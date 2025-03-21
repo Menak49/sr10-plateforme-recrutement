@@ -1,6 +1,5 @@
 @startuml
 
-test
 
 note as GlobalNote
     Tous les attributs sont considÃƒÂ©rÃƒÂ©s not null par dÃƒÂ©faut
