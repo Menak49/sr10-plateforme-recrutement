@@ -1,0 +1,166 @@
+@startuml UseCaseDiagramV3
+
+
+'Mise en page
+left to right direction
+skinparam actorStyle awesome
+
+'Acteurs
+actor Administrateur
+actor "Recruteur d'une Organisation" as Recruteur 
+actor Candidat
+Candidat <|-- Recruteur : <<inherit>>
+Candidat <|-- Administrateur : <<inherit>>
+
+'Connexion
+(S'inscrire) as sinscrire
+"Utilisateur non connecté" --> sinscrire
+"Utilisateur non connecté" --> (Se connecter)
+sinscrire --> Candidat
+(Se connecter) --> Candidat
+(Se connecter) --> Administrateur
+(Recruter) --> Recruteur
+Candidat --> (Recruter)
+Administrateur --> (Espace candidat/recruteur)
+(Espace candidat/recruteur)--> Candidat
+ 
+note left of sinscrire
+    Notifie utilisateur par mail :
+    compte créé avec succès
+end note
+
+
+
+
+' Cas d'utilisation pour l'administrateur
+
+(Lister les demandes pour joindre une Organisation \n et devenir Recruteur) as LDR
+(Valider la demande) as VDR
+(Refuser la demande) as RDR
+(Visualiser l'état des demandes : \n traitée ou en cours de traitement) as VD
+LDR <|-- VDR : <<extend>>
+LDR <|-- RDR : <<extend>>
+LDR --|> VD : <<include>>
+Administrateur -- LDR
+
+note right of VDR
+    Notifie utilisateur par mail :
+    demande de joindre l'Organisation acceptée, droits Recruteur accordés
+end note
+
+note right of RDR
+    Notifie utilisateur par mail :
+    demande de joindre l'Organisation refusée
+end note
+
+(Lister les demandes pour créer une Organisation) as LDO
+(Valider la demande) as VDO
+(Refuser la demande) as RDO
+(Visualiser l'état des demandes : \n traitée ou en cours de traitement) as DT
+LDO <|-- VDO : <<extend>>
+LDO <|-- RDO : <<extend>>
+LDO --|> DT : <<include>>
+Administrateur -- LDO
+
+note right of VDO
+    Notifie utilisateur par mail :
+    demande de création d'Organisation acceptée
+end note
+
+note right of RDO
+    Notifie utilisateur par mail :
+    demande de création d'Organisation refusée
+end note
+
+
+(Lister les comptes utilisateurs) as LU
+(Supprimer un compte utilisateur) as SU
+(Donner les droits d'admin) as ARA
+(Visualiser l'état des demandes : \n traitée ou en cours de traitement) as DTU
+LU <|-- SU : <<extend>>
+LU <|-- ARA : <<extend>>
+LU --|> DTU : <<include>>
+Administrateur -- LU
+
+note right of ARA
+    Notifie utilisateur par mail :
+    droits d'admin accordés
+end note
+
+note right of SU
+    Notifie utilisateur par mail :
+    compte supprimé
+end note
+
+
+
+' Cas d'utilisation pour le recruteur
+
+(Déposer une offre d'emploi) as AO
+(Modifier une offre d'emploi) as MO
+(Supprimer une offre d'emploi) as SO
+(Lister les offres de l'Organisation) as LO
+
+LO <|-- AO : <<extend>>
+LO <|-- MO : <<extend>>
+LO <|-- SO : <<extend>>
+
+(Telecharger les dossiers des candidats) as TDC
+(Afficher la liste des candidats à une offre) as ALC
+
+ALC <|-- TDC : <<extend>>
+
+Recruteur -- LO
+Recruteur -- ALC
+
+
+' Cas d'utilisation pour le candidat
+
+(Elevation de privilèges) as EP
+Candidat -- EP
+
+EP <|-- (Demander à devenir Admin) : <<extend>>
+EP <|-- (Demander à joindre une Organisation \n et devenir Recruteur) : <<extend>>
+EP <|-- (Demander à créer une Organisation \n via le formulaire \n et devenir Recruteur) : <<extend>>
+
+note right of (Demander à devenir Admin)
+    Notifie un Admin
+end note
+
+note right of (Demander à joindre une Organisation \n et devenir Recruteur)
+    Notifie un Admin
+end note
+
+note right of (Demander à créer une Organisation \n via le formulaire \n et devenir Recruteur)
+    Notifie un Admin
+end note
+
+(Lister ses candidatures) as LC
+(Modifier une candidature) as MC
+(Annuler une candidature) as AC
+LC <|-- MC : <<extend>>
+LC <|-- AC : <<extend>>
+Candidat -- LC
+
+
+(Lister les offres d'emploi) as LOE
+(Rechercher une offre filtrée\n par lieu, typologie de métier, salaire, ...) as RO
+(Candidater à une offre) as CA
+(Visualiser le détail d'une offre) as VDOO
+LOE <|-- VDOO : <<extend>>
+RO <|-- CA : <<extend>>
+RO <|-- VDOO : <<extend>>
+LOE <|-- CA : <<extend>>
+VDOO <|-- CA : <<extend>>
+LOE <|-- RO
+Candidat -- LOE
+
+note right of CA
+    Notifie recruteurs de l'Organisation
+end note
+
+
+@enduml
+
+
+
