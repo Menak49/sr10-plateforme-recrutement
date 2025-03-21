@@ -1,0 +1,135 @@
+@startuml
+
+entity "Utilisateur" as utilisateur {
+    + nom: varchar
+    + prenom: varchar
+    + tel: int 
+    + statut: statut
+    + mdp : varchar
+}
+
+note bottom of utilisateur
+    les mots de passe doivent être composés d'au minimum 12 caractères
+comprenant des majuscules, des minuscules, des chiffres et des caractères spéciaux à choisir dans
+une liste d'au moins 37 caractères spéciaux possibles
+end note
+
+entity "Recruteur" as recruteur {
+}
+
+entity "Administrateur" as admin{
+}
+entity "Candidat" as candidat{
+}
+
+enum statut {
+    actif 
+    inactif
+}
+
+entity "Type d'organisation" as type_orga{
+    + nom : varchar 
+}
+
+note bottom of type_orga
+    On aurait pu mettre un enum si on connaissait tous les types d'organisations
+end note
+
+entity "Organisation" as organisation{
+    + siren: int 
+    + nom : varchar
+    + siege_social : varchar
+}
+
+entity "Offre emploi" as offre_emploi{
+    + Id: int 
+    + etat : etat
+    + date_validitee: date
+    + indication: varchar
+    + nb_pce: int
+}
+
+entity "Fiche poste" as fiche_poste {
+    + intitule: varchar
+    + resp_hier : varchar
+    + lieu_mission : varchar
+    + rythme : varchar
+    + salaire_min : int
+    + salaire_max : int
+    + description : varchar
+}
+
+entity "Statut de poste" as statut_poste {
+    + nom: varchar 
+}
+entity "Type de metiers" as type_metier {
+    + nom: varchar 
+}
+enum etat {
+  non publiée
+  en cours d’édition 
+  publiée 
+  expirée
+}
+
+entity "Candidature" as candidature{
+    + date: date
+   
+}
+
+entity "Piece de dossier" as piece_dossier{
+    + nom: varchar
+    + chemin : varchar
+}
+
+
+entity "OrganisationJoinQuery" as OrganisationJoinQuery{
+    + Message : varchar
+}
+
+entity "AdminBecomeQuery" as AdminBecomeQuery{
+    + Message : varchar
+}
+
+
+entity "RecruteurBecomeQuery" as RecruteurBecomeQuery{
+    + Message : varchar
+}
+
+entity "AddOrganisationQuery" as AddOrganisationQuery{
+    + Siren: int
+    + Name: varchar
+    + Headquarters: varchar
+}
+
+organisation "1" -- "*" recruteur : fait partie de <
+organisation  "*" -- "1" type_orga : est >
+offre_emploi  "*" -- "1" fiche_poste : est rattache a >
+statut_poste "1" -- "*" fiche_poste : est rattache a <
+organisation  "1" -- "*" fiche_poste : appartient a <
+type_metier "1" -- "*" fiche_poste : est de type <
+recruteur "1" -- "*" fiche_poste : editee par <
+candidature "*" -- "*" piece_dossier : fait partie de <
+candidature "*" -- "1" offre_emploi: postule pour >
+utilisateur <|--  admin
+utilisateur <|--  candidat
+candidature "*"--"1"  candidat
+utilisateur <|--  recruteur
+
+organisation "1" -- "*" OrganisationJoinQuery
+recruteur "0-1" -- "0-1" OrganisationJoinQuery
+candidat "0-1" -- "0-1"  OrganisationJoinQuery
+candidat "0-1" -- "0-1"  AdminBecomeQuery
+recruteur "0-1" -- "0-1"  AdminBecomeQuery
+candidat "1" -- "0-1"  RecruteurBecomeQuery
+recruteur "1" -- "*" AddOrganisationQuery
+
+note bottom of OrganisationJoinQuery
+    Une query de type OrganisationJoinQuery est liée à soit un recruteur soit un candidat
+end note
+
+note bottom of AdminBecomeQuery
+    Une query de type AdminBecomeQuery est liée à soit un recruteur soit un candidat
+end note
+
+@enduml
