@@ -1,5 +1,7 @@
 @startuml
 
+test
+
 note as GlobalNote
     Tous les attributs sont considÃƒÂ©rÃƒÂ©s not null par dÃƒÂ©faut
     Les clÃ©s primaires sont uniques not null par dÃ©faut
