@@ -6,11 +6,11 @@ note as GlobalNote
 end note
 
 entity "Utilisateur" as Utilisateur {
-    + LastName: varchar(25)
-    + FirstName: varchar(25)
+    + LastName: varchar(255)
+    + FirstName: varchar(255)
     + Phone: int [PK]
     + Status: Status
-    + Password: varchar(50)
+    + Password: varchar(255)
 }
 
 entity "Recruteur" as Recruteur {
@@ -32,7 +32,7 @@ enum Status {
 }
 
 entity "TypeOrganisation" as TypeOrganisation {
-    + Name: varchar(20) [PK]
+    + Name: varchar(255) [PK]
 }
 
 note bottom of "TypeOrganisation"
@@ -42,8 +42,8 @@ end note
 
 entity "Organisation" as Organisation {
     + Siren: int [PK]
-    + Name: varchar(25)
-    + Headquarters: varchar(50)
+    + Name: varchar(255)
+    + Headquarters: varchar(255)
     + Type: varchar [FK] --> TypeOrganisation.Name
 }
 
@@ -51,20 +51,20 @@ entity "Offre emploi" as OffreEmploi {
     + Id: int [PK]
     + State: State
     + ExpiryDate: date
-    + Details: varchar(500) (nullable)
+    + Details: Text (nullable)
     + Slots: int
     + FichePoste: int [FK] --> FichePoste.Id
 }
 
 entity "Fiche poste" as FichePoste {
     + Id: int [PK]
-    + Title: varchar(20)
-    + Supervisor: varchar(50)
-    + Location: varchar(25) (unique)
-    + WorkSchedule: varchar(25)
+    + Title: varchar(255)
+    + Supervisor: varchar(255)
+    + Location: varchar(255) (unique)
+    + WorkSchedule: varchar(255)
     + MinSalary: int
     + MaxSalary: int
-    + Description: varchar(3000) (nullable)
+    + Description: Text (nullable)
     + Organisation: int [FK] --> Organisation.Siren
     + StatutPoste: varchar [FK] --> StatutPoste.Name
     + Recruteur: varchar [FK] --> Recruteur.User
@@ -72,11 +72,11 @@ entity "Fiche poste" as FichePoste {
 }
 
 entity "StatutPoste" as StatutPoste {
-    + Name: varchar(25) [PK]
+    + Name: varchar(255) [PK]
 }
 
 entity "TypeMetier" as TypeMetier {
-    + Name: varchar(25) [PK]
+    + Name: varchar(255) [PK]
 }
 
 enum State {
@@ -101,8 +101,8 @@ entity "CandidaturePieceDossier" as CandidaturePieceDossier {
 
 entity "PieceDossier" as PieceDossier {
     + Id: int [PK]
-    + Name: varchar(25)
-    + Chemin: varchar(100)
+    + Name: varchar(255)
+    + Chemin: varchar(255)
 }
 
 entity "OrganisationJoinQuery" as OrganisationJoinQuery{
@@ -114,7 +114,7 @@ entity "OrganisationJoinQuery" as OrganisationJoinQuery{
 
 entity "AdminBecomeQuery" as AdminBecomeQuery{
     + Id : int [PK]
-    + Message : varchar(300)
+    + Message : varchar(511)
     + Recruteur: varchar [FK] --> Recruteur.User (nullable)
     + Candidat: int [FK] --> Candidat.User (nullable)
 }
@@ -122,15 +122,15 @@ entity "AdminBecomeQuery" as AdminBecomeQuery{
 
 entity "RecruteurBecomeQuery" as RecruteurBecomeQuery{
     + Id : int [PK]
-    + Message : varchar(300)
+    + Message : varchar(511)
     + Candidat: int [FK] --> Candidat.User
 }
 
 entity "AddOrganisationQuery" as AddOrganisationQuery{
     + Id : int [PK]
     + Siren: int
-    + Name: varchar(25)
-    + Headquarters: varchar(50)
+    + Name: varchar(255)
+    + Headquarters: varchar(255)
     + Recruteur: varchar [FK] --> Recruteur.User
 }
 
@@ -166,6 +166,17 @@ end note
 note bottom of AddOrganisationQuery
     Une query de type AddOrganisationQuery est liÃ©e Ã  soit un recruteur soit un candidat
 end note
+
+
+
+
+
+
+
+
+
+
+
 
 
 
