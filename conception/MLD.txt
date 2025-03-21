@@ -79,6 +79,8 @@ entity "Fiche poste" as FichePoste {
     + Type: varchar [FK] --> TypeMetier.Name
 }
 
+
+
 entity "StatutPoste" as StatutPoste {
     + Name: varchar(255) [PK]
 }
@@ -138,7 +140,6 @@ Organisation "1" -- "*" Recruteur : BelongsTo <
 Organisation  "*" -- "1" TypeOrganisation : Has >
 OffreEmploi  "*" -- "1" FichePoste : RefersTo >
 StatutPoste "1" -- "*" FichePoste : RelatedTo <
-Organisation  "1" -- "*" FichePoste : Owns <
 TypeMetier "1" -- "*" FichePoste : IsOfType <
 Recruteur "1" -- "*" FichePoste : EditedBy <
 CandidaturePieceDossier"*" -- "1" PieceDossier 
@@ -151,6 +152,7 @@ Organisation "1" -- "*" OrganisationJoinQuery
 Utilisateur "1" -- "0-1"  AdminBecomeQuery
 Candidat "1" -- "0-1"  RecruteurBecomeQuery
 Utilisateur "0-1" -- "0-1" Organisation : RequestToAdd >
+
 
 
 

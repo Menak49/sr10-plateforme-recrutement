@@ -109,7 +109,6 @@ organisation "1" -- "*" recruteur : fait partie de <
 organisation  "*" -- "1" type_orga : est >
 offre_emploi  "*" -- "1" fiche_poste : est rattache a >
 statut_poste "1" -- "*" fiche_poste : est rattache a <
-organisation  "1" -- "*" fiche_poste : appartient a <
 type_metier "1" -- "*" fiche_poste : est de type <
 recruteur "1" -- "*" fiche_poste : editee par <
 candidature "*" -- "*" piece_dossier : fait partie de <
@@ -124,6 +123,9 @@ organisation "1" -- "*" OrganisationJoinQuery
 utilisateur "1" -- "0-1"  AdminBecomeQuery
 candidat "1" -- "0-1"  RecruteurBecomeQuery
 utilisateur "0-1" -- "0-1" organisation : RequestToAdd >
+
+
+
 
 
 @enduml
