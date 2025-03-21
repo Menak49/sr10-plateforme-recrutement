@@ -16,15 +16,15 @@ entity "Utilisateur" as Utilisateur {
 
 entity "Recruteur" as Recruteur {
    + User: int [PK, FK] --> Utilisateur.Id
-   + Organization: int [FK] --> Organisation.Id
+   + Organization: int [FK] --> Organisation.Phone
 }
 
 entity "Administrateur" as Administrateur {
-   + User: int [PK, FK] --> Utilisateur.Id
+   + User: int [PK, FK] --> Utilisateur.Phone
 }
 
 entity "Candidat" as Candidat {
-   + User: int [PK, FK] --> Utilisateur.Id
+   + User: int [PK, FK] --> Utilisateur.Phone
 }
 
 enum StatusUtilisateur {
@@ -52,6 +52,7 @@ entity "Organisation" as Organisation {
     + Headquarters: varchar(255)
     + Status: StatusOrganisation
     + Type: varchar [FK] --> TypeOrganisation.Name
+    + Creator: int [PK, FK] --> Utilisateur.Phone(nullable)
 }
 
 entity "Offre emploi" as OffreEmploi {
@@ -113,17 +114,15 @@ entity "PieceDossier" as PieceDossier {
 }
 
 entity "OrganisationJoinQuery" as OrganisationJoinQuery{
-    + Recruteur: varchar [FK] --> Recruteur.User (nullable)
-    + Candidat: int [FK] --> Candidat.User (nullable)
+    + User: int [PK, FK] --> Utilisateur.Phone
     + Organisation : int [FK] --> Organisation.Siren
-    [PK] Recruteur, Candidat, Organisation
+    [PK] User, Organisation
 }
 
 entity "AdminBecomeQuery" as AdminBecomeQuery{
     + Id : int [PK]
     + Message : varchar(511)
-    + Recruteur: varchar [FK] --> Recruteur.User (nullable)
-    + Candidat: int [FK] --> Candidat.User (nullable)
+    + User: int [PK, FK] --> Utilisateur.Phone
 }
 
 
@@ -149,18 +148,9 @@ Utilisateur <|--  Administrateur
 
 Utilisateur "1" -- "0-1" OrganisationJoinQuery
 Organisation "1" -- "*" OrganisationJoinQuery
-Candidat "0-1" -- "0-1"  AdminBecomeQuery
-Recruteur "0-1" -- "0-1"  AdminBecomeQuery
+Utilisateur "1" -- "0-1"  AdminBecomeQuery
 Candidat "1" -- "0-1"  RecruteurBecomeQuery
-
-
-note bottom of OrganisationJoinQuery
-    Une query de type OrganisationJoinQuery est liÃ©e Ã  soit un recruteur soit un candidat
-end note
-
-note bottom of AdminBecomeQuery
-    Une query de type AdminBecomeQuery est liÃ©e Ã  soit un recruteur soit un candidat
-end note
+Utilisateur "0-1" -- "0-1" Organisation : RequestToAdd >
 
 
 

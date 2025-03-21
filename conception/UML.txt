@@ -29,6 +29,11 @@ enum statut {
     inactif
 }
 
+enum StatusOrganisation {
+    Valide
+    StandBy
+}
+
 entity "Type d'organisation" as type_orga{
     + nom : varchar 
 }
@@ -41,6 +46,7 @@ entity "Organisation" as organisation{
     + siren: int 
     + nom : varchar
     + siege_social : varchar
+    + Status: StatusOrganisation
 }
 
 entity "Offre emploi" as offre_emploi{
@@ -98,11 +104,6 @@ entity "RecruteurBecomeQuery" as RecruteurBecomeQuery{
     + Message : varchar
 }
 
-entity "AddOrganisationQuery" as AddOrganisationQuery{
-    + Siren: int
-    + Name: varchar
-    + Headquarters: varchar
-}
 
 organisation "1" -- "*" recruteur : fait partie de <
 organisation  "*" -- "1" type_orga : est >
@@ -118,20 +119,11 @@ utilisateur <|--  candidat
 candidature "*"--"1"  candidat
 utilisateur <|--  recruteur
 
+utilisateur "1" -- "0-1" OrganisationJoinQuery
 organisation "1" -- "*" OrganisationJoinQuery
-recruteur "0-1" -- "0-1" OrganisationJoinQuery
-candidat "0-1" -- "0-1"  OrganisationJoinQuery
-candidat "0-1" -- "0-1"  AdminBecomeQuery
-recruteur "0-1" -- "0-1"  AdminBecomeQuery
+utilisateur "1" -- "0-1"  AdminBecomeQuery
 candidat "1" -- "0-1"  RecruteurBecomeQuery
-recruteur "1" -- "*" AddOrganisationQuery
+utilisateur "0-1" -- "0-1" organisation : RequestToAdd >
 
-note bottom of OrganisationJoinQuery
-    Une query de type OrganisationJoinQuery est liée à soit un recruteur soit un candidat
-end note
-
-note bottom of AdminBecomeQuery
-    Une query de type AdminBecomeQuery est liée à soit un recruteur soit un candidat
-end note
 
 @enduml
