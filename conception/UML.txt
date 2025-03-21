@@ -17,6 +17,8 @@ end note
 entity "Recruteur" as recruteur {
 }
 
+
+
 entity "Administrateur" as admin{
 }
 entity "Candidat" as candidat{

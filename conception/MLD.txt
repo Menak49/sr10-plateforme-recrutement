@@ -26,9 +26,14 @@ entity "Candidat" as Candidat {
    + User: int [PK, FK] --> Utilisateur.Id
 }
 
-enum Status {
+enum StatusUtilisateur {
     Active 
     Inactive
+}
+
+enum StatusOrganisation {
+    Valide
+    StandBy
 }
 
 entity "TypeOrganisation" as TypeOrganisation {
@@ -44,6 +49,7 @@ entity "Organisation" as Organisation {
     + Siren: int [PK]
     + Name: varchar(255)
     + Headquarters: varchar(255)
+    + Status: StatusOrganisation
     + Type: varchar [FK] --> TypeOrganisation.Name
 }
 
@@ -126,13 +132,7 @@ entity "RecruteurBecomeQuery" as RecruteurBecomeQuery{
     + Candidat: int [FK] --> Candidat.User
 }
 
-entity "AddOrganisationQuery" as AddOrganisationQuery{
-    + Id : int [PK]
-    + Siren: int
-    + Name: varchar(255)
-    + Headquarters: varchar(255)
-    + Recruteur: varchar [FK] --> Recruteur.User
-}
+
 
 Organisation "1" -- "*" Recruteur : BelongsTo <
 Organisation  "*" -- "1" TypeOrganisation : Has >
@@ -146,14 +146,12 @@ Candidature "1" -- "*" CandidaturePieceDossier
 Candidature "*" -- "1" OffreEmploi: AppliesFor >
 Utilisateur <|--  Administrateur
 
-Recruteur "0-1" -- "0-1" OrganisationJoinQuery
+Utilisateur "1" -- "0-1" OrganisationJoinQuery
 Organisation "1" -- "*" OrganisationJoinQuery
-Candidat "0-1" -- "0-1"  OrganisationJoinQuery
 Candidat "0-1" -- "0-1"  AdminBecomeQuery
 Recruteur "0-1" -- "0-1"  AdminBecomeQuery
 Candidat "1" -- "0-1"  RecruteurBecomeQuery
-Recruteur "0-1" -- "0-1" AddOrganisationQuery
-Candidat "0-1" -- "0-1" AddOrganisationQuery
+
 
 note bottom of OrganisationJoinQuery
     Une query de type OrganisationJoinQuery est liÃ©e Ã  soit un recruteur soit un candidat
@@ -162,20 +160,6 @@ end note
 note bottom of AdminBecomeQuery
     Une query de type AdminBecomeQuery est liÃ©e Ã  soit un recruteur soit un candidat
 end note
-
-note bottom of AddOrganisationQuery
-    Une query de type AddOrganisationQuery est liÃ©e Ã  soit un recruteur soit un candidat
-end note
-
-
-
-
-
-
-
-
-
-
 
 
 
