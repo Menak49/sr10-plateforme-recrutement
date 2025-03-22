@@ -3,9 +3,9 @@ INSERT INTO TypeOrganisation (Name) VALUES ('Entreprise'), ('Association'), ('Fr
 INSERT INTO StatutPoste (Name) VALUES ('CDI'), ('CDD'), ('Stage'), ('Alternance');
 INSERT INTO TypeMetier (Name) VALUES ('Informatique'), ('Marketing'), ('Finance');
 
-INSERT INTO Utilisateur (Phone, LastName, FirstName, Status, Password) VALUES
-(123456789, 'Doe', 'John', 'Active', 'SecurePass123!'),
-(987654321, 'Smith', 'Alice', 'Inactive', 'SuperSafePwd456!');
+INSERT INTO Utilisateur (Phone, LastName, FirstName, Status, Password, Email) VALUES
+(123456789, 'Doe', 'John', 'Active', 'SecurePass123!', 'Doe@gmail.com'),
+(987654321, 'Smith', 'Alice', 'Inactive', 'SuperSafePwd456!', 'Alice@gmail.com');
 
 INSERT INTO Organisation (Siren, Name, Headquarters, Status, Type, Creator) VALUES
 (111222333, 'Tech Corp', 'Paris', 'Valide', 'Entreprise', 123456789),
@@ -27,11 +27,11 @@ INSERT INTO Candidature (Date, OffreEmploi, Candidat) VALUES
 ('2025-03-20', 1, 987654321);
 
 
-INSERT INTO Utilisateur (Phone, LastName, FirstName, Status, Password) VALUES
-(112233445, 'Martin', 'Sophie', 'Active', 'Pass123!'),
-(556677889, 'Leroy', 'Thomas', 'Inactive', 'Secure456!'),
-(998877665, 'Dubois', 'Emma', 'Active', 'StrongPass789!'),
-(223344556, 'Morel', 'Lucas', 'Active', 'UltraSafePwd!');
+INSERT INTO Utilisateur (Phone, LastName, FirstName, Status, Password, Email) VALUES
+(112233445, 'Martin', 'Sophie', 'Active', 'Pass123!', 'Sophie@gmail.com'),
+(556677889, 'Leroy', 'Thomas', 'Inactive', 'Secure456!', 'Thomas@gmail.com'),
+(998877665, 'Dubois', 'Emma', 'Active', 'StrongPass789!', 'Emma@gmail.com'),
+(223344556, 'Morel', 'Lucas', 'Active', 'UltraSafePwd!', 'Lucas@gmail.com');
 
 
 INSERT INTO Organisation (Siren, Name, Headquarters, Status, Type, Creator) VALUES

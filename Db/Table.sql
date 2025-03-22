@@ -5,6 +5,7 @@ CREATE TABLE Utilisateur (
     FirstName VARCHAR(255) NOT NULL,
     Status ENUM('Active', 'Inactive') NOT NULL,
     Password VARCHAR(255) NOT NULL
+    Email VARCHAR(255) UNIQUE NOT NULL
 );
 
 CREATE TABLE TypeOrganisation (
