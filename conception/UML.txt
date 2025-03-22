@@ -6,6 +6,7 @@ entity "Utilisateur" as utilisateur {
     + tel: int 
     + statut: statut
     + mdp : varchar
+    + email : varchar
 }
 
 note bottom of utilisateur

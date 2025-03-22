@@ -12,6 +12,7 @@ entity "Utilisateur" as Utilisateur {
     + Phone: int [PK]
     + Status: Status
     + Password: varchar(255)
+    + Email: varchar(255) (unique)
 }
 
 entity "Recruteur" as Recruteur {
