@@ -24,3 +24,17 @@ body {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+
+.container-form {
+  width: 400px; /* Largeur de la boîte */
+  padding: 20px;
+  background: white;
+  border-radius: 10px; /* Coins arrondis */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Ombre légère */
+  
+  /* Centrage */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
