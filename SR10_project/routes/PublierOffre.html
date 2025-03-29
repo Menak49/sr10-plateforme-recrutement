@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Publier une offre</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container mt-3">
+      <ul class="nav nav-tabs mb-4">
+        <li class="nav-item">
+          <a class="nav-link" href="#">Accueil</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="#">Publier une offre</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Gérer les offres</a>
+        </li>
+      </ul>
+
+      <div class="card mb-3">
+        <div class="card-body">
+          <h4 class="card-title mb-4">PUBLIER UNE NOUVELLE OFFRE 1/2</h4>
+
+          <div class="alert alert-light mb-4">
+            <small class="text-muted">
+              <i class="bi bi-info-circle me-1"></i>
+              Vous devez d’abord remplir toutes les informations de ce
+              formulaire qui constituera la fiche de poste liée à l’offre. Les
+              candidats auront accès à ces informations.
+            </small>
+          </div>
+
+          <form>
+            <div class="mb-3">
+              <label for="organization" class="form-label"
+                >Nom de l'organisation</label
+              >
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                id="organization"
+                placeholder="Votre entreprise / organisme - votre localité"
+              />
+            </div>
+
+            <div class="mb-3">
+              <label for="offerTitle" class="form-label"
+                >Intitulé de l'offre</label
+              >
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                id="offerTitle"
+              />
+            </div>
+
+            <div class="mb-3">
+              <label for="jobStatus" class="form-label"
+                >Statut du poste (cadre, ETAM, etc.)</label
+              >
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                id="jobStatus"
+              />
+            </div>
+
+            <div class="mb-3">
+              <label for="manager" class="form-label"
+                >Responsable hiérarchique</label
+              >
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                id="manager"
+              />
+            </div>
+
+            <div class="mb-3">
+              <label for="vehicleType" class="form-label"
+                >Type de véhicule</label
+              >
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                id="vehicleType"
+              />
+            </div>
+
+            <div class="mb-3">
+              <label for="jobLocation" class="form-label"
+                >Localisation de la mission</label
+              >
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                id="jobLocation"
+              />
+            </div>
+
+            <div class="mb-3">
+              <label for="workSchedule" class="form-label"
+                >Rythme (nombre d'heures par semaine, possibilité
+                télétravail)</label
+              >
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                id="workSchedule"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <form>
+            <div class="mb-3">
+              <label for="salarRange" class="form-label"
+                >Fourchette de salaire</label
+              >
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                id="salarRange"
+              />
+            </div>
+
+            <div class="mb-3">
+              <label for="jobDescription" class="form-label"
+                >Description (mission et activités, compétences
+                attendues)</label
+              >
+              <textarea
+                class="form-control form-control-sm"
+                id="jobDescription"
+                rows="4"
+              ></textarea>
+            </div>
+
+            <div class="text-end mt-4">
+              <button type="button" class="btn btn-secondary me-2">
+                Annuler
+              </button>
+              <button type="submit" class="btn btn-dark">Continuer</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
