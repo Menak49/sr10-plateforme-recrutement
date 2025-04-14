@@ -3,35 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Espace Candidat</title>
+    <title><%= title %></title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
   </head>
   <body class="bg-dark text-white text-center">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary py-3">
-      <div class="container">
-        <div class="w-100 d-flex justify-content-between align-items-center">
-          <div class="collapse navbar-collapse justify-content-center">
-            <ul class="navbar-nav d-flex flex-row gap-4">
-              <a class="navbar-brand" href="#">Accueil</a>
-              <li class="nav-item"><a class="nav-link" href="#">Offres</a></li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Organisations</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Mes candidatures</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </nav>
-
+    <%- include('partials/navbar') %>
     <div
       class="container d-flex flex-column justify-content-center align-items-center vh-100 mx-auto"
     >
+      <%= text%>
       <h1 class="text-center">
         Bienvenue sur votre <br />
         espace <span class="fw-monospace">Candidat</span>
@@ -47,11 +30,13 @@
       <a href="WelcomePageRecruteur.html"
         ><button type="button" class="btn btn-dark">Espace Recruteur</button></a
       >
+
       <a href="WelcomePageAdmin.html"
         ><button type="button" class="btn btn-dark">Espace Admin</button></a
       >
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <%- include('partials/footer') %>
   </body>
 </html>

@@ -1,0 +1,62 @@
+<!-- views/WelcomePage.ejs -->
+
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bienvenue - <%= role %></title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-dark text-white">
+    <%- include('partials/navbar', { role: role }) %>
+
+    <div class="d-flex flex-column min-vh-100">
+      <div class="container mt-5">
+        <h1>
+          Bienvenue dans votre espace <span class="fw-bold"><%= role %></span>
+        </h1>
+        <p>
+          Voici votre espace personnalisé pour gérer vos actions : <%= role ===
+          'admin' ? 'Gérer les utilisateurs et les offres.' : (role ===
+          'recruteur' ? 'Gérer les offres et consulter les candidatures.' :
+          'Postuler à des offres et gérer vos candidatures.') %>
+        </p>
+
+        <div>
+          <% if (role === 'admin') { %>
+          <a href="/admin/gestion" class="btn btn-light"
+            >Accéder à la gestion des utilisateurs</a
+          >
+          <% } else if (role === 'recruteur') { %>
+          <a href="/recruteur/offres" class="btn btn-light">Gérer les offres</a>
+          <% } else if (role === 'candidat') { %>
+          <a href="/candidat/offres" class="btn btn-light">Voir les offres</a>
+          <% } %>
+        </div>
+      </div>
+      <div class="position-fixed bottom-0 end-0 m-4 d-flex flex-column gap-2">
+        <% if (role !== 'admin') { %>
+        <a href="/admin/accueil">
+          <button type="button" class="btn btn-dark">Espace Admin</button>
+        </a>
+        <% } %> <% if (role !== 'recruteur') { %>
+        <a href="/recruteur/accueil">
+          <button type="button" class="btn btn-dark">Espace Recruteur</button>
+        </a>
+        <% } %> <% if (role !== 'candidat') { %>
+        <a href="/candidat/accueil">
+          <button type="button" class="btn btn-dark">Espace Candidat</button>
+        </a>
+        <% } %>
+      </div>
+
+      <%- include('partials/footer') %>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,46 @@
+<nav class="navbar navbar-expand bg-secondary navbar-dark py-3">
+  <div class="container">
+    <a class="navbar-brand" href="/">Accueil</a>
+
+    <ul class="navbar-nav ms-auto d-flex flex-row gap-3">
+      <% if (role === 'admin') { %>
+      <li class="nav-item">
+        <a class="nav-link" href="/admin/utilisateurs"
+          >Gestion des utilisateurs</a
+        >
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/admin/organisations"
+          >Gestion des organisations</a
+        >
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/admin/recruteurs">Gestion des recruteurs</a>
+      </li>
+      <% } else if (role === 'recruteur') { %>
+      <li class="nav-item">
+        <a class="nav-link" href="/recruteur/publierOffre">Publier une offre</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/recruteur/gererOffre">Gérer mes offres</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/recruteur/ficheDePoste">Fiches de poste</a>
+      </li>
+      <% } else if (role === 'candidat') { %>
+      <li class="nav-item">
+        <a class="nav-link" href="/candidat/offres">Voir les offres</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/candidat/candidatures">Mes candidatures</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/candidat/organisations">Organisations</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/candidat/candidatures">Mes candidatures</a>
+      </li>
+      <% } %>
+    </ul>
+  </div>
+</nav>
