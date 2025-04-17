@@ -1,3 +1,6 @@
+
+
+//importation des modules 
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -5,11 +8,14 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var session = require('express-session'); 
 
+// importation des routes
 var indexRouter = require('./routes/index');
 
 
+//création de l'application Express
 var app = express();
 
+//configuration de la session
 app.use(session({
   secret: 'ton-secret',   
   resave: false,
@@ -20,12 +26,17 @@ app.use(session({
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+//ajoute de middleware layers (layers ajoutées à l'Express middleware stack)
+//Each app.use(middleware) is called every time a request is sent to the server.
+//pas de route spécifiée, ces layers seront exécutés pour chaque requête, quelque soit la route
+app.use(logger('dev')); //enregistre les requêtes HTTP dans la console
+app.use(express.json());//analyse le corps de la requête HTTP au format JSON
+app.use(express.urlencoded({ extended: false })); //analyse le corps de la requête HTTP au format URL-encoded
+app.use(cookieParser()); //analyse les cookies dans la requête HTTP
+app.use(express.static(path.join(__dirname, 'public'))); 
 
+//middleware de gestion des routes
+//Ces middleware sont exécutés ssi la requête correspond à la route spécifiée
 app.use('/', indexRouter);
 
 
@@ -45,4 +56,6 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+//exportation de l'application Express
+//pour lutiliser dans d'autres fichiers (comme www)
 module.exports = app;
