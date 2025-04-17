@@ -3,6 +3,21 @@ const express = require('express');
 const router = express.Router();
 const db = require('../model/db');
 
+
+
+
+
+router.get('/Accueil', function(req, res, next) {
+  var role =  req.session.role ||'candidat';  
+  if (!role) {
+    //role = 'candidat'
+    //return res.redirect('/connexion'); // on verra plus tard
+  }
+
+  res.render('WelcomePage', { role: role });
+});
+
+
 router.get('/parcourir', (req, res) => {
     const query = `
   SELECT 
