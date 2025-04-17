@@ -10,26 +10,7 @@
     />
   </head>
   <body class="bg-light">
-    <nav
-      class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm"
-    >
-      <div class="container">
-        <a class="navbar-brand fw-bold" href="#">Accueil</a>
-        <div class="collapse navbar-collapse">
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-              <a class="nav-link fw-bold active" href="#">Offres</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Organisations</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Mes Candidatures</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+    <%- include('partials/navbar', { role: role }) %>
 
     <div class="container mt-4">
       <h2 class="fw-bold">PARCOUREZ LES OFFRES</h2>
@@ -44,7 +25,7 @@
         <button class="btn btn-dark">🔍</button>
       </div>
 
-      <button class="btn btn-outline-dark mb-4">Tous les Offres</button>
+      <button class="btn btn-outline-dark mb-4">Toutes les Offres</button>
 
       <!-- Grille  avec toutes les offres dedans  -->
       <div class="row g-3">
@@ -91,6 +72,7 @@
           </li>
         </ul>
       </nav>
+      <% include('partials/footer.ejs') %>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

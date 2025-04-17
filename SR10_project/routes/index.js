@@ -1,16 +1,16 @@
 var express = require('express');
 var router = express.Router();
 
-router.get('/Accueil', function(req, res, next) {
-  var role = req.session.role;  
-  if (!role) {
-    role = 'admin'
-    //return res.redirect('/connexion'); // Redirige vers la page de connexion si l'utilisateur n'est pas connecté
-  }
+var WelcomePagerouter = require('./WelcomePage');
+var candidatRouter = require('./candidat');
+var adminRouter = require('./admin');
+var recruteurRouter = require('./recruteur');
 
-  // Passer le rôle à la vue
-  res.render('WelcomePage', { role: role });
-});
+router.use('/Accueil', WelcomePagerouter);
+router.use('/candidat', candidatRouter);
+router.use('/recruteur', recruteurRouter);
+router.use('/admin', adminRouter);
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
