@@ -24,7 +24,7 @@ router.get('/parcourir', (req, res) => {
       }
       role = req.session.role || 'candidat';
   
-      res.render('ParcourirOffre', {role:role, offres: results });
+      res.render('Candidat/ParcourirOffre', {role:role, offres: results });
     });
   });
 
@@ -60,7 +60,7 @@ router.get('/parcourir', (req, res) => {
       }
       
   
-      res.render('Candidatures', {
+      res.render('Candidat/Candidatures', {
         role: req.session.role || 'candidat',
         candidatures: results
       });
@@ -77,13 +77,10 @@ router.get('/privileges', (req, res) => {
     return res.redirect('/login');
   }
   
-  // Définir le rôle par défaut - candidat
   const role = req.session.role || 'candidat';
   
-  // Générer le titre de la page en fonction du rôle
   const pageTitle = 'Élévation de Privilèges';
   
-  // Rendre la vue avec les données nécessaires
   res.render('Privileges', {
     role: role,
     title: pageTitle,
