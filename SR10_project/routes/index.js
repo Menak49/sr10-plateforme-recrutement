@@ -11,16 +11,6 @@ router.use('/candidat', candidatRouter);
 router.use('/recruteur', recruteurRouter);
 router.use('/admin', adminRouter);
 
-router.get('/Accueil', function(req, res, next) {
-  var role = req.session.role;  
-  if (!role) {
-    role = 'admin'
-    //return res.redirect('/connexion'); // Redirige vers la page de connexion si l'utilisateur n'est pas connecté
-  }
-
-  // Passer le rôle à la vue
-  res.render('WelcomePage', { role: role });
-});
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

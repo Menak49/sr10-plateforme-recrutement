@@ -22,8 +22,9 @@ router.get('/parcourir', (req, res) => {
         console.error('Erreur MySQL : ', err);
         return res.status(500).send("Erreur lors de la récupération des offres");
       }
+      role = req.session.role || 'candidat';
   
-      res.render('ParcourirOffre', { offres: results });
+      res.render('ParcourirOffre', {role:role, offres: results });
     });
   });
 
