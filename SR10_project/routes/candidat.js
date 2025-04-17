@@ -29,5 +29,68 @@ router.get('/parcourir', (req, res) => {
   });
 
 
+  router.get('/candidatures', (req, res) => {
+    const userId = req.session.user || 223344556;
+  
+    const query = `
+    SELECT 
+      c.Id AS candidature_id,
+      DATE_FORMAT(c.Date, '%d/%m/%Y') AS date_candidature,
+      f.Title AS titre,
+      org.Name AS organisation,
+      f.Location AS localisation,
+      sp.Name AS contrat,
+      GROUP_CONCAT(pd.Name, '::', pd.Chemin SEPARATOR '||') AS pieces
+    FROM Candidature c
+    JOIN OffreEmploi o ON c.OffreEmploi = o.Id
+    JOIN FichePoste f ON o.FichePoste = f.Id
+    JOIN Organisation org ON f.Organisation = org.Siren
+    LEFT JOIN StatutPoste sp ON f.StatutPoste = sp.Name
+    LEFT JOIN CandidaturePieceDossier cpd ON c.Id = cpd.Candidature
+    LEFT JOIN PieceDossier pd ON cpd.PieceDossier = pd.Id
+    WHERE c.Candidat = ?
+    GROUP BY c.Id, f.Title, org.Name, f.Location, sp.Name, c.Date
+    ORDER BY c.Date DESC
+  `;
+  
+    db.query(query, [userId], (err, results) => {
+      if (err) {
+        console.error("Erreur MySQL :", err);
+        return res.status(500).send("Erreur serveur");
+      }
+      
+  
+      res.render('Candidatures', {
+        role: req.session.role || 'candidat',
+        candidatures: results
+      });
+    });
+});
+
+
+router.get('/privileges', (req, res) => {
+  // Récupérer l'ID de l'utilisateur depuis la session
+  const userId = req.session.user || 223344556;
+  
+  // Si l'utilisateur n'est pas connecté, rediriger vers la page de connexion
+  if (!userId) {
+    return res.redirect('/login');
+  }
+  
+  // Définir le rôle par défaut - candidat
+  const role = req.session.role || 'candidat';
+  
+  // Générer le titre de la page en fonction du rôle
+  const pageTitle = 'Élévation de Privilèges';
+  
+  // Rendre la vue avec les données nécessaires
+  res.render('Privileges', {
+    role: role,
+    title: pageTitle,
+    userId: userId
+  });
+});
+
+
 
 module.exports = router;
