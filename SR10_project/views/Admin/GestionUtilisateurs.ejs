@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gestion des comptes utilisateurs</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-light">
+    <%- include('../partials/navbar', { role: role }) %>
+
+    <div class="container mt-4">
+      <h2 class="fw-bold">GESTION DES COMPTES UTILISATEURS</h2>
+
+      <!-- Barre de recherche -->
+      <div class="input-group mt-3 mb-3 shadow-sm">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Rechercher un utilisateur..."
+        />
+        <button class="btn btn-dark">🔍</button>
+      </div>
+
+      <!-- Grille avec tous les utilisateurs -->
+      <div class="row g-3">
+        <% utilisateurs.forEach(user => { %>
+        <div class="col-md-4 mb-3">
+          <div class="card border shadow-sm h-100">
+            <div class="card-body">
+              <h5 class="fw-bold mb-0"><%= user.nom %></h5>
+              <p class="text-muted"><%= user.email %></p>
+              <div class="d-flex justify-content-end mt-3 gap-2">
+                <button class="btn btn-sm btn-dark">Éditer</button>
+                <button class="btn btn-sm btn-outline-dark">Voir</button>
+                <button class="btn btn-sm btn-outline-danger">Supprimer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+
+      <!-- Pagination -->
+      <nav aria-label="Pagination" class="mt-4">
+        <ul class="pagination justify-content-center">
+          <li class="page-item">
+            <a class="page-link text-dark" href="#">&lt;</a>
+          </li>
+          <li class="page-item active">
+            <a class="page-link bg-dark border-dark" href="#">1</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link text-dark" href="#">2</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link text-dark" href="#">3</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link text-dark" href="#">...</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link text-dark" href="#">9</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link text-dark" href="#">&gt;</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <%- include('../partials/footer') %>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

@@ -5,7 +5,7 @@
     <ul class="navbar-nav ms-auto d-flex flex-row gap-3">
       <% if (role === 'admin') { %>
       <li class="nav-item">
-        <a class="nav-link" href="/admin/utilisateurs"
+        <a class="nav-link" href="/admin/gestionUtilisateurs"
           >Gestion des utilisateurs</a
         >
       </li>
@@ -16,6 +16,9 @@
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/admin/recruteurs">Gestion des recruteurs</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/admin/Privileges">Privilèges</a>
       </li>
       <% } else if (role === 'recruteur') { %>
       <li class="nav-item">

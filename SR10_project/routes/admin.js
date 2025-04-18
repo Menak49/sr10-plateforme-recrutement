@@ -66,4 +66,90 @@ router.get('/privileges', (req, res) => {
       });
     });
 
+
+    router.get('/gestionUtilisateurs', (req, res) => {
+      const role = req.session.role || 'admin';
+      const page = parseInt(req.query.page) || 1;
+      const limit = 9; // Nombre d'utilisateurs par page
+      const offset = (page - 1) * limit;
+      
+      // Récupération du terme de recherche
+      const searchTerm = req.query.search || '';
+      const searchCondition = searchTerm ? 
+        `WHERE Utilisateur.LastName LIKE ? OR Utilisateur.FirstName LIKE ? OR Utilisateur.Email LIKE ?` : 
+        '';
+      
+      // Requête pour récupérer les utilisateurs avec pagination
+      const query = `
+        SELECT Utilisateur.Phone, Utilisateur.LastName, Utilisateur.FirstName, Utilisateur.Email, Utilisateur.Status,
+        CASE 
+          WHEN Administrateur.User IS NOT NULL THEN 'Administrateur'
+          WHEN Recruteur.User IS NOT NULL THEN 'Recruteur'
+          WHEN Candidat.User IS NOT NULL THEN 'Candidat'
+          ELSE 'Utilisateur'
+        END AS Role
+        FROM Utilisateur
+        LEFT JOIN Administrateur ON Utilisateur.Phone = Administrateur.User
+        LEFT JOIN Recruteur ON Utilisateur.Phone = Recruteur.User
+        LEFT JOIN Candidat ON Utilisateur.Phone = Candidat.User
+        ${searchCondition}
+        ORDER BY Utilisateur.LastName ASC
+        LIMIT ? OFFSET ?
+      `;
+      
+      // Paramètres pour la requête
+      const queryParams = searchTerm ? 
+        [`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`, limit, offset] : 
+        [limit, offset];
+      
+      // Requête pour compter le nombre total d'utilisateurs (pour la pagination)
+      const countQuery = `
+        SELECT COUNT(*) as total
+        FROM Utilisateur
+        ${searchCondition}
+      `;
+    
+      // Paramètres pour la requête de comptage
+      const countParams = searchTerm ? 
+        [`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`] : 
+        [];
+    
+      // Exécution des requêtes
+      db.query(query, queryParams, (err, results) => {
+        if (err) {
+          console.error("Erreur MySQL (utilisateurs) :", err);
+          return res.status(500).send("Erreur serveur");
+        }
+        
+        // Transformer les données pour correspondre à la vue
+        const utilisateurs = results.map(user => {
+          return {
+            id: user.Phone,
+            nom: `${user.LastName} ${user.FirstName}`,
+            email: user.Email,
+            status: user.Status,
+            role: user.Role
+          };
+        });
+        
+        db.query(countQuery, countParams, (countErr, countResults) => {
+          if (countErr) {
+            console.error("Erreur MySQL (comptage) :", countErr);
+            return res.status(500).send("Erreur serveur");
+          }
+          
+          const totalUtilisateurs = countResults[0].total;
+          const totalPages = Math.ceil(totalUtilisateurs / limit);
+          
+          res.render('admin/gestionUtilisateurs', {
+            role: role,
+            utilisateurs: utilisateurs,
+            currentPage: page,
+            totalPages: totalPages,
+            searchTerm: searchTerm
+          });
+        });
+      });
+    });
+
 module.exports = router;
