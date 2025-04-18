@@ -13,6 +13,28 @@ router.get('/Accueil', function(req, res, next) {
     res.render('WelcomePage', { role: role });
   });
 
+  router.get('/devenirRecruteur', (req, res) => {
+    const role = req.session.role || 'admin';
+  
+    const query = `
+      SELECT Siren, Name 
+      FROM Organisation
+      ORDER BY Name ASC
+    `;
+  
+    db.query(query, (err, results) => {
+      if (err) {
+        console.error("Erreur MySQL :", err);
+        return res.status(500).send("Erreur serveur");
+      }
+  
+      res.render('Privileges/DevenirRecruteur', {
+        role: role,
+        organisations: results
+      });
+    });
+  });
+
 router.get('/privileges', (req, res) => {
     // Récupérer l'ID de l'utilisateur depuis la session
     const userId = req.session.user || 1234567890;
@@ -33,5 +55,15 @@ router.get('/privileges', (req, res) => {
     });
   });
 
+
+  router.get('/creerOrganisation', (req, res) => {
+    const role = req.session.role || 'recruteur';
+  
+    
+  
+      res.render('Privileges/creerOrga', {
+        role: role
+      });
+    });
 
 module.exports = router;

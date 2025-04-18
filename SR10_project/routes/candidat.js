@@ -103,6 +103,36 @@ router.get('/privileges', (req, res) => {
   });
 });
 
+router.get('/devenirRecruteur', (req, res) => {
+  const role = req.session.role || 'candidat';
 
+  const query = `
+    SELECT Siren, Name 
+    FROM Organisation
+    ORDER BY Name ASC
+  `;
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error("Erreur MySQL :", err);
+      return res.status(500).send("Erreur serveur");
+    }
+
+    res.render('Privileges/DevenirRecruteur', {
+      role: role,
+      organisations: results
+    });
+  });
+});
+
+router.get('/creerOrganisation', (req, res) => {
+  const role = req.session.role || 'candidat';
+
+  
+
+    res.render('Privileges/creerOrga', {
+      role: role
+    });
+  });
 
 module.exports = router;
