@@ -13,10 +13,33 @@ router.get('/Accueil', function(req, res, next) {
 });
 
 
-router.get('/ajouterFicheDePoste', function(req, res, next) {
+router.get('/ajouterOffre', (req, res) => {
+  const query = `
+    SELECT 
+      fp.Id,
+      fp.Title,
+      org.Name AS organisation
+    FROM FichePoste fp
+    LEFT JOIN Organisation org ON fp.Organisation = org.Siren
+  `;
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Erreur MySQL :', err);
+      return res.status(500).send("Erreur lors de la récupération des fiches de poste");
+    }
+
+    res.render('Recruteur/PublierOffre', {
+      fiches: results,
+      role : 'recruteur'
+    });
+  });
+});
+
+
+  router.get('/ajouterFicheDePoste', function(req, res, next) {
     res.render('Recruteur/PublierFichePoste', {role:'recruteur', title: 'Accueil', text: 'Bienvenue sur notre site de gestion des offres d\'emploi !' });
   });
-
 
   router.get('/gererFicheDePoste', (req, res) => {
     const query = `
