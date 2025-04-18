@@ -151,16 +151,14 @@ router.get('/privileges', (req, res) => {
     router.get('/GestionDemandeRecruteur', (req, res) => {
       const role = req.session.role || 'admin';
       const page = parseInt(req.query.page) || 1;
-      const limit = 9; // Nombre de demandes par page
+      const limit = 9; 
       const offset = (page - 1) * limit;
       
-      // Récupération du terme de recherche
       const searchTerm = req.query.search || '';
       const searchCondition = searchTerm ? 
         `WHERE u.LastName LIKE ? OR u.FirstName LIKE ? OR u.Email LIKE ? OR q.Message LIKE ?` : 
         '';
       
-      // Requête pour récupérer les demandes avec pagination
       const query = `
   SELECT
     q.Id,
@@ -183,12 +181,10 @@ router.get('/privileges', (req, res) => {
   LIMIT ? OFFSET ?
 `;
       
-      // Paramètres pour la requête
       const queryParams = searchTerm ? 
         [`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`, limit, offset] : 
         [limit, offset];
       
-      // Requête pour compter le nombre total de demandes (pour la pagination)
       const countQuery = `
         SELECT COUNT(*) as total
         FROM RecruteurBecomeQuery q
@@ -196,21 +192,18 @@ router.get('/privileges', (req, res) => {
         ${searchCondition}
       `;
     
-      // Paramètres pour la requête de comptage
       const countParams = searchTerm ? 
         [`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`] : 
         [];
         console.log("Query params:", queryParams);
 console.log("Count params:", countParams);
     
-      // Exécution des requêtes
       db.query(query, queryParams, (err, results) => {
         if (err) {
           console.error("Erreur MySQL (demandes) :", err);
           return res.status(500).send("Erreur serveur f");
         }
         
-        // Transformer les données pour correspondre à la vue
         const demandes = results.map(demande => {
           return {
             id: demande.Id,
