@@ -15,7 +15,6 @@
     <div class="container mt-4">
       <h2 class="fw-bold">GESTION DES COMPTES UTILISATEURS</h2>
 
-      <!-- Barre de recherche -->
       <div class="input-group mt-3 mb-3 shadow-sm">
         <input
           type="text"
@@ -25,7 +24,6 @@
         <button class="btn btn-dark">🔍</button>
       </div>
 
-      <!-- Grille avec tous les utilisateurs -->
       <div class="row g-3">
         <% utilisateurs.forEach(user => { %>
         <div class="col-md-4 mb-3">
@@ -44,7 +42,6 @@
         <% }) %>
       </div>
 
-      <!-- Pagination -->
       <nav aria-label="Pagination" class="mt-4">
         <ul class="pagination justify-content-center">
           <li class="page-item">

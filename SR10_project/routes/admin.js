@@ -70,16 +70,14 @@ router.get('/privileges', (req, res) => {
     router.get('/gestionUtilisateurs', (req, res) => {
       const role = req.session.role || 'admin';
       const page = parseInt(req.query.page) || 1;
-      const limit = 9; // Nombre d'utilisateurs par page
+      const limit = 9;
       const offset = (page - 1) * limit;
       
-      // Récupération du terme de recherche
       const searchTerm = req.query.search || '';
       const searchCondition = searchTerm ? 
         `WHERE Utilisateur.LastName LIKE ? OR Utilisateur.FirstName LIKE ? OR Utilisateur.Email LIKE ?` : 
         '';
       
-      // Requête pour récupérer les utilisateurs avec pagination
       const query = `
         SELECT Utilisateur.Phone, Utilisateur.LastName, Utilisateur.FirstName, Utilisateur.Email, Utilisateur.Status,
         CASE 
@@ -97,31 +95,26 @@ router.get('/privileges', (req, res) => {
         LIMIT ? OFFSET ?
       `;
       
-      // Paramètres pour la requête
       const queryParams = searchTerm ? 
         [`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`, limit, offset] : 
         [limit, offset];
       
-      // Requête pour compter le nombre total d'utilisateurs (pour la pagination)
       const countQuery = `
         SELECT COUNT(*) as total
         FROM Utilisateur
         ${searchCondition}
       `;
     
-      // Paramètres pour la requête de comptage
       const countParams = searchTerm ? 
         [`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`] : 
         [];
     
-      // Exécution des requêtes
       db.query(query, queryParams, (err, results) => {
         if (err) {
           console.error("Erreur MySQL (utilisateurs) :", err);
           return res.status(500).send("Erreur serveur");
         }
         
-        // Transformer les données pour correspondre à la vue
         const utilisateurs = results.map(user => {
           return {
             id: user.Phone,
@@ -151,5 +144,181 @@ router.get('/privileges', (req, res) => {
         });
       });
     });
+
+
+
+
+    router.get('/GestionDemandeRecruteur', (req, res) => {
+      const role = req.session.role || 'admin';
+      const page = parseInt(req.query.page) || 1;
+      const limit = 9; // Nombre de demandes par page
+      const offset = (page - 1) * limit;
+      
+      // Récupération du terme de recherche
+      const searchTerm = req.query.search || '';
+      const searchCondition = searchTerm ? 
+        `WHERE u.LastName LIKE ? OR u.FirstName LIKE ? OR u.Email LIKE ? OR q.Message LIKE ?` : 
+        '';
+      
+      // Requête pour récupérer les demandes avec pagination
+      const query = `
+  SELECT
+    q.Id,
+    q.Message,
+    u.Phone as UserId,
+    u.LastName,
+    u.FirstName,
+    u.Email,
+    u.Status as UserStatus,
+    'Non disponible' as FormattedDate,
+    CASE
+      WHEN r.User IS NOT NULL THEN 'Validé'
+      ELSE 'En attente'
+    END as StatutDemande
+  FROM RecruteurBecomeQuery q
+  JOIN Utilisateur u ON q.Candidat = u.Phone
+  LEFT JOIN Recruteur r ON u.Phone = r.User
+  ${searchCondition}
+  ORDER BY q.Id DESC
+  LIMIT ? OFFSET ?
+`;
+      
+      // Paramètres pour la requête
+      const queryParams = searchTerm ? 
+        [`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`, limit, offset] : 
+        [limit, offset];
+      
+      // Requête pour compter le nombre total de demandes (pour la pagination)
+      const countQuery = `
+        SELECT COUNT(*) as total
+        FROM RecruteurBecomeQuery q
+        JOIN Utilisateur u ON q.Candidat = u.Phone
+        ${searchCondition}
+      `;
+    
+      // Paramètres pour la requête de comptage
+      const countParams = searchTerm ? 
+        [`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`] : 
+        [];
+        console.log("Query params:", queryParams);
+console.log("Count params:", countParams);
+    
+      // Exécution des requêtes
+      db.query(query, queryParams, (err, results) => {
+        if (err) {
+          console.error("Erreur MySQL (demandes) :", err);
+          return res.status(500).send("Erreur serveur f");
+        }
+        
+        // Transformer les données pour correspondre à la vue
+        const demandes = results.map(demande => {
+          return {
+            id: demande.Id,
+            nom: `${demande.LastName} ${demande.FirstName}`,
+            email: demande.Email,
+            message: demande.Message,
+            date: demande.FormattedDate,
+            statut: demande.StatutDemande
+          };
+        });
+        
+        db.query(countQuery, countParams, (countErr, countResults) => {
+          if (countErr) {
+            console.error("Erreur MySQL (comptage) :", countErr);
+            return res.status(500).send("Erreur serveur");
+          }
+          
+          const totalDemandes = countResults[0].total;
+          const totalPages = Math.ceil(totalDemandes / limit);
+          
+          res.render('admin/GestionDemandeRecruteur', {
+            role: role,
+            demandes: demandes,
+            currentPage: page,
+            totalPages: totalPages,
+            searchTerm: searchTerm
+          });
+        });
+      });
+    });
+
+
+
+
+    router.get('/organisations', (req, res) => {
+      const role = req.session.role || 'admin';
+      const page = parseInt(req.query.page) || 1;
+      const limit = 9;
+      const offset = (page - 1) * limit;
+    
+      const searchTerm = req.query.search || '';
+      const searchCondition = searchTerm
+        ? `WHERE o.Name LIKE ? OR o.Headquarters LIKE ? OR o.Type LIKE ? OR o.Status LIKE ?`
+        : '';
+    
+      const query = `
+        SELECT
+          o.Siren,
+          o.Name AS Nom,
+          o.Status AS Statut,
+          o.Headquarters AS Localisation,
+          o.Type
+        FROM Organisation o
+        ${searchCondition}
+        ORDER BY o.Siren DESC
+        LIMIT ? OFFSET ?
+      `;
+    
+      const queryParams = searchTerm
+        ? [`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`, limit, offset]
+        : [limit, offset];
+    
+      const countQuery = `
+        SELECT COUNT(*) AS total
+        FROM Organisation o
+        ${searchCondition}
+      `;
+    
+      const countParams = searchTerm
+        ? [`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`]
+        : [];
+    
+      db.query(query, queryParams, (err, results) => {
+        if (err) {
+          console.error("Erreur MySQL (organisations) :", err);
+          return res.status(500).send("Erreur serveur");
+        }
+    
+        const organisations = results.map(org => ({
+          siren: org.Siren,
+          nom: org.Nom,
+          statut: org.Statut,
+          localisation: org.Localisation,
+          type: org.Type || 'Non spécifié'
+        }));
+    
+        db.query(countQuery, countParams, (countErr, countResults) => {
+          if (countErr) {
+            console.error("Erreur MySQL (comptage) :", countErr);
+            return res.status(500).send("Erreur serveur");
+          }
+    
+          const totalOrganisations = countResults[0].total;
+          const totalPages = Math.ceil(totalOrganisations / limit);
+    
+          res.render('admin/GestionOrganisation', {
+            role: role,
+            organisations: organisations,
+            currentPage: page,
+            totalPages: totalPages,
+            searchTerm: searchTerm
+          });
+        });
+      });
+    });
+    
+
+
+
 
 module.exports = router;
