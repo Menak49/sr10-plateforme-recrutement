@@ -34,7 +34,15 @@
               <div class="d-flex justify-content-end mt-3 gap-2">
                 <button class="btn btn-sm btn-dark">Éditer</button>
                 <button class="btn btn-sm btn-outline-dark">Voir</button>
-                <button class="btn btn-sm btn-outline-danger">Supprimer</button>
+                <button
+                  class="btn btn-sm btn-outline-danger"
+                  data-bs-toggle="modal"
+                  data-bs-target="#deleteModal"
+                >
+                  Supprimer
+                </button>
+                <%- include('../partials/Confirmation', { message: "Êtes-vous sûr de vouloir supprimer ce compte utilisateur ?", action:
+                "/delete-user" }) %>
               </div>
             </div>
           </div>

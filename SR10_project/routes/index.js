@@ -17,4 +17,13 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Accueil', text: 'Bienvenue sur notre site de gestion des offres d\'emploi !' });
 });
 
+router.get('/SignUp', function(req, res, next) {
+  res.render('SignUp', { title: 'Accueil', text: 'Bienvenue sur notre site de gestion des offres d\'emploi !' });
+});
+
+router.get('/LogIn', function(req, res, next) {
+  res.render('LogIn', { title: 'Accueil', text: 'Bienvenue sur notre site de gestion des offres d\'emploi !' });
+});
+
+
 module.exports = router;
