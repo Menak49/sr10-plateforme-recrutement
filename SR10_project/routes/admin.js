@@ -48,7 +48,7 @@ router.get('/privileges', (req, res) => {
     
     const pageTitle = 'Élévation de Privilèges';
     
-    res.render('Privileges', {
+    res.render('Privileges/Privileges', {
       role: role,
       title: pageTitle,
       userId: userId
