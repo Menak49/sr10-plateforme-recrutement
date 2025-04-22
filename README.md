@@ -17,9 +17,9 @@ npm start
 Se connecter au VPN de l'utc pour avoir accès à la base de données puis ouvrir un navigateur et taper : 
 ```http://localhost:3000/Accueil```
 
-## Explication de l'arborescence des routes (controleur)
+## Explication de l'arborescence des routes (contrôleur)
 
-Il  a trois espaces utilisateurs différents : **candidat, recruteur, admin**. Par défaut, l'utilisateur est considéré comme un candidat. Vous pouvez changer d'espaces grâces aux boutons en bas à droite des pages d'accueil.
+Il  a trois espaces utilisateurs différents : **candidat, recruteur, admin**. Par défaut, l'utilisateur est considéré comme un candidat. Vous pouvez changer d'espaces grâce aux boutons en bas à droite des pages d'accueil.
 Les routes sont les suivantes:
 - espace candidat: ```http://localhost:3000/Accueil```
 - espace recruteur : ```http://localhost:3000/recruteur/accueil```
