@@ -1,5 +1,12 @@
 # Projet SR10 - TD03
 
+## Technologies utilisées
+
+On utilise : 
+- le framework ```Express``` qui implémente l'architecture MVC (Modèle Vue Contrôleur)
+- le serveur web ```Node.js```
+
+
 ## Pour faire fonctionner le serveur
 
 Cloner le dépôt puis ouvrir un terminal et taper: 
@@ -7,8 +14,7 @@ Cloner le dépôt puis ouvrir un terminal et taper:
 cd .\SR10\SR10_project\
 npm start
 ```
-
-Ouvrir un navigateur et taper : 
+Se connecter au VPN de l'utc pour avoir accès à la base de données puis ouvrir un navigateur et taper : 
 ```http://localhost:3000/Accueil```
 
 ## Explication de l'arborescence des routes (controleur)
@@ -36,4 +42,6 @@ Sur les trois espaces utilisateurs, des fonctionnalités différentes sont progr
 	- Privilèges : ```/admin/Privileges```
 		- Devenir recruteur : ```/admin/devenirRecruteur```
 		- Créer une organisation : ```/adim/creerOrganisation```
+
+*Lien vers le figma : [Conception des routes](https://www.figma.com/design/l7j4jq5fwSGC3Mfd4yWi7d/SR10-Maquette?node-id=0-1&t=OZ16zT2FTczzaGUG-1)*
 
