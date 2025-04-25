@@ -30,13 +30,12 @@
             <div><small>Candidature du <%= c.date_candidature %></small></div>
           </div>
 
-          <!-- Boutons à droite -->
+
           <div class="d-flex justify-content-end gap-2">
             <a href="#" class="btn btn-sm btn-outline-danger">Annuler</a>
             <a href="#" class="btn btn-sm btn-outline-secondary">Modifier</a>
           </div>
 
-          <!-- Pièces jointes dans un accordéon si présentes -->
           <% if (c.pieces) { const docs = c.pieces.split('||'); %>
           <div class="mt-3">
             <p class="mb-1">
