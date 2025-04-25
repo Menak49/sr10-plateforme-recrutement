@@ -21,7 +21,7 @@ Se connecter au VPN de l'utc pour avoir accès à la base de données puis ouvri
 
 Il  a trois espaces utilisateurs différents : **candidat, recruteur, admin**. Par défaut, l'utilisateur est considéré comme un candidat. Vous pouvez changer d'espaces grâce aux boutons en bas à droite des pages d'accueil.
 Les routes sont les suivantes:
-- espace candidat: ```http://localhost:3000/Accueil```
+- espace candidat: ```http://localhost:3000/candidat/Accueil```
 - espace recruteur : ```http://localhost:3000/recruteur/accueil```
 - espace admin : ```http://localhost:3000/admin/accueil```
 
