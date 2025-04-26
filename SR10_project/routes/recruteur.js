@@ -12,26 +12,89 @@ router.get('/Accueil', function(req, res, next) {
   res.render('WelcomePage', { role: role });
 });
 
-
 router.get('/ajouterOffre', (req, res) => {
-  const query = `
+
+  const getFichesQuery = `
     SELECT 
       fp.Id,
       fp.Title,
       org.Name AS organisation
     FROM FichePoste fp
-    LEFT JOIN Organisation org ON fp.Organisation = org.Siren
+    JOIN Organisation org ON fp.Organisation = org.Siren
   `;
 
-  db.query(query, (err, results) => {
+  db.query(getFichesQuery, (err, fiches) => {
     if (err) {
-      console.error('Erreur MySQL :', err);
-      return res.status(500).send("Erreur lors de la récupération des fiches de poste");
+      console.error('Erreur MySQL:', err);
+      return res.status(500).send("Erreur lors de la récupération des fiches");
     }
 
+
     res.render('Recruteur/PublierOffre', {
-      fiches: results,
-      role : 'recruteur'
+      mode: 'create',
+      fiches: fiches,
+      role: 'recruteur',
+      defaultValues: {
+        state: 'NotPublished',
+        expiryDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+                    .toISOString()
+                    .split('T')[0]
+      }
+    });
+  });
+});
+
+router.get('/modifierOffre/:id', (req, res) => {
+  const offreId = req.params.id;
+
+  const getOffreQuery = `
+    SELECT 
+      Id,
+      FichePoste,
+      State,
+      DATE_FORMAT(ExpiryDate, '%Y-%m-%d') AS ExpiryDateFormatted,
+      Details,
+      Slots
+    FROM OffreEmploi 
+    WHERE Id = ?
+  `;
+
+  db.query(getOffreQuery, [offreId], (err, offreResults) => {
+    if (err || offreResults.length === 0) {
+      console.error('Erreur ou offre non trouvée:', err);
+      return res.status(404).send("Offre non trouvée");
+    }
+
+    const offre = offreResults[0];
+
+    const getFichesQuery = `
+      SELECT 
+        fp.Id,
+        fp.Title, 
+        org.Name AS organisation
+      FROM FichePoste fp
+      JOIN Organisation org ON fp.Organisation = org.Siren
+    `;
+
+    db.query(getFichesQuery, (err, fiches) => {
+      if (err) {
+        console.error('Erreur MySQL (fiches):', err);
+        return res.status(500).send("Erreur lors de la récupération des fiches");
+      }
+
+      res.render('Recruteur/PublierOffre', {
+        mode: 'edit',
+        offre: {
+          id: offre.Id,
+          FichePoste: offre.FichePoste,
+          State: offre.State,
+          ExpiryDate: offre.ExpiryDateFormatted,
+          Details: offre.Details,
+          Slots: offre.Slots
+        },
+        fiches: fiches,
+        role: 'recruteur'
+      });
     });
   });
 });

@@ -3,46 +3,46 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Publier une offre</title>
+    <title><%= mode === 'edit' ? 'Modifier une offre' : 'Publier une offre' %></title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
   </head>
   <body class="bg-dark text-light">
-    <%- include('../partials/navbar', { title: 'Publier une offre' }) %>
+    <%- include('../partials/navbar', { title: mode === 'edit' ? 'Modifier une offre' : 'Publier une offre' }) %>
 
     <div class="container mt-4">
       <div class="card bg-light text-dark">
         <div class="card-body">
-          <h4 class="card-title mb-4">PUBLIER UNE NOUVELLE OFFRE</h4>
+          <h4 class="card-title mb-4"><%= mode === 'edit' ? 'MODIFIER UNE OFFRE' : 'PUBLIER UNE NOUVELLE OFFRE' %></h4>
 
-          <form method="POST" action="/offres/ajouter">
-            <!-- Fiche de poste -->
+          <div class="alert mb-4">
+            <small class="text-muted">
+              <i class="bi bi-info-circle me-1"></i>
+              Remplissez ce formulaire pour <%= mode === 'edit' ? 'modifier' : 'publier' %> votre offre d'emploi.
+            </small>
+          </div>
+
+          <form action="<%= mode === 'edit' ? '/offres/' + offre.id + '/update' : '/offres/ajouter' %>" method="POST">
+
             <div class="mb-3">
-              <label for="fichePosteId" class="form-label"
-                >Fiche de poste</label
-              >
+              <label for="fichePosteId" class="form-label">Fiche de poste</label>
               <select
                 class="form-select form-select-sm"
                 id="fichePosteId"
                 name="fichePosteId"
                 required
               >
-                <option value="" disabled selected>Choisissez une fiche de poste</option>
+                <option value="" disabled <%= mode === 'edit' ? '' : 'selected' %>>Choisissez une fiche de poste</option>
                 <% fiches.forEach(fiche => { %>
-                
-                  Choisissez une fiche de poste
-                </option>
-
-                <option value="<%= fiche.id %>">
+                <option value="<%= fiche.id %>" <%= mode === 'edit' && offre.FichePoste == fiche.id ? 'selected' : '' %>>
                   <%= fiche.Title %> - <%= fiche.organisation %>
                 </option>
                 <% }) %>
               </select>
             </div>
 
-            <!-- State -->
             <div class="mb-3">
               <label for="state" class="form-label">État de l'offre</label>
               <select
@@ -51,13 +51,13 @@
                 name="state"
                 required
               >
-                <option value="brouillon">Brouillon</option>
-                <option value="publiée">Publiée</option>
-                <option value="fermée">Fermée</option>
+                <option value="NotPublished" <%= mode === 'edit' && offre.State === 'NotPublished' ? 'selected' : '' %>>Brouillon</option>
+                <option value="Editing" <%= mode === 'edit' && offre.State === 'Editing' ? 'selected' : '' %>>En cours d'édition</option>
+                <option value="Published" <%= mode === 'edit' && offre.State === 'Published' ? 'selected' : '' %>>Publiée</option>
+                <option value="Expired" <%= mode === 'edit' && offre.State === 'Expired' ? 'selected' : '' %>>Expirée</option>
               </select>
             </div>
 
-            <!-- Expiry Date -->
             <div class="mb-3">
               <label for="expiryDate" class="form-label">Date limite</label>
               <input
@@ -65,44 +65,39 @@
                 class="form-control form-control-sm"
                 id="expiryDate"
                 name="expiryDate"
+                value="<%= mode === 'edit' ? offre.ExpiryDate : '' %>"
                 required
               />
             </div>
 
-            <!-- Details -->
             <div class="mb-3">
-              <label for="details" class="form-label"
-                >Détails supplémentaires</label
-              >
+              <label for="details" class="form-label">Détails supplémentaires</label>
               <textarea
                 class="form-control form-control-sm"
                 id="details"
                 name="details"
                 rows="4"
                 placeholder="Compléments d'information sur l'offre"
-              ></textarea>
+              ><%= mode === 'edit' ? offre.Details : '' %></textarea>
             </div>
 
-            <!-- Slots -->
             <div class="mb-3">
-              <label for="slots" class="form-label"
-                >Nombre de postes ouverts</label
-              >
+              <label for="slots" class="form-label">Nombre de postes ouverts</label>
               <input
                 type="number"
                 class="form-control form-control-sm"
                 id="slots"
                 name="slots"
                 min="1"
+                value="<%= mode === 'edit' ? offre.Slots : '' %>"
                 required
               />
             </div>
 
-            <!-- Boutons -->
             <div class="text-end">
-              <a href="/" class="btn btn-secondary me-2">Annuler</a>
+              <a href="/offres" class="btn btn-secondary me-2">Annuler</a>
               <button type="submit" class="btn btn-dark">
-                Publier l'offre
+                <%= mode === 'edit' ? 'Mettre à jour' : 'Publier' %>
               </button>
             </div>
           </form>
