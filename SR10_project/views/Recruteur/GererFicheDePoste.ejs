@@ -43,9 +43,9 @@
                 <%= fiche.minSalaire %>€ - <%= fiche.maxSalaire %>€ / semaine
               </p>
               <div class="d-flex justify-content-end gap-2">
-                <a href="/fiches/<%= fiche.id %>" class="btn btn-dark"
-                  >Afficher</a
-                >
+                <a href="/supprimerFicheDePoste/<%= fiche.id %>" class="btn btn-outline-danger">Supprimer</a>
+
+                <a href="modifierFicheDePoste/<%= fiche.id %>" class="btn btn-outline-secondary">Modifier</a>
               </div>
             </div>
           </div>

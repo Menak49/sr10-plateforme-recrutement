@@ -37,9 +37,87 @@ router.get('/ajouterOffre', (req, res) => {
 });
 
 
-  router.get('/ajouterFicheDePoste', function(req, res, next) {
-    res.render('Recruteur/PublierFichePoste', {role:'recruteur', title: 'Accueil', text: 'Bienvenue sur notre site de gestion des offres d\'emploi !' });
+router.get('/ajouterFicheDePoste', function(req, res, next) {
+  db.query('SELECT * FROM StatutPoste', (err, statuts) => {
+    if (err) {
+      console.error('Erreur lors de la récupération des statuts :', err);
+      return res.status(500).send('Erreur serveur');
+    }
+    
+    db.query('SELECT * FROM TypeMetier', (err, metiers) => {
+      if (err) {
+        console.error('Erreur lors de la récupération des métiers :', err);
+        return res.status(500).send('Erreur serveur');
+      }
+      
+      db.query('SELECT Siren, Name FROM Organisation', (err, organisations) => {
+        if (err) {
+          console.error('Erreur lors de la récupération des organisations :', err);
+          return res.status(500).send('Erreur serveur');
+        }
+        
+        res.render('Recruteur/PublierFichePoste', {
+          mode: 'create',
+          fiche: {}, 
+          statuts: statuts,
+          metiers: metiers,
+          organisations: organisations,
+          role: 'recruteur',
+          title: 'Créer une fiche de poste'
+        });
+      });
+    });
   });
+});
+
+
+router.get('/modifierFicheDePoste/:id', function(req, res, next) {
+  const ficheId = req.params.id;
+  
+  db.query('SELECT * FROM FichePoste WHERE Id = ?', [ficheId], (err, fiches) => {
+    if (err) {
+      console.error('Erreur lors de la récupération de la fiche :', err);
+      return res.status(500).send('Erreur serveur');
+    }
+    
+    if (fiches.length === 0) {
+      return res.status(404).send('Fiche de poste non trouvée');
+    }
+    
+    const fiche = fiches[0];
+    
+    db.query('SELECT * FROM StatutPoste', (err, statuts) => {
+      if (err) {
+        console.error('Erreur lors de la récupération des statuts :', err);
+        return res.status(500).send('Erreur serveur');
+      }
+      
+      db.query('SELECT * FROM TypeMetier', (err, metiers) => {
+        if (err) {
+          console.error('Erreur lors de la récupération des métiers :', err);
+          return res.status(500).send('Erreur serveur');
+        }
+        
+        db.query('SELECT Siren, Name FROM Organisation', (err, organisations) => {
+          if (err) {
+            console.error('Erreur lors de la récupération des organisations :', err);
+            return res.status(500).send('Erreur serveur');
+          }
+          
+          res.render('Recruteur/PublierFichePoste', {
+            mode: 'edit',
+            fiche: fiche,
+            statuts: statuts,
+            metiers: metiers,
+            organisations: organisations,
+            role: 'recruteur',
+            title: 'Modifier une fiche de poste'
+          });
+        });
+      });
+    });
+  });
+});
 
   router.get('/gererFicheDePoste', (req, res) => {
     const query = `

@@ -3,82 +3,87 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Publier une offre</title>
+    <title><%= mode === 'edit' ? 'Modifier une fiche de poste' : 'Créer une fiche de poste' %></title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
   </head>
   <body class="bg-dark text-light">
-    <%- include('../partials/navbar', { title: 'Mes Candidatures' }) %>
+    <%- include('../partials/navbar', { title: mode === 'edit' ? 'Modifier une fiche de poste' : 'Créer une fiche de poste' }) %>
 
     <div class="container mt-3">
       <div class="card bg-light text-dark mb-3">
         <div class="card-body">
-          <h4 class="card-title mb-4">PUBLIER UNE NOUVELLE OFFRE 1/2</h4>
+          <h4 class="card-title mb-4"><%= mode === 'edit' ? 'MODIFIER UNE FICHE DE POSTE' : 'CRÉER UNE NOUVELLE FICHE DE POSTE' %></h4>
 
           <div class="alert alert-light mb-4">
             <small class="text-muted">
               <i class="bi bi-info-circle me-1"></i>
-              Vous devez d’abord remplir toutes les informations de ce
-              formulaire qui constituera la fiche de poste liée à l’offre. Les
+              Vous devez remplir toutes les informations de ce
+              formulaire qui constituera la fiche de poste. Les
               candidats auront accès à ces informations.
             </small>
           </div>
 
-          <form>
-
-
+          <form action="<%= mode === 'edit' ? '/fiches/' + fiche.id + '/update' : '/fiches/create' %>" method="POST">
             <div class="mb-3">
-              <label for="offerTitle" class="form-label"
-                >Intitulé de l'offre</label
-              >
+              <label for="title" class="form-label">Intitulé de l'offre</label>
               <input
                 type="text"
                 class="form-control form-control-sm"
-                id="offerTitle"
+                id="title"
+                name="title"
+                value="<%= mode === 'edit' ? fiche.Title : '' %>"
+                required
               />
             </div>
 
             <div class="mb-3">
-              <label for="jobStatus" class="form-label">Statut du poste</label>
+              <label for="statutPoste" class="form-label">Statut du poste</label>
+              <select class="form-select form-select-sm" id="statutPoste" name="statutPoste" required>
+                <option value="" disabled <%= mode === 'edit' ? '' : 'selected' %>>Sélectionnez un statut</option>
+                <% statuts.forEach(statut => { %>
+                <option value="<%= statut.Name %>" <%= mode === 'edit' && fiche.StatutPoste === statut.Name ? 'selected' : '' %>>
+                  <%= statut.Name %>
+                </option>
+                <% }) %>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="supervisor" class="form-label">Responsable hiérarchique</label>
               <input
                 type="text"
                 class="form-control form-control-sm"
-                id="jobStatus"
+                id="supervisor"
+                name="supervisor"
+                value="<%= mode === 'edit' ? fiche.Supervisor : '' %>"
+                required
               />
             </div>
 
             <div class="mb-3">
-              <label for="manager" class="form-label"
-                >Responsable hiérarchique</label
-              >
-              <input
-                type="text"
-                class="form-control form-control-sm"
-                id="manager"
-              />
+              <label for="type" class="form-label">Type de métier</label>
+              <select class="form-select form-select-sm" id="type" name="type" required>
+                <option value="" disabled <%= mode === 'edit' ? '' : 'selected' %>>Sélectionnez un type</option>
+                <% metiers.forEach(metier => { %>
+                <option value="<%= metier.Name %>" <%= mode === 'edit' && fiche.Type === metier.Name ? 'selected' : '' %>>
+                  <%= metier.Name %>
+                </option>
+                <% }) %>
+              </select>
             </div>
 
             <div class="mb-3">
-              <label for="vehicleType" class="form-label"
-                >Type de véhicule</label
-              >
+              <label for="location" class="form-label">Localisation de la mission</label>
               <input
                 type="text"
                 class="form-control form-control-sm"
-                id="vehicleType"
-              />
-            </div>
-
-            <div class="mb-3">
-              <label for="jobLocation" class="form-label"
-                >Localisation de la mission</label
-              >
-              <input
-                type="text"
-                class="form-control form-control-sm"
-                id="jobLocation"
+                id="location"
+                name="location"
+                value="<%= mode === 'edit' ? fiche.Location : '' %>"
+                required
               />
             </div>
 
@@ -88,40 +93,73 @@
                 type="text"
                 class="form-control form-control-sm"
                 id="workSchedule"
+                name="workSchedule"
+                value="<%= mode === 'edit' ? fiche.WorkSchedule : '' %>"
+                required
               />
             </div>
-          </form>
-        </div>
+          </div>
       </div>
 
       <div class="card bg-light text-dark">
         <div class="card-body">
-          <form>
-            <div class="mb-3">
-              <label for="salarRange" class="form-label"
-                >Fourchette de salaire</label
-              >
-              <input
-                type="text"
-                class="form-control form-control-sm"
-                id="salarRange"
-              />
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="minSalary" class="form-label">Salaire minimum</label>
+                <div class="input-group">
+                  <input
+                    type="number"
+                    class="form-control form-control-sm"
+                    id="minSalary"
+                    name="minSalary"
+                    value="<%= mode === 'edit' ? fiche.MinSalary : '' %>"
+                    required
+                  />
+                  <span class="input-group-text">€</span>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="maxSalary" class="form-label">Salaire maximum</label>
+                <div class="input-group">
+                  <input
+                    type="number"
+                    class="form-control form-control-sm"
+                    id="maxSalary"
+                    name="maxSalary"
+                    value="<%= mode === 'edit' ? fiche.MaxSalary : '' %>"
+                    required
+                  />
+                  <span class="input-group-text">€</span>
+                </div>
+              </div>
             </div>
 
             <div class="mb-3">
-              <label for="jobDescription" class="form-label">Description</label>
+              <label for="description" class="form-label">Description</label>
               <textarea
                 class="form-control form-control-sm"
-                id="jobDescription"
+                id="description"
+                name="description"
                 rows="4"
-              ></textarea>
+                required
+              ><%= mode === 'edit' ? fiche.Description : '' %></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label for="organisation" class="form-label">Organisation</label>
+              <select class="form-select form-select-sm" id="organisation" name="organisation" required>
+                <option value="" disabled <%= mode === 'edit' ? '' : 'selected' %>>Sélectionnez une organisation</option>
+                <% organisations.forEach(org => { %>
+                <option value="<%= org.Siren %>" <%= mode === 'edit' && fiche.Organisation == org.Siren ? 'selected' : '' %>>
+                  <%= org.Name %>
+                </option>
+                <% }) %>
+              </select>
             </div>
 
             <div class="text-end mt-4">
-              <button type="button" class="btn btn-secondary me-2">
-                Annuler
-              </button>
-              <button type="submit" class="btn btn-dark">Continuer</button>
+              <a href="/fiches" class="btn btn-secondary me-2">Annuler</a>
+              <button type="submit" class="btn btn-dark"><%= mode === 'edit' ? 'Mettre à jour' : 'Créer' %></button>
             </div>
           </form>
         </div>
