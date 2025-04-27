@@ -19,83 +19,83 @@
         <div class="input-group mt-3 mb-3 shadow-sm">
           <input
             type="text"
+            name="search"
             class="form-control"
-            placeholder="Rechercher un utilisateur..."
+            placeholder="Rechercher une organisation..."
+            value="<%= searchTerm %>"
           />
           <button type="submit" class="btn btn-dark">🔍</button>
         </div>
       </form>
 
-      <div class="row">
-        <% organisations.forEach(function(org) { %>
-        <div class="col-md-4">
-          <div class="card mb-4 shadow-sm">
-            <div class="card-body">
-              <h5 class="card-title"><%= org.nom %></h5>
-
-              <% if (org.statut === 'StandBy') { %>
-              <p class="card-text">
-                <strong>Statut :</strong>
-                <span class="text-warning">En attente</span>
-              </p>
-              <p class="card-text"><strong>SIREN :</strong> <%= org.siren %></p>
-              <p class="card-text">
-                <strong>Localisation :</strong> <%= org.localisation %>
-              </p>
-              <p class="card-text"><strong>Type :</strong> <%= org.type %></p>
-
-              <div class="d-flex justify-content-between mt-3">
-                  <input type="hidden"
-                   name="siren"
-                   />
-                  <button type="submit" class="btn btn-outline-success"
-                  value="<%= org.siren %>"
-                  data-bs-toggle="modal"
-                  data-bs-target="#validModalOrganisation-<%= org.siren %>">Valider</button>
-                  <input type="hidden" name="siren" value="<%= org.siren %>" />
-                  <button type="submit" class="btn btn-outline-danger"
-                  value="<%= org.siren %>"
-                  data-bs-toggle="modal"
-                  data-bs-target="#deleteModalOrganisation-<%= org.siren %>">Refuser</button>
-                  <%- include('../partials/Confirmation', { 
-                    modalId: 'deleteModalOrganisation-' + org.siren, 
-                    message: 'Êtes-vous sûr de vouloir refuser cette organisation ?', 
-                    action: '/RefuserOrganisation/'+ org.siren, 
-                    siren: org.siren 
-                  }) %>
-                  <%- include('../partials/Confirmation', { 
-                    modalId: 'validModalOrganisation-' + org.siren, 
-                    message: 'Êtes-vous sûr de vouloir valider cette organisation ?', 
-                    action: '/ValiderOrganisation/'+ org.siren,
-                    siren: org.siren 
-                  }) %>
-                
-              </div>
-              <% } else { %>
-              <p class="card-text">
-                <strong>Statut :</strong> <%= org.statut %>
-              </p>
-              <p class="card-text"><strong>SIREN :</strong> <%= org.siren %></p>
-              <p class="card-text">
-                <strong>Localisation :</strong> <%= org.localisation %>
-              </p>
-              <p class="card-text"><strong>Type :</strong> <%= org.type %></p>
+      <% for (let pageNum = 1; pageNum <= totalPages; pageNum++) { %>
+        <div class="row page-content" id="page-<%= pageNum %>" style="display: none;">
+          <% organisations.forEach(function(org, index) { 
+              const orgPage = Math.floor(index / 9) + 1;
+              if (orgPage === pageNum) { %>
+                <div class="col-md-4">
+                  <div class="card mb-4 shadow-sm">
+                    <div class="card-body">
+                      <h5 class="card-title"><%= org.nom %></h5>
+                      
+                      <% if (org.statut === 'StandBy') { %>
+                      <p class="card-text">
+                        <strong>Statut :</strong>
+                        <span class="text-warning">En attente</span>
+                      </p>
+                      <% } else { %>
+                      <p class="card-text">
+                        <strong>Statut :</strong> <%= org.statut %>
+                      </p>
+                      <% } %>
+                      
+                      <p class="card-text"><strong>SIREN :</strong> <%= org.siren %></p>
+                      <p class="card-text">
+                        <strong>Localisation :</strong> <%= org.localisation %>
+                      </p>
+                      <p class="card-text"><strong>Type :</strong> <%= org.type %></p>
+                      
+                      <% if (org.statut === 'StandBy') { %>
+                      <div class="d-flex justify-content-between mt-3">
+                        <button type="button" class="btn btn-outline-success"
+                          data-bs-toggle="modal"
+                          data-bs-target="#validModalOrganisation-<%= org.siren %>">
+                          Valider
+                        </button>
+                        <button type="button" class="btn btn-outline-danger"
+                          data-bs-toggle="modal"
+                          data-bs-target="#deleteModalOrganisation-<%= org.siren %>">
+                          Refuser
+                        </button>
+                        
+                        <%- include('../partials/Confirmation', { 
+                          modalId: 'deleteModalOrganisation-' + org.siren, 
+                          message: 'Êtes-vous sûr de vouloir refuser cette organisation ?', 
+                          action: '/RefuserOrganisation/'+ org.siren, 
+                          siren: org.siren 
+                        }) %>
+                        
+                        <%- include('../partials/Confirmation', { 
+                          modalId: 'validModalOrganisation-' + org.siren, 
+                          message: 'Êtes-vous sûr de vouloir valider cette organisation ?', 
+                          action: '/ValiderOrganisation/'+ org.siren,
+                          siren: org.siren 
+                        }) %>
+                      </div>
+                      <% } %>
+                    </div>
+                  </div>
+                </div>
               <% } %>
-            </div>
-          </div>
+          <% }); %>
         </div>
-        <% }); %>
-      </div>
+      <% } %>
 
       <nav aria-label="Pagination">
         <ul class="pagination justify-content-center">
           <% for (let i = 1; i <= totalPages; i++) { %>
-          <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-            <a
-              class="page-link"
-              href="/ListeOrganisation?page=<%= i %>&search=<%= searchTerm %>"
-              ><%= i %></a
-            >
+          <li class="page-item" id="page-item-<%= i %>">
+            <button class="page-link" onclick="showPage(<%= i %>)"><%= i %></button>
           </li>
           <% } %>
         </ul>
@@ -105,5 +105,27 @@
     <%- include('../partials/footer') %>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      // Je mets ici pour le moment, onfera un fichier quand on mutualisera
+      function showPage(page) {
+
+        document.querySelectorAll('.page-content').forEach(div => {
+          div.style.display = 'none';
+        });
+        
+        document.getElementById('page-' + page).style.display = 'flex';
+        
+
+        document.querySelectorAll('.pagination .page-item').forEach(li => {
+          li.classList.remove('active');
+        });
+        document.getElementById('page-item-' + page).classList.add('active');
+      }
+
+      document.addEventListener('DOMContentLoaded', function() {
+        showPage(1);
+      });
+    </script>
   </body>
 </html>

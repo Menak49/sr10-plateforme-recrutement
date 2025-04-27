@@ -259,7 +259,6 @@ console.log("Count params:", countParams);
         FROM Organisation o
         ${searchCondition}
         ORDER BY o.Siren DESC
-        LIMIT ? OFFSET ?
       `;
     
       const queryParams = searchTerm
