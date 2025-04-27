@@ -92,14 +92,17 @@
       <% } %>
 
       <nav aria-label="Pagination">
-        <ul class="pagination justify-content-center">
-          <% for (let i = 1; i <= totalPages; i++) { %>
-          <li class="page-item" id="page-item-<%= i %>">
-            <button class="page-link" onclick="showPage(<%= i %>)"><%= i %></button>
-          </li>
-          <% } %>
-        </ul>
-      </nav>
+  <ul class="pagination justify-content-center">
+    <% for (let i = 1; i <= totalPages; i++) { %>
+    <li class="page-item" id="page-item-<%= i %>">
+      <button class="page-link bg-dark text-white border-0" style="outline: none; box-shadow: 0 0 0 2px white;" onclick="showPage(<%= i %>)"><%= i %></button>
+    </li>
+    <% } %>
+  </ul>
+</nav>
+
+
+
     </div>
 
     <%- include('../partials/footer') %>
