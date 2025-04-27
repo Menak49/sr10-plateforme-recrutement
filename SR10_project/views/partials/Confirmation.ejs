@@ -1,8 +1,8 @@
 <div
   class="modal fade"
-  id="deleteModal"
+  id="<%= modalId || 'deleteModal' %>"
   tabindex="-1"
-  aria-labelledby="deleteModalLabel"
+  aria-labelledby="<%= modalId || 'deleteModal' %>Label"
   aria-hidden="true"
 >
   <div class="modal-dialog modal-dialog-centered">
@@ -28,14 +28,17 @@
   </div>
 </div>
 
-<!-- exemple de bouton supprimer (pour avoir les bonnes classes et tout)
-<button
-                  class="btn btn-sm btn-outline-danger"
-                  data-bs-toggle="modal"
-                  data-bs-target="#deleteModal"
-                >
-                  Supprimer
-                </button>
-                et ensuite 
-                 include('../partials/Confirmation', { message: "Êtes-vous sûr de vouloir supprimer ce compte utilisateur ?", action:
-                "/delete-user" }) %> -->
+
+<!--<button
+            class="btn btn-sm btn-outline-danger"
+            data-bs-toggle="modal"
+            data-bs-target="#deleteModalUser-< %= user.id %>"
+          >
+            Supprimer
+          </button>
+        et ensuite mais y a une balise : < % -
+          include('../partials/Confirmation', { 
+            modalId: "deleteModalUser-" + user.id,
+            message: "Êtes-vous sûr de vouloir supprimer l'utilisateur " + user.nom + " ?",
+            action: "/delete-user/" + user.id
+          }) %>-->

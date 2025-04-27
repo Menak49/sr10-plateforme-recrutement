@@ -35,14 +35,18 @@
                 <button class="btn btn-sm btn-dark">Éditer</button>
                 <button class="btn btn-sm btn-outline-dark">Voir</button>
                 <button
-                  class="btn btn-sm btn-outline-danger"
-                  data-bs-toggle="modal"
-                  data-bs-target="#deleteModal"
-                >
-                  Supprimer
-                </button>
-                <%- include('../partials/Confirmation', { message: "Êtes-vous sûr de vouloir supprimer ce compte utilisateur ?", action:
-                "/delete-user" }) %>
+            class="btn btn-sm btn-outline-danger"
+            data-bs-toggle="modal"
+            data-bs-target="#deleteModalUser-<%= user.id %>"
+          >
+            Supprimer
+          </button>
+
+          <%- include('../partials/Confirmation', { 
+            modalId: "deleteModalUser-" + user.id,
+            message: "Êtes-vous sûr de vouloir supprimer l'utilisateur " + user.nom + " ?",
+            action: "/delete-user/" + user.id
+          }) %>
               </div>
             </div>
           </div>

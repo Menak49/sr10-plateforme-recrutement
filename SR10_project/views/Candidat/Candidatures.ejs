@@ -32,7 +32,18 @@
 
 
           <div class="d-flex justify-content-end gap-2">
-            <a href="#" class="btn btn-sm btn-outline-danger">Annuler</a>
+                        <button 
+              class="btn btn-sm btn-outline-danger" 
+              data-bs-toggle="modal" 
+              data-bs-target="#deleteModalCandidature-<%= c.candidature_id %>"
+            >
+              Annuler
+            </button>
+            <%- include('../partials/Confirmation', {
+              modalId: "deleteModalCandidature-" + c.candidature_id,
+              message: "Êtes-vous sûr de vouloir annuler cette candidature ?",
+              action: "/delete-candidature/" + c.candidature_id
+            }) %>
             <a href="#" class="btn btn-sm btn-outline-secondary">Modifier</a>
           </div>
 
