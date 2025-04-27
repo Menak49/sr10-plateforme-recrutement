@@ -91,11 +91,18 @@
                   >Voir</a
                 >
                 <button
-                  class="btn btn-sm btn-outline-danger"
-                  onclick="if(confirm('Êtes-vous sûr de vouloir refuser cette demande?')) window.location.href='/demandes/recruteur/refuser/<%= demande.id %>'"
-                >
-                  Refuser
-                </button>
+                class="btn btn-sm btn-outline-danger"
+                data-bs-toggle="modal"
+                data-bs-target="#deleteModalDemande-<%= demande.id %>"
+              >
+                Refuser
+              </button>
+                <%- include('../partials/Confirmation', { 
+                  modalId: "deleteModalDemande-" + demande.id,
+                  message: "Êtes-vous sûr de vouloir refuser cette demande ?",
+                  action: "/demandes/recruteur/refuser/" + demande.id
+                }) %>
+                
               </div>
             </div>
           </div>
