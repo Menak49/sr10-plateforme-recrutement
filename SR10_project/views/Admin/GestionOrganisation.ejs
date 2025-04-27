@@ -16,14 +16,14 @@
       <h2 class="mb-4 text-center">Organisations enregistrées</h2>
 
       <form method="get" action="/ListeOrganisation" class="mb-4 text-center">
-        <input
-          type="text"
-          name="search"
-          placeholder="Rechercher..."
-          value="<%= searchTerm %>"
-          class="form-control d-inline-block w-50"
-        />
-        <button type="submit" class="btn btn-primary ml-2">Rechercher</button>
+        <div class="input-group mt-3 mb-3 shadow-sm">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Rechercher un utilisateur..."
+          />
+          <button type="submit" class="btn btn-dark">🔍</button>
+        </div>
       </form>
 
       <div class="row">
@@ -45,14 +45,31 @@
               <p class="card-text"><strong>Type :</strong> <%= org.type %></p>
 
               <div class="d-flex justify-content-between mt-3">
-                <form action="/ValiderOrganisation" method="POST">
+                  <input type="hidden"
+                   name="siren"
+                   />
+                  <button type="submit" class="btn btn-outline-success"
+                  value="<%= org.siren %>"
+                  data-bs-toggle="modal"
+                  data-bs-target="#validModalOrganisation-<%= org.siren %>">Valider</button>
                   <input type="hidden" name="siren" value="<%= org.siren %>" />
-                  <button type="submit" class="btn btn-success">Valider</button>
-                </form>
-                <form action="/RefuserOrganisation" method="POST">
-                  <input type="hidden" name="siren" value="<%= org.siren %>" />
-                  <button type="submit" class="btn btn-danger">Refuser</button>
-                </form>
+                  <button type="submit" class="btn btn-outline-danger"
+                  value="<%= org.siren %>"
+                  data-bs-toggle="modal"
+                  data-bs-target="#deleteModalOrganisation-<%= org.siren %>">Refuser</button>
+                  <%- include('../partials/Confirmation', { 
+                    modalId: 'deleteModalOrganisation-' + org.siren, 
+                    message: 'Êtes-vous sûr de vouloir refuser cette organisation ?', 
+                    action: '/RefuserOrganisation/'+ org.siren, 
+                    siren: org.siren 
+                  }) %>
+                  <%- include('../partials/Confirmation', { 
+                    modalId: 'validModalOrganisation-' + org.siren, 
+                    message: 'Êtes-vous sûr de vouloir valider cette organisation ?', 
+                    action: '/ValiderOrganisation/'+ org.siren,
+                    siren: org.siren 
+                  }) %>
+                
               </div>
               <% } else { %>
               <p class="card-text">
