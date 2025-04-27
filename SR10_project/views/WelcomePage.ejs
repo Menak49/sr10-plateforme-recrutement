@@ -28,13 +28,13 @@
 
         <div>
           <% if (role === 'admin') { %>
-          <a href="/admin/gestion" class="btn btn-light"
+          <a href="/admin/gestionUtilisateurs" class="btn btn-light"
             >Accéder à la gestion des utilisateurs</a
           >
           <% } else if (role === 'recruteur') { %>
-          <a href="/recruteur/offres" class="btn btn-light">Gérer les offres</a>
+          <a href="/recruteur/GererOffres" class="btn btn-light">Gérer les offres</a>
           <% } else if (role === 'candidat') { %>
-          <a href="/candidat/offres" class="btn btn-light">Voir les offres</a>
+          <a href="/candidat/parcourir" class="btn btn-light">Voir les offres</a>
           <% } %>
         </div>
       </div>
