@@ -39,7 +39,6 @@ router.get('/privileges', (req, res) => {
     // Récupérer l'ID de l'utilisateur depuis la session
     const userId = req.session.user || 1234567890;
     
-    // Si l'utilisateur n'est pas connecté, rediriger vers la page de connexion
     if (!userId) {
       return res.redirect('/login');
     }
@@ -134,7 +133,7 @@ router.get('/privileges', (req, res) => {
           const totalUtilisateurs = countResults[0].total;
           const totalPages = Math.ceil(totalUtilisateurs / limit);
           
-          res.render('admin/gestionUtilisateurs', {
+          res.render('Admin/gestionUtilisateurs', {
             role: role,
             utilisateurs: utilisateurs,
             currentPage: page,
@@ -224,7 +223,7 @@ console.log("Count params:", countParams);
           const totalDemandes = countResults[0].total;
           const totalPages = Math.ceil(totalDemandes / limit);
           
-          res.render('admin/GestionDemandeRecruteur', {
+          res.render('Admin/GestionDemandeRecruteur', {
             role: role,
             demandes: demandes,
             currentPage: page,
@@ -298,7 +297,7 @@ console.log("Count params:", countParams);
           const totalOrganisations = countResults[0].total;
           const totalPages = Math.ceil(totalOrganisations / limit);
     
-          res.render('admin/GestionOrganisation', {
+          res.render('Admin/GestionOrganisation', {
             role: role,
             organisations: organisations,
             currentPage: page,
