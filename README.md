@@ -53,3 +53,22 @@ Sur les trois espaces utilisateurs, des fonctionnalités différentes sont progr
 
 Le projet étant de taille réduite, on choisit de développer des scripts qui permettent de filtrer, rechercher et paginer **côté client** ; le serveur envoie toutes les données au client qui ne les affiche pas toutes. Dans le cadre d'un projet avec une grande quantité de données, on aurait pu filtrer les données **côté serveur**, avant l'envoie au client ; cette stratégie est plus optimale en therme de consommation énergétique.
 
+
+## Tests
+
+On utilise le framework de tests automatisés pour JavaScript `Jest`.
+Pour contrôler la **couverture de code**, c'est-à-dire le poucentage de métriques couvertes par les tests dans le projet, ouvrez un terminal et tapez : 
+```bash
+cd .\SR10\SR10_project\
+npm run test
+```
+
+### Tests unitaires
+
+Les tests unitaires permettent de tester chaque fonctions indépendamment des autres. Ainsi, on donne une entrée à cette fonction et on vérifie que la sortie est celle attendue grâce à l'assertion `expect()`.
+
+Le champ des possibles des fonctions à tester est énormes, on décide de se limiter aux tests unitaires suivants :
+- vérification du bon fonctionnement de toutes les routes
+- vérification du mot de passe choisi par l'utilisateur, il doit être conforme aux recommandations de la CNIL
+- vérifier que toutes les candidatures contiennent une pièce jointe
+
