@@ -14,7 +14,10 @@ router.use('/admin', adminRouter);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Accueil', text: 'Bienvenue sur notre site de gestion des offres d\'emploi !' });
+  //appelle la fonction readall() dans /model/utilisateur.js pour récupérer les utilisateurs
+  //puis les affiche dans la vue usersList.ejs
+
+
 });
 
 router.get('/SignUp', function(req, res, next) {

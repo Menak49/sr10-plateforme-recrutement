@@ -82,6 +82,10 @@ D'autres tests
 
 ### Tests d'intégration : tester des routes
 
+Pour faire des tests complets de l'application, il faudrait le décliner sur tous les domaines du dossier route; on se concentre ici sur le domaine candidat. Les tests implémentés sont : 
+- marche pas qd nn authent
+- recup page qui existe pas => page qui existe pas
+
 
 ## Model
 
@@ -99,4 +103,5 @@ CREATE TABLE Utilisateur (
     Email VARCHAR(255) UNIQUE NOT NULL
 );
 ```
+
 
