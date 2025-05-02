@@ -18,7 +18,7 @@ result });
   title est le titre de la page
   users est le nom de la variable qui va contenir le résultat de la requête, ici result
    */
-  userModel.readall().then(function(result){   //userModel est le nom du fichier correspondant dans Model
+  utilisateurModel.readall().then(function(result){   //userModel est le nom du fichier correspondant dans Model
     res.render('usersList', { title: 'List des utilisateurs', users: result });
   }).catch(function(err){
     console.log(err);

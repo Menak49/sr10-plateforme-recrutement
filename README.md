@@ -63,12 +63,40 @@ cd .\SR10\SR10_project\
 npm run test
 ```
 
-### Tests unitaires
+### Tests unitaires : tester les fonctions CRUD
 
 Les tests unitaires permettent de tester chaque fonctions indépendamment des autres. Ainsi, on donne une entrée à cette fonction et on vérifie que la sortie est celle attendue grâce à l'assertion `expect()`.
 
-Le champ des possibles des fonctions à tester est énormes, on décide de se limiter aux tests unitaires suivants :
+Le champ des possibles des fonctions à tester est énorme, on décide de se limiter aux tests unitaires permettant de vérifier la persistance des données. On vérifie ainsi le bon fonctionnement des fonctions CRUD :
+- CREATE : test de création d'utilisateur (model.create)
+- READ : test de lecture d'utilisateur (model.read)
+- UPDATE : test de mise à jour d'utilisateur (model.update)
+- DELETE : test de suppression d'utilisateur (model.delete)
+
+
+D'autres tests
 - vérification du bon fonctionnement de toutes les routes
 - vérification du mot de passe choisi par l'utilisateur, il doit être conforme aux recommandations de la CNIL
 - vérifier que toutes les candidatures contiennent une pièce jointe
+
+
+### Tests d'intégration : tester des routes
+
+
+## Model
+
+Pour chaque table de la base de données, on crée dans notre modèle un fichier « .js » qui regroupe les opérations de persistance CRUD (create, read, update, delete). 
+
+Si on prend par exemple la table utilisateur :
+
+```SQL
+CREATE TABLE Utilisateur (
+    Phone INT PRIMARY KEY,
+    LastName VARCHAR(255) NOT NULL,
+    FirstName VARCHAR(255) NOT NULL,
+    Status ENUM('Active', 'Inactive') NOT NULL,
+    Password VARCHAR(255) NOT NULL,
+    Email VARCHAR(255) UNIQUE NOT NULL
+);
+```
 
