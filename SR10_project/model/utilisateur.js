@@ -1,15 +1,17 @@
 const db = require('./db.js');
+const util = require('util');
+// Promisify db.query
+db.query = util.promisify(db.query);
+
 module.exports = {
 
 
-
-  //READ : lit un utilisateur (par son email)
+  //READ : lit un utilisateur (par son email) 
   read : async function (email) {
     const query = `SELECT * FROM Utilisateur WHERE Email = ?`;
     try {
-        const results = db.query(query, [email]);
-        console.log('Résultats de la requête :', results);
-        return results[0]; // Retourne l'utilisateur correspondant
+        const results = await db.query(query, [email]);
+        return results; // Retourne l'utilisateur correspondant
     } catch (err) {
         console.error('Erreur lors de la lecture de l\'utilisateur :', err);
         throw err;
@@ -21,7 +23,7 @@ module.exports = {
   readall : async function () {
     const query = 'SELECT * FROM Utilisateur';
     try {
-      const results = db.query(query);
+      const results = await db.query(query);
       return results; // Retourne tous les utilisateurs
     } catch (err) {
       console.error('Erreur lors de la récupération des utilisateurs :', err);
@@ -31,14 +33,16 @@ module.exports = {
 
 
   /* vérifier si les informations d'identification sont valides:
-  - results[0].length === 1 : Vérifie qu'un seul utilisateur a été trouvé.
-  - results[0][0].Password === password : Vérifie que le mot de passe stocké dans la BD
+  - results.length === 1 : Vérifie qu'un seul utilisateur a été trouvé.
+  - results[0].Password === password : Vérifie que le mot de passe stocké dans la BD
   correspond au mot de passe fourni en paramètre.
+
+  attention : ne marche pas sans le await
   */
   areValid: async function (email, password) {
     const query = 'SELECT Password FROM Utilisateur WHERE Email = ?';
     try {
-      const [results] = db.query(query, [email]);
+      const results = await db.query(query, [email]);
       if (results.length === 1 && results[0].Password === password) {
         return true;
       } else {
@@ -49,6 +53,30 @@ module.exports = {
       throw err;
     }
   },
+
+  // CREATE : Fonction pour créer un utilisateur (candidat)
+  create: async function (phone, lastName, firstName, status, password, email) {
+    const checkQuery = 'SELECT * FROM Utilisateur WHERE Phone = ?';
+    const query = 'INSERT INTO Utilisateur (Phone, LastName, FirstName, Status, Password, Email) VALUES (?, ?, ?, ?, ?, ?)';
+    try {
+      // Vérifie si l'utilisateur existe déjà
+      const existingUser = await db.query(checkQuery, [phone]);
+      if (existingUser.length > 0) {
+        throw new Error(`Un utilisateur avec le numéro de téléphone ${phone} existe déjà.`);
+      }
+      //insère le nouvel user dans la base de données
+      const result = await db.query(query, [email]);
+      if (result.length === 1) {
+        return true;
+      } else {
+        return false;
+      } 
+    } catch (err) {
+      console.error('Erreur MySQL : ', err);
+      throw err;
+    }
+  },
+
 
 
     // UPDATE : Fonction pour mettre à jour un utilisateur 
@@ -66,7 +94,8 @@ module.exports = {
     deleteUser: async function (email) {
       const query = 'DELETE FROM Utilisateur WHERE Email = ?';
       try {
-        db.query(query, [email]);
+        const result = await db.query(query, [email]);
+        return result
       } catch (err) {
         console.error('Erreur MySQL : ', err);
         throw err;
