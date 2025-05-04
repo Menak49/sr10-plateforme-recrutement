@@ -1,12 +1,9 @@
 // routes/candidat.js
 const express = require('express');
 const router = express.Router();
-const db = require('../model/db');
 const offre = require('../model/offreEmploi.js');
 const candidature = require('../model/candidature.js');
-const utilisateur = require('../model/utilisateur.js');
-
-
+const organisation = require('../model/organisation.js');
 
 
 
@@ -35,6 +32,7 @@ router.get('/parcourir', async (req, res) => {
   }
 });
 
+
 router.get('/candidatures', async (req, res) => {
   try {
     const userId = req.session.user || 223344556;  
@@ -48,9 +46,6 @@ router.get('/candidatures', async (req, res) => {
     res.status(500).send("Erreur lors de la récupération de vos candidatures (Contrôleur)");
   }
 });
-
-
-
 
 
 
@@ -74,36 +69,31 @@ router.get('/privileges', (req, res) => {
   });
 });
 
-router.get('/devenirRecruteur', (req, res) => {
-  const role = req.session.role || 'candidat';
 
-  const query = `
-    SELECT Siren, Name 
-    FROM Organisation
-    ORDER BY Name ASC
-  `;
 
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error("Erreur MySQL :", err);
-      return res.status(500).send("Erreur serveur");
-    }
-
-    res.render('Privileges/DevenirRecruteur', {
-      role: role,
-      organisations: results
-    });
-  });
+router.get('/devenirRecruteur', async (req, res) => {
+  try {
+    let results;
+    results = await organisation.readAll();
+    role = req.session.role || 'candidat';
+    return res.render('Privileges/DevenirRecruteur', {role: role, organisations: results});
+  }
+  catch (err) {
+    console.log(err);
+    res.status(500).send("Erreur lors de la récupération des organisations (Contrôleur)");
+  }
 });
+
+
 
 router.get('/creerOrganisation', (req, res) => {
   const role = req.session.role || 'candidat';
-
-  
 
     res.render('Privileges/creerOrga', {
       role: role
     });
   });
+
+
 
 module.exports = router;
