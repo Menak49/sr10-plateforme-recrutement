@@ -54,23 +54,32 @@ module.exports = {
     }
   },
 
-  // CREATE : Fonction pour créer un utilisateur (candidat)
+  /* CREATE : Fonction pour insérer un nouvel utilisateur (candidat)
+Lorsque la requête réussit, la fonction retourne un objet contenant 
+des informations sur l'opération SQL du type : 
+{
+  fieldCount: 0,
+  affectedRows: 1, // Nombre de lignes affectées (1 pour un INSERT réussi)
+  insertId: 42,    // ID de l'enregistrement inséré (si la table a une colonne AUTO_INCREMENT)
+  serverStatus: 2,
+  warningCount: 0,
+  message: '',
+  protocol41: true,
+  changedRows: 0
+}
+  */
   create: async function (phone, lastName, firstName, status, password, email) {
     const checkQuery = 'SELECT * FROM Utilisateur WHERE Phone = ?';
-    const query = 'INSERT INTO Utilisateur (Phone, LastName, FirstName, Status, Password, Email) VALUES (?, ?, ?, ?, ?, ?)';
     try {
-      // Vérifie si l'utilisateur existe déjà
       const existingUser = await db.query(checkQuery, [phone]);
       if (existingUser.length > 0) {
-        throw new Error(`Un utilisateur avec le numéro de téléphone ${phone} existe déjà.`);
+        return false; // L'utilisateur existe déjà
       }
-      //insère le nouvel user dans la base de données
-      const result = await db.query(query, [email]);
-      if (result.length === 1) {
-        return true;
-      } else {
-        return false;
-      } 
+      else {
+        const query = 'INSERT INTO Utilisateur (Phone, LastName, FirstName, Status, Password, Email) VALUES (?, ?, ?, ?, ?, ?)';
+        const result = await db.query(query, [phone, lastName, firstName, status, password, email]);
+        return result
+      }
     } catch (err) {
       console.error('Erreur MySQL : ', err);
       throw err;
@@ -79,16 +88,17 @@ module.exports = {
 
 
 
-    // UPDATE : Fonction pour mettre à jour un utilisateur 
-    update : async function (userId, user) {
-      const query = 'UPDATE Candidat SET Name = ?, Email = ?, Password = ? WHERE Id = ?';
+/*     // UPDATE : Fonction pour mettre à jour une donnée d'un utilisateur 
+    update: async function (clé, valeur, email) {
+      const query = `UPDATE Utilisateur SET ${clé} = ? WHERE Email = ?`;
       try {
-        db.query(query, [user.name, user.email, user.password, userId]);
+          const results = await db.query(query, [valeur, email]);
+          return results;
       } catch (err) {
-        console.error('Erreur MySQL : ', err);
-        throw err;
+          console.error('Erreur MySQL : ', err);
+          throw err;
       }
-    },
+  }, */
   
     // Fonction pour supprimer un utilisateur (candidat)
     deleteUser: async function (email) {

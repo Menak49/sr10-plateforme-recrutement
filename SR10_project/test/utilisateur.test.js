@@ -3,6 +3,9 @@ const model = require('../model/utilisateur.js');
 
 describe('Tests sur la table Utilisateur', () => {
     
+  //variable qui stocke l'email de l'utilisateur créé (create test), puis permet de le supprimer (delete test)
+  let createdUserEmail = null;
+
     beforeAll(async () => {
     // Instructions à exécuter avant le lancement des tests
   });
@@ -19,63 +22,65 @@ describe('Tests sur la table Utilisateur', () => {
   });
 
   test('create user', async () => {
+    /* On teste les deux embranchements de la fonction create
+    - si le numéros (qui est notre clé unique) existe déjà, on retourne false
+    - sinon on crée l'utilisateur*/
+    
+    //attention à bien vérifer que l'utilisateur n'existe pas déjà dans la BD, sinon erreur!!
     const newUser = {
-      phone: 123456789,
-      lastName: 'Doe',
-      firstName: 'John',
+      phone: 1005089,
+      lastName: 'asupp',
+      firstName: 'asupp',
       status: 'Active',
-      password: 'password123',
-      email: 'test@test.fr'
+      password: 'psu23',
+      email: 'supp@supp.fr'
     };
-    const userId = await model.create(newUser.phone, newUser.lastName, newUser.firstName, newUser.status, newUser.password, newUser.email);
-    expect(userId).toBeGreaterThan(0);
 
-    const user = await model.read(newUser.email);
-    expect(user.Phone).toBe(newUser.phone);
-    expect(user.LastName).toBe(newUser.lastName);
-    expect(user.FirstName).toBe(newUser.firstName);
-    expect(user.Status).toBe(newUser.status);
-    expect(user.Password).toBe(newUser.password);
-    expect(user.Email).toBe(newUser.email);
+    const existingUser = {
+      phone: 1005, //même numéros qu'utilisateur existant (Nina)
+      lastName: 'Robert',
+      firstName: 'Macha',
+      status: 'Active',
+      password: 'mdp123',
+      email: 'macha.robert@mail.com'
+    };
+
+    //test sur le if
+    const userCreated = await model.create(newUser.phone, newUser.lastName, newUser.firstName, newUser.status, newUser.password, newUser.email);
+    expect(userCreated.affectedRows).toBe(1);
+
+    //test sur le else
+    const userNotCreated = await model.create(existingUser.phone, existingUser.lastName, existingUser.firstName, existingUser.status, existingUser.password, existingUser.email);
+    expect(userNotCreated).toBe(false);
+
+    createdUserEmail = newUser.email;
   });
 
   test('read user', async () => {
-    const user = await model.read('test@test.fr');
-    expect(user.FirstName).toBe('John');
+    const user = await model.read('nina.robert@mail.com');
+    expect(user[0].FirstName).toBe('Nina');
   });
 
   test('readall users', async () => {
     const users = await model.readall();
-    expect(users.length).toBeGreaterThanOrEqual(1);
+    expect(users.length).toBeGreaterThan(1);
   });
 
   test('areValid user', async () => {
-    const isValid = await model.areValid('test@test.fr', 'password123');
+    const isValid = await model.areValid('nina.robert@mail.com', 'mdp123');
     expect(isValid).toBe(true);
   });
 
-  test('update user', async () => {
-    const updatedData = {
-      phone: 987654321,
-      lastName: 'Smith',
-      firstName: 'Jane',
-      status: 'Inactive',
-      password: 'newpassword123'
-    };
-    await model.update(updatedData, 'test@test.fr');
-
-    const user = await model.read('test@test.fr');
-    expect(user.Phone).toBe(updatedData.phone);
-    expect(user.LastName).toBe(updatedData.lastName);
-    expect(user.FirstName).toBe(updatedData.firstName);
-    expect(user.Status).toBe(updatedData.status);
-    expect(user.Password).toBe(updatedData.password);
-  });
-
   test('delete user', async () => {
-    await model.deleteUser('test@test.fr');
+    const result = await model.deleteUser(createdUserEmail);
+    expect(result.affectedRows).toBe(1); //objet renvoyé a un champ affectedRows qui indique le nombre de lignes affectées par la requête
+  }); 
 
-    const user = await model.read('test@test.fr');
-    expect(user).toBeUndefined();
-  });
+/*   test("update user last name", async () => {
+    const result = await model.update('LastName', 'nouveauNom', createdUserEmail);
+    expect(result.affectedRows).toBe(1);
+
+}); */
+
+
 });

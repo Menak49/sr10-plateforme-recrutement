@@ -19,12 +19,12 @@ const utilisateurModel = require('./utilisateur.js'); // Assurez-vous que le che
 async function debugCreateUser() {
     try {
         const newUser = {
-            phone: 123456789,
-            lastName: 'Doe',
-            firstName: 'John',
+            phone: 12389,
+            lastName: 'àsupp',
+            firstName: 'asupp',
             status: 'Active',
             password: 'password123',
-            email: 'Doe@John.fr'
+            email: 'àsupp@John.fr'
         };
         const user = await utilisateurModel.create(newUser.phone, newUser.lastName, newUser.firstName, newUser.status, newUser.password, newUser.email);
         console.log('Utilisateur créé :', user);
@@ -49,11 +49,11 @@ async function debugCreateUser() {
     }
 }*/
 
-/*
-async function debugReadUser() {
+
+/* async function debugReadUser() {
     try {
         const email = 'Sophie@gmail.com';
-        const user = await utilisateurModel.readall();
+        const user = await utilisateurModel.read(email);
         if (user) {
             console.log('Utilisateurs trouvés :', user);
         } else {
@@ -67,6 +67,6 @@ async function debugReadUser() {
 // Appel de la fonction de débogage
 
 // debugAreValid();
-// debugReadUser();
+/* debugReadUser(); */
 debugCreateUser();
 //debugDeleteUser();

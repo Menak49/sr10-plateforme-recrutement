@@ -68,7 +68,7 @@ Le projet étant de taille réduite, on choisit de développer des scripts qui p
 
 Le dossier `Modèle` représente la partie modèle de l'architecture MVC. Il contient : 
 - `db.js` qui implémente la connexion à la base de donnée MySQL
-- un fichier qui regroupe les opérations de persistance CRUD (create, read, update, delete) pour chaque table principale de notre base de données : Utilisateur, 
+- un fichier qui contient les opérations de persistance CRUD (create, read, update, delete) et d'autres plus spécifiques pour chaque table principale de notre base de données : Utilisateur, 
 
 Si on prend par exemple la table utilisateur :
 
@@ -99,13 +99,13 @@ Les tests unitaires permettent de tester chaque fonctions indépendamment des au
 
 Le champ des possibles des fonctions à tester est énorme, on décide de se limiter aux tests unitaires permettant de vérifier la persistance des données. On vérifie ainsi le bon fonctionnement des fonctions CRUD :
 - CREATE : test de création d'utilisateur (model.create)
-- READ : test de lecture d'utilisateur (model.read)
+- READ : test de lecture d'un champ d'un utilisateur (model.read)
+- READALL
 - UPDATE : test de mise à jour d'utilisateur (model.update)
-- DELETE : test de suppression d'utilisateur (model.delete)
+- DELETE : test de suppression d'utilisateur (model.delete), on vérifie qu'une et une seule ligne a été affectée avec `expect(result.affectedRows).toBe(1);`
 
 
 D'autres tests
-- vérification du bon fonctionnement de toutes les routes
 - vérification du mot de passe choisi par l'utilisateur, il doit être conforme aux recommandations de la CNIL
 - vérifier que toutes les candidatures contiennent une pièce jointe
 
