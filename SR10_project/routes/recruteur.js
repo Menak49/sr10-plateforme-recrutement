@@ -3,6 +3,9 @@ var router = express.Router();
 var db = require('../model/db');
 const offre = require('../model/offreEmploi.js');
 const fiche = require('../model/fichePoste.js');
+const statut = require('../model/statutPoste.js');
+const metier = require('../model/typeMetier.js');
+const organisation = require('../model/organisation.js');
 
 router.get('/Accueil', function(req, res, next) {
   var role =  req.session.role ||'recruteur';  
@@ -136,68 +139,51 @@ router.get('/ajouterFicheDePoste', function(req, res, next) {
 });
 
 
-router.get('/modifierFicheDePoste/:id', function(req, res, next) {
-  const ficheId = req.params.id;
+router.get('/modifierFicheDePoste/:id', async (req, res) => {
+  try {
+    const ficheId = req.params.id;
   
-  db.query('SELECT * FROM FichePoste WHERE Id = ?', [ficheId], (err, fiches) => {
-    if (err) {
-      console.error('Erreur lors de la récupération de la fiche :', err);
-      return res.status(500).send('Erreur serveur');
-    }
-    
+    const fiches = await fiche.read(ficheId)
     if (fiches.length === 0) {
       return res.status(404).send('Fiche de poste non trouvée');
     }
     
-    const fiche = fiches[0];
+    const statuts = await statut.readAll()
+    const metiers = await metier.readAll()
+    const organisations = await organisation.readAll()
     
-    db.query('SELECT * FROM StatutPoste', (err, statuts) => {
-      if (err) {
-        console.error('Erreur lors de la récupération des statuts :', err);
-        return res.status(500).send('Erreur serveur');
-      }
-      
-      db.query('SELECT * FROM TypeMetier', (err, metiers) => {
-        if (err) {
-          console.error('Erreur lors de la récupération des métiers :', err);
-          return res.status(500).send('Erreur serveur');
-        }
-        
-        db.query('SELECT Siren, Name FROM Organisation', (err, organisations) => {
-          if (err) {
-            console.error('Erreur lors de la récupération des organisations :', err);
-            return res.status(500).send('Erreur serveur');
-          }
-          
-          res.render('Recruteur/PublierFichePoste', {
-            mode: 'edit',
-            fiche: fiche,
-            statuts: statuts,
-            metiers: metiers,
-            organisations: organisations,
-            role: 'recruteur',
-            title: 'Modifier une fiche de poste'
-          });
-        });
-      });
+    res.render('Recruteur/PublierFichePoste', {
+      mode: 'edit',
+      fiche: fiches,
+      statuts: statuts,
+      metiers: metiers,
+      organisations: organisations,
+      role: 'recruteur',
+      title: 'Modifier une fiche de poste'
     });
-  });
+  }
+  catch (err) {
+    console.error('Erreur lors de la récupération de la fiche de poste :', err);
+    return res.status(500).send('Erreur serveur');
+  }
 });
 
+
+
   router.get('/gererFicheDePoste', async (req, res) => {
-      try { 
-        const results = await fiche.readAll();
-        const role = req.session?.role || 'recruteur';
-    
-        res.render('Recruteur/GererFicheDePoste', {
-          fiches: results,
-          role: role
-        });
-      }
-      catch (err) {
-        console.error('Erreur MySQL:', err);
-        return res.status(500).send('Erreur lors de la récupération des fiches de poste');
-      }
+    try { 
+      const results = await fiche.readAll();
+      const role = req.session?.role || 'recruteur';
+  
+      res.render('Recruteur/GererFicheDePoste', {
+        fiches: results,
+        role: role
+      });
+    }
+    catch (err) {
+      console.error('Erreur MySQL:', err);
+      return res.status(500).send('Erreur lors de la récupération des fiches de poste');
+    }
   });
 
 
@@ -227,8 +213,6 @@ router.get('/modifierFicheDePoste/:id', function(req, res, next) {
  
   });
   
-  
-  
 
 
   router.get('/privileges', (req, res) => {
@@ -248,5 +232,6 @@ router.get('/modifierFicheDePoste/:id', function(req, res, next) {
       userId: userId
     });
   });
+
 
 module.exports = router;

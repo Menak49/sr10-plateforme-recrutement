@@ -5,6 +5,18 @@ db.query = util.promisify(db.query);
 
 module.exports = {
 
+    read: async function (ficheId){
+        const query = 'SELECT * FROM FichePoste WHERE Id = ?'
+        try{
+            const result = await db.query(query,[ficheId])
+            return result[0];
+        }
+        catch(err){
+            console.error('Erreur lors de la récupération de la fiche de poste (Modèle) :', err);
+            throw err;
+        }
+    },
+    
     readAll: async function(){
         const query = `
         SELECT 
