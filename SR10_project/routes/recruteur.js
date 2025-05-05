@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var db = require('../model/db');
+const offre = require('../model/offreEmploi.js');
+const fiche = require('../model/fichePoste.js');
 
 router.get('/Accueil', function(req, res, next) {
   var role =  req.session.role ||'recruteur';  
@@ -182,107 +184,47 @@ router.get('/modifierFicheDePoste/:id', function(req, res, next) {
   });
 });
 
-  router.get('/gererFicheDePoste', (req, res) => {
-    const query = `
-      SELECT 
-        fp.Id AS id,
-        fp.Title AS titre,
-        fp.Location AS localisation,
-        fp.MinSalary AS minSalaire,
-        fp.MaxSalary AS maxSalaire,
-        fp.WorkSchedule AS horaire,
-        fp.Description AS description,
-        org.Name AS organisation,
-        sp.Name AS statut,
-        tm.Name AS typeMetier
-      FROM FichePoste fp
-      LEFT JOIN Organisation org ON fp.Organisation = org.Siren
-      LEFT JOIN StatutPoste sp ON fp.StatutPoste = sp.Name
-      LEFT JOIN TypeMetier tm ON fp.Type = tm.Name
-    `;
-  
-    db.query(query, (err, results) => {
-      if (err) {
-        console.error('Erreur MySQL :', err);
+  router.get('/gererFicheDePoste', async (req, res) => {
+      try { 
+        const results = await fiche.readAll();
+        const role = req.session?.role || 'recruteur';
+    
+        res.render('Recruteur/GererFicheDePoste', {
+          fiches: results,
+          role: role
+        });
+      }
+      catch (err) {
+        console.error('Erreur MySQL:', err);
         return res.status(500).send('Erreur lors de la récupération des fiches de poste');
       }
-  
-      const role = req.session?.role || 'recruteur';
-  
-      res.render('Recruteur/GererFicheDePoste', {
-        fiches: results,
-        role: role
-      });
-    });
   });
 
 
-  router.get('/gererOffres', (req, res) => {
-    const searchTerm = req.query.search || '';
-    const page = parseInt(req.query.page) || 1;
-    const limit = 9; 
-    const offset = (page - 1) * limit;
+  router.get('/gererOffres', async (req, res) => {
+    try {
+      const searchTerm = req.query.search || '';
+      const page = parseInt(req.query.page) || 1;
+      const limit = 9; 
+      const offset = (page - 1) * limit;
   
-
-    const query = `
-      SELECT 
-        o.Id AS id,
-        o.State AS etat,
-        o.ExpiryDate AS dateExpiration,
-        o.Details AS details,
-        o.Slots AS nombrePostes,
-        fp.Title AS titre,
-        fp.Supervisor AS superviseur,
-        fp.Location AS localisation,
-        fp.WorkSchedule AS horaire,
-        fp.MinSalary AS minSalaire,
-        fp.MaxSalary AS maxSalaire,
-        fp.Description AS description,
-        org.Name AS organisation,
-        sp.Name AS statut,
-        tm.Name AS typeMetier
-      FROM OffreEmploi o
-      LEFT JOIN FichePoste fp ON o.FichePoste = fp.Id
-      LEFT JOIN Organisation org ON fp.Organisation = org.Siren
-      LEFT JOIN StatutPoste sp ON fp.StatutPoste = sp.Name
-      LEFT JOIN TypeMetier tm ON fp.Type = tm.Name
-      WHERE fp.Title LIKE ? OR org.Name LIKE ?
-      LIMIT ? OFFSET ?;
-    `;
+      const results = await offre.readOffresFiltréPaginé(searchTerm, limit, offset);
+      const countResult = await offre.nbTotalOffres(searchTerm);  
+      const totalOffers = countResult[0] ? countResult[0].total : 0;
+      const totalPages = Math.ceil(totalOffers / limit); 
   
-    db.query(query, [`%${searchTerm}%`, `%${searchTerm}%`, limit, offset], (err, results) => {
-      if (err) {
-        console.error('Erreur MySQL :', err);
-        return res.status(500).send('Erreur lors de la récupération des offres');
-      }
-  
-      const countQuery = `
-        SELECT COUNT(*) AS total
-        FROM OffreEmploi o
-        LEFT JOIN FichePoste fp ON o.FichePoste = fp.Id
-        LEFT JOIN Organisation org ON fp.Organisation = org.Siren
-        WHERE fp.Title LIKE ? OR org.Name LIKE ?;
-      `;
-  
-
-      db.query(countQuery, [`%${searchTerm}%`, `%${searchTerm}%`], (err, countResult) => {
-        if (err) {
-          console.error('Erreur MySQL :', err);
-          return res.status(500).send('Erreur lors de la récupération du nombre total d\'offres');
-        }
-  
-        const totalOffers = countResult[0] ? countResult[0].total : 0;
-        const totalPages = Math.ceil(totalOffers / limit); 
-  
-        res.render('Recruteur/GererOffres', {
-          role:"recruteur",
-          offres: results,
-          searchTerm: searchTerm,
-          currentPage: page,
-          totalPages: totalPages
+      res.render('Recruteur/GererOffres', {
+        role:"recruteur",
+        offres: results,
+        searchTerm: searchTerm,
+        currentPage: page,
+        totalPages: totalPages
         });
-      });
-    });
+    } catch (err) {
+      console.error('Erreur MySQL :', err);
+      return res.status(500).send('Erreur lors de la récupération des offres');
+    }
+ 
   });
   
   

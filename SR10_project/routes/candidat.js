@@ -22,7 +22,7 @@ router.get('/Accueil', function(req, res, next) {
 router.get('/parcourir', async (req, res) => {
   try {
     let results;
-    results = await offre.readall();
+    results = await offre.readAll();
     role = req.session.role || 'candidat';
     return res.render('Candidat/ParcourirOffre', {role:role, offres: results });
     }
