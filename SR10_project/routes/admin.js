@@ -144,49 +144,19 @@ router.get('/GestionDemandeRecruteur', async (req, res) => {
 
 
 
-router.get('/organisations', (req, res) => {
-  const role = req.session.role || 'admin';
-  const page = parseInt(req.query.page) || 1;
-  const limit = 9;
-  const offset = (page - 1) * limit;
-
-  const searchTerm = req.query.search || '';
-  const searchCondition = searchTerm
-    ? `WHERE o.Name LIKE ? OR o.Headquarters LIKE ? OR o.Type LIKE ? OR o.Status LIKE ?`
-    : '';
-
-  const query = `
-    SELECT
-      o.Siren,
-      o.Name AS Nom,
-      o.Status AS Statut,
-      o.Headquarters AS Localisation,
-      o.Type
-    FROM Organisation o
-    ${searchCondition}
-    ORDER BY o.Siren DESC
-  `;
-
-  const queryParams = searchTerm
-    ? [`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`, limit, offset]
-    : [limit, offset];
-
-  const countQuery = `
-    SELECT COUNT(*) AS total
-    FROM Organisation o
-    ${searchCondition}
-  `;
-
-  const countParams = searchTerm
-    ? [`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`]
-    : [];
-
-  db.query(query, queryParams, (err, results) => {
-    if (err) {
-      console.error("Erreur MySQL (organisations) :", err);
-      return res.status(500).send("Erreur serveur");
-    }
-
+router.get('/organisations', async(req, res) => {
+  try{
+    const role = req.session.role || 'admin';
+    const page = parseInt(req.query.page) || 1;
+    const limit = 9;
+    const offset = (page - 1) * limit;
+    const searchTerm = req.query.search || '';
+  
+    let results;
+    results = await organisation.readAllFiltréPaginé(searchTerm, limit, offset);
+    let countResults;
+    countResults = await organisation.count(searchTerm);
+  
     const organisations = results.map(org => ({
       siren: org.Siren,
       nom: org.Nom,
@@ -194,29 +164,23 @@ router.get('/organisations', (req, res) => {
       localisation: org.Localisation,
       type: org.Type || 'Non spécifié'
     }));
-
-    db.query(countQuery, countParams, (countErr, countResults) => {
-      if (countErr) {
-        console.error("Erreur MySQL (comptage) :", countErr);
-        return res.status(500).send("Erreur serveur");
-      }
-
-      const totalOrganisations = countResults[0].total;
-      const totalPages = Math.ceil(totalOrganisations / limit);
-
-      res.render('Admin/GestionOrganisation', {
-        role: role,
-        organisations: organisations,
-        currentPage: page,
-        totalPages: totalPages,
-        searchTerm: searchTerm
-      });
+  
+    const totalPages = Math.ceil(countResults / limit);
+  
+    res.render('Admin/GestionOrganisation', {
+      role: role,
+      organisations: organisations,
+      currentPage: page,
+      totalPages: totalPages,
+      searchTerm: searchTerm
     });
-  });
+  }
+  catch (err) {
+    console.log(err);
+    res.status(500).send("Erreur lors de la récupération des organisations (Contrôleur)");
+  }
+  
 });
-    
-
-
 
 
 module.exports = router;

@@ -20,51 +20,60 @@ module.exports = {
         }
     },
 
-    /* getOrganisations: async function(searchTerm, limit, offset) {
+    readAllFiltréPaginé: async function(searchTerm, limit, offset) {
+      const searchCondition = searchTerm
+      ? `WHERE o.Name LIKE ? OR o.Headquarters LIKE ? OR o.Type LIKE ? OR o.Status LIKE ?`
+      : '';
 
-        const searchCondition = searchTerm ?
-          `WHERE o.Name LIKE ? OR o.Headquarters LIKE ? OR o.Type LIKE ? OR o.Status LIKE ?` :
-          '';
+      const query = `
+      SELECT
+        o.Siren,
+        o.Name AS Nom,
+        o.Status AS Statut,
+        o.Headquarters AS Localisation,
+        o.Type
+      FROM Organisation o
+      ${searchCondition}
+      ORDER BY o.Siren DESC
+      `;
       
-        const query = `
-          SELECT
-            o.Siren,
-            o.Name AS Nom,
-            o.Status AS Statut,
-            o.Headquarters AS Localisation,
-            o.Type
-          FROM Organisation o
-          ${searchCondition}
-          ORDER BY o.Siren DESC
-          LIMIT ? OFFSET ?
-        `;
+      const queryParams = searchTerm
+      ? [`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`, limit, offset]
+      : [limit, offset];
       
-        const queryParams = searchTerm ?
-          [`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`, limit, offset] :
-          [limit, offset];
-      
+      try {
         const results = await db.query(query, queryParams);
         return results;
-      },
+      }
+      catch (err) {
+          console.error('Erreur lors de la récupération des recruteurs(Modèle) :', err);
+          throw err;
+      }
+    },
       
-      getTotalOrganisations: async function (searchTerm) {
-        const searchCondition = searchTerm ?
-          `WHERE o.Name LIKE ? OR o.Headquarters LIKE ? OR o.Type LIKE ? OR o.Status LIKE ?` :
-          '';
+    count: async function (searchTerm) {
+      const searchCondition = searchTerm ?
+        `WHERE o.Name LIKE ? OR o.Headquarters LIKE ? OR o.Type LIKE ? OR o.Status LIKE ?` :
+        '';
+    
+      const countQuery = `
+      SELECT COUNT(*) AS total
+      FROM Organisation o
+      ${searchCondition}
+      `;
       
-        const countQuery = `
-          SELECT COUNT(*) AS total
-          FROM Organisation o
-          ${searchCondition}
-        `;
+      const countParams = searchTerm
+        ? [`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`]
+        : [];
       
-        const countParams = searchTerm ?
-          [`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`] :
-          [];
-      
-        const countResults = await db.query(countQuery, countParams);
-        return countResults
-      } */
+      try {
+        const results = await db.query(countQuery, countParams);
+        return results[0].total;
+      } catch (err) {
+        console.error('Erreur lors de la récupération du nombre total de recruteurs (Modèle) :', err);
+        throw err;
+      }
+    }
       
 
 
