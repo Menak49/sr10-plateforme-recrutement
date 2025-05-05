@@ -43,6 +43,25 @@ module.exports = {
             throw err;
         }
     
+    },
+
+    readAllBis: async function(){
+        const query = `
+        SELECT 
+            fp.Id,
+            fp.Title, 
+            org.Name AS organisation
+        FROM FichePoste fp
+        JOIN Organisation org ON fp.Organisation = org.Siren
+        `;
+        try{
+            const results = await db.query(query);
+            return results;
+        }
+        catch(err){
+            console.error('Erreur lors de la récupération des fiches de poste (Modèle) :', err);
+            throw err;
+        }
     }
 
 }

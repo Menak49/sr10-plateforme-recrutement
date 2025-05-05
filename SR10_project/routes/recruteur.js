@@ -17,24 +17,11 @@ router.get('/Accueil', function(req, res, next) {
   res.render('WelcomePage', { role: role });
 });
 
-router.get('/ajouterOffre', (req, res) => {
-
-  const getFichesQuery = `
-    SELECT 
-      fp.Id,
-      fp.Title,
-      org.Name AS organisation
-    FROM FichePoste fp
-    JOIN Organisation org ON fp.Organisation = org.Siren
-  `;
-
-  db.query(getFichesQuery, (err, fiches) => {
-    if (err) {
-      console.error('Erreur MySQL:', err);
-      return res.status(500).send("Erreur lors de la récupération des fiches");
-    }
 
 
+router.get('/ajouterOffre', async(req, res) => {
+  try{
+    const fiches = await fiche.readAllBis();
     res.render('Recruteur/PublierOffre', {
       mode: 'create',
       fiches: fiches,
@@ -44,99 +31,69 @@ router.get('/ajouterOffre', (req, res) => {
         expiryDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
                     .toISOString()
                     .split('T')[0]
-      }
-    });
-  });
-});
-
-router.get('/modifierOffre/:id', (req, res) => {
-  const offreId = req.params.id;
-
-  const getOffreQuery = `
-    SELECT 
-      Id,
-      FichePoste,
-      State,
-      DATE_FORMAT(ExpiryDate, '%Y-%m-%d') AS ExpiryDateFormatted,
-      Details,
-      Slots
-    FROM OffreEmploi 
-    WHERE Id = ?
-  `;
-
-  db.query(getOffreQuery, [offreId], (err, offreResults) => {
-    if (err || offreResults.length === 0) {
-      console.error('Erreur ou offre non trouvée:', err);
-      return res.status(404).send("Offre non trouvée");
-    }
-
-    const offre = offreResults[0];
-
-    const getFichesQuery = `
-      SELECT 
-        fp.Id,
-        fp.Title, 
-        org.Name AS organisation
-      FROM FichePoste fp
-      JOIN Organisation org ON fp.Organisation = org.Siren
-    `;
-
-    db.query(getFichesQuery, (err, fiches) => {
-      if (err) {
-        console.error('Erreur MySQL (fiches):', err);
-        return res.status(500).send("Erreur lors de la récupération des fiches");
-      }
-
-      res.render('Recruteur/PublierOffre', {
-        mode: 'edit',
-        offre: {
-          id: offre.Id,
-          FichePoste: offre.FichePoste,
-          State: offre.State,
-          ExpiryDate: offre.ExpiryDateFormatted,
-          Details: offre.Details,
-          Slots: offre.Slots
-        },
-        fiches: fiches,
-        role: 'recruteur'
-      });
-    });
-  });
-});
-
-
-router.get('/ajouterFicheDePoste', function(req, res, next) {
-  db.query('SELECT * FROM StatutPoste', (err, statuts) => {
-    if (err) {
-      console.error('Erreur lors de la récupération des statuts :', err);
-      return res.status(500).send('Erreur serveur');
-    }
-    
-    db.query('SELECT * FROM TypeMetier', (err, metiers) => {
-      if (err) {
-        console.error('Erreur lors de la récupération des métiers :', err);
-        return res.status(500).send('Erreur serveur');
-      }
-      
-      db.query('SELECT Siren, Name FROM Organisation', (err, organisations) => {
-        if (err) {
-          console.error('Erreur lors de la récupération des organisations :', err);
-          return res.status(500).send('Erreur serveur');
         }
-        
-        res.render('Recruteur/PublierFichePoste', {
-          mode: 'create',
-          fiche: {}, 
-          statuts: statuts,
-          metiers: metiers,
-          organisations: organisations,
-          role: 'recruteur',
-          title: 'Créer une fiche de poste'
-        });
-      });
     });
-  });
+  }
+  catch (err) {
+    console.error('Erreur lors de la récupération des données:', err);
+    return res.status(500).send('Erreur serveur');
+  }
+  
 });
+
+
+router.get('/ajouterOffre', async(req, res) => {
+  try {
+    const offreId = req.params.id;
+    const offreToRender = await offre.read(offreId);
+    const fiches = await fiche.readAllBis();
+  
+    res.render('Recruteur/PublierOffre', {
+      mode: 'edit',
+      offre: {
+        id: offreToRender.Id,
+        FichePoste: offreToRender.FichePoste,
+        State: offreToRender.State,
+        ExpiryDate: offreToRender.ExpiryDateFormatted,
+        Details: offreToRender.Details,
+        Slots: offreToRender.Slots
+      },
+      fiches: fiches,
+      role: 'recruteur'
+    });
+  }
+  catch (err) {
+    console.error('Erreur lors de la récupération des données:', err);
+    return res.status(500).send('Erreur serveur');
+  }
+  
+});
+
+
+
+
+router.get('/ajouterOffre', async (req, res) => {
+  try{
+    const statuts = await statut.readAll()
+    const metiers = await metier.readAll()
+    const organisations = await organisation.readAll()
+          
+    res.render('Recruteur/PublierFichePoste', {
+      mode: 'create',
+      fiche: {}, 
+      statuts: statuts,
+      metiers: metiers,
+      organisations: organisations,
+      role: 'recruteur',
+      title: 'Créer une fiche de poste'
+    });
+  }
+  catch (err) {
+    console.error('Erreur lors de la récupération des données :', err);
+    return res.status(500).send('Erreur serveur');
+  }
+});
+
 
 
 router.get('/modifierFicheDePoste/:id', async (req, res) => {

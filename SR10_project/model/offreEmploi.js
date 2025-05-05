@@ -5,6 +5,27 @@ db.query = util.promisify(db.query);
 
 module.exports = {
 
+    read: async function (id) {
+       const query = `
+        SELECT 
+            Id,
+            FichePoste,
+            State,
+            DATE_FORMAT(ExpiryDate, '%Y-%m-%d') AS ExpiryDateFormatted,
+            Details,
+            Slots
+        FROM OffreEmploi 
+        WHERE Id = ?
+        `;
+        try {
+            const result= await db.query(query, [id]);
+            return result[0];
+        } catch (err) {
+            console.error('Erreur lors de la récupération de l\'offre d\'emploi (modèle):', err);
+            throw err;
+        }
+    },
+    
     readAll: async function(){
         const query = `
         SELECT 
@@ -20,7 +41,7 @@ module.exports = {
         WHERE o.State = 'Published'`;
         try {
             const results = await db.query(query);
-            return results; // Retourne tous les utilisateurs
+            return results;
         } catch (err) {
             console.error('Erreur lors de la récupération des offres demploi (Modèle) :', err);
             throw err;
@@ -55,7 +76,7 @@ module.exports = {
       `;
         try {
             const results = await db.query(query, [`%${searchTerm}%`, `%${searchTerm}%`, limit, offset]);
-            return results; // Retourne tous les utilisateurs
+            return results;
         }
         catch (err) {
             console.error('Erreur lors de la récupération des offres demploi (Modèle) :', err);
