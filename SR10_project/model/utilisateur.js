@@ -1,5 +1,6 @@
 const db = require('./db.js');
 const util = require('util');
+const { readAllFiltréPaginé } = require('./recruteurBecomeQuery.js');
 // Promisify db.query
 db.query = util.promisify(db.query);
 
@@ -110,7 +111,72 @@ des informations sur l'opération SQL du type :
         console.error('Erreur MySQL : ', err);
         throw err;
       }
+    },
+
+    readAllFiltréPaginé: async function(searchTerm, limit, offset) {
+      const searchCondition = searchTerm ? 
+        `WHERE Utilisateur.LastName LIKE ? OR Utilisateur.FirstName LIKE ? OR Utilisateur.Email LIKE ?` : 
+        '';
+      
+      const query = `
+        SELECT Utilisateur.Phone, Utilisateur.LastName, Utilisateur.FirstName, Utilisateur.Email, Utilisateur.Status,
+        CASE 
+          WHEN Administrateur.User IS NOT NULL THEN 'Administrateur'
+          WHEN Recruteur.User IS NOT NULL THEN 'Recruteur'
+          WHEN Candidat.User IS NOT NULL THEN 'Candidat'
+          ELSE 'Utilisateur'
+        END AS Role
+        FROM Utilisateur
+        LEFT JOIN Administrateur ON Utilisateur.Phone = Administrateur.User
+        LEFT JOIN Recruteur ON Utilisateur.Phone = Recruteur.User
+        LEFT JOIN Candidat ON Utilisateur.Phone = Candidat.User
+        ${searchCondition}
+        ORDER BY Utilisateur.LastName ASC
+        LIMIT ? OFFSET ?
+      `;
+      
+      const queryParams = searchTerm ? 
+        [`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`, limit, offset] : 
+        [limit, offset];
+
+        try {
+          const results = await db.query(query, queryParams);
+          return results;
+      }
+      catch (err) {
+          console.error('Erreur lors de la récupération des recruteurs(Modèle) :', err);
+          throw err;
+      }
+    
+    },
+
+    count: async function(searchTerm) {
+      const searchCondition = searchTerm ? 
+      `WHERE Utilisateur.LastName LIKE ? OR Utilisateur.FirstName LIKE ? OR Utilisateur.Email LIKE ?` : 
+      '';
+
+      const countQuery = `
+        SELECT COUNT(*) as total
+        FROM Utilisateur
+        ${searchCondition}
+      `;
+    
+      const countParams = searchTerm ? 
+        [`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`] : 
+        [];
+
+      try {
+        const results = await db.query(countQuery, countParams);
+        return results[0].total;
+      } catch (err) {
+          console.error('Erreur lors de la récupération du nombre total dutilisateurs (Modèle) :', err);
+          throw err;
+      }
     }
+
+
+
+    
 
 }
 

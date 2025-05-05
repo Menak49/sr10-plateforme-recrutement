@@ -42,7 +42,7 @@ router.get('/ajouterOffre', async(req, res) => {
 });
 
 
-router.get('/ajouterOffre', async(req, res) => {
+router.get('/modifierOffre/:id', async(req, res) => {
   try {
     const offreId = req.params.id;
     const offreToRender = await offre.read(offreId);
@@ -72,7 +72,7 @@ router.get('/ajouterOffre', async(req, res) => {
 
 
 
-router.get('/ajouterOffre', async (req, res) => {
+router.get('/ajouterFicheDePoste', async (req, res) => {
   try{
     const statuts = await statut.readAll()
     const metiers = await metier.readAll()
