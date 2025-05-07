@@ -52,7 +52,7 @@ router.get('/privileges', (req, res) => {
 
 
 router.get('/creerOrganisation', (req, res) => {
-  const role = req.session.role || 'recruteur';
+  const role = req.session.role || 'admin';
   res.render('Privileges/creerOrga', {
     role: role
   });
