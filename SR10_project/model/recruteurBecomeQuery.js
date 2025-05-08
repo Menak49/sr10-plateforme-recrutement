@@ -5,7 +5,7 @@ db.query = util.promisify(db.query);
 
 module.exports = {
 
-    readAllFiltréPaginé: async function(searchTerm, limit, offset) {
+    readAllFiltrePagine: async function(searchTerm, limit, offset) {
         const searchCondition = searchTerm ? 
         `WHERE u.LastName LIKE ? OR u.FirstName LIKE ? OR u.Email LIKE ? OR q.Message LIKE ?` : 
         '';
