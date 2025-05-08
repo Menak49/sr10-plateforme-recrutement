@@ -14,6 +14,12 @@
 
     <div class="container mt-4">
       <h2 class="fw-bold mb-4">MES CANDIDATURES</h2>
+      <form method="get" action="candidatures" class="mb-4 d-flex gap-2">
+        <input type="text" name="search" placeholder="Recherche..." class="form-control" value="<%= searchTerm || '' %>">
+        <button class="btn btn-dark" type="submit">🔍</button>
+      </form>
+      
+      
 
       <% candidatures.forEach(c => { %>
       <div class="card mb-3 shadow-sm">
@@ -82,6 +88,30 @@
       </div>
       <% }) %>
     </div>
+    <nav aria-label="Pagination" class="mt-4">
+        <ul class="pagination justify-content-center">
+          <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+            <a class="page-link text-dark" href="?page=<%= currentPage - 1 %>&search=<%= searchTerm %>">‹</a>
+          </li>
+      
+          <% for (let i = 1; i <= totalPages; i++) { %>
+            <% if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) { %>
+              <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                <a class="page-link <%= currentPage === i ? 'bg-dark border-dark' : 'text-dark' %>" href="?page=<%= i %>&search=<%= searchTerm %>"><%= i %></a>
+              </li>
+            <% } else if ((i === 2 && currentPage > 3) || (i === totalPages - 1 && currentPage < totalPages - 2)) { %>
+              <li class="page-item">
+                <span class="page-link text-dark">…</span>
+              </li>
+            <% } %>
+          <% } %>
+      
+          <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+            <a class="page-link text-dark" href="gererFicheDePoste?page=<%= currentPage + 1 %>">›</a>
+          </li>
+        </ul>
+      </nav>
+      
 
     <% include('../partials/footer') %>
 

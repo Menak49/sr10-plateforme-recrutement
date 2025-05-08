@@ -15,19 +15,21 @@
     <div class="container mt-4">
       <h2 class="fw-bold">PARCOUREZ LES OFFRES</h2>
 
-      <!-- Barre de recherche -->
-      <div class="input-group mt-3 mb-3 shadow-sm">
-        <input
-          type="text"
-          class="form-control"
-          placeholder="Rechercher par offre, entreprise ou mots-clés"
-        />
-        <button class="btn btn-dark">🔍</button>
-      </div>
+      <form method="GET" action="/parcourir">
+        <div class="input-group mt-3 mb-3 shadow-sm">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Rechercher par titre, organisation ou mots-clés"
+            value="<%= searchTerm %>"
+            name="search"
+          />
+          <button class="btn btn-dark">🔍</button>
+        </div>
+      </form>
 
       <button class="btn btn-outline-dark mb-4">Toutes les Offres</button>
 
-      <!-- Grille  avec toutes les offres dedans  -->
       <div class="row g-3">
         <% offres.forEach(offre => { %>
         <div class="col-md-4">
@@ -47,31 +49,31 @@
         </div>
         <% }) %>
       </div>
+
       <nav aria-label="Pagination" class="mt-4">
         <ul class="pagination justify-content-center">
-          <li class="page-item">
-            <a class="page-link text-dark" href="#">‹</a>
+          <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+            <a class="page-link text-dark" href="parcourir?page=<%= currentPage - 1 %>">‹</a>
           </li>
-          <li class="page-item active">
-            <a class="page-link bg-dark border-dark" href="#">1</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link text-dark" href="#">2</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link text-dark" href="#">3</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link text-dark" href="#">…</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link text-dark" href="#">9</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link text-dark" href="#">›</a>
+
+          <% for (let i = 1; i <= totalPages; i++) { %>
+            <% if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) { %>
+              <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                <a class="page-link <%= currentPage === i ? 'bg-dark border-dark' : 'text-dark' %>" href="parcourir?page=<%= i %>"><%= i %></a>
+              </li>
+            <% } else if ((i === 2 && currentPage > 3) || (i === totalPages - 1 && currentPage < totalPages - 2)) { %>
+              <li class="page-item">
+                <span class="page-link text-dark">…</span>
+              </li>
+            <% } %>
+          <% } %>
+
+          <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+            <a class="page-link text-dark" href="parcourir?page=<%= currentPage + 1 %>">›</a>
           </li>
         </ul>
       </nav>
+
       <% include('../partials/footer.ejs') %>
     </div>
 

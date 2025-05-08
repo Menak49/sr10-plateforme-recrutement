@@ -18,34 +18,71 @@ router.get('/Accueil', function(req, res, next) {
 });
 
 
-
 router.get('/parcourir', async (req, res) => {
   try {
-    let results;
-    results = await offre.readAll();
-    role = req.session.role || 'candidat';
-    return res.render('Candidat/ParcourirOffre', {role:role, offres: results });
+    const searchTerm = req.query.search || ''; 
+    const page = parseInt(req.query.page) || 1;
+    const limit = 9;
+    const offset = (page - 1) * limit;
+
+    const userId = req.session.user || 223344556;
+    const role = req.session.role || 'candidat';
+
+    let offres, total;
+
+    if (role === 'candidat') {
+      offres = await offre.readOffresPourCandidat(userId, searchTerm, limit, offset);
+      total = await offre.countOffresPourCandidat(userId, searchTerm);
+    } else {
+      offres = await offre.readOffresFiltrePagine(searchTerm, limit, offset);
+      const countResult = await offre.nbTotalOffres(searchTerm);
+      total = countResult[0].total;
     }
-  catch (err) {
-    console.log(err);
-    res.status(500).send("Erreur lors de la récupération des offres (Contrôleur)");
+
+    const totalPages = Math.ceil(total / limit);
+
+    return res.render('Candidat/ParcourirOffre', {
+      role,
+      offres,
+      currentPage: page,
+      totalPages,
+      searchTerm,
+    });
+  } catch (err) {
+    console.error("Erreur complète :", err);
+  res.status(500).send("Erreur lors de la récupération des offres (Contrôleur)");
   }
 });
+
 
 
 router.get('/candidatures', async (req, res) => {
   try {
-    const userId = req.session.user || 223344556;  
-    let results;
-    results = await candidature.getCandidaturesByUserId(userId);
-    role = req.session.role || 'candidat';
-    return res.render('Candidat/Candidatures', {role: req.session.role || 'candidat', candidatures: results});
-  }
-  catch (err) {
-    console.log(err);
+    const userId = req.session.user || 223344556;
+    const role = req.session.role || 'candidat';
+    
+    const currentPage = parseInt(req.query.page) || 1;
+    const limit = 5;
+    const offset = (currentPage - 1) * limit;
+    const searchTerm = req.query.search || '';
+
+    const candidatures = await candidature.getCandidaturesByUserId(userId, searchTerm, limit, offset);
+    const total = await candidature.countCandidaturesByUserId(userId, searchTerm);
+    const totalPages = Math.ceil(total / limit);
+
+    res.render('Candidat/Candidatures', {
+      role,
+      candidatures,
+      currentPage,
+      totalPages,
+      searchTerm
+    });
+  } catch (err) {
+    console.error(err);
     res.status(500).send("Erreur lors de la récupération de vos candidatures (Contrôleur)");
   }
 });
+
 
 
 

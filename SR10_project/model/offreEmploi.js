@@ -48,7 +48,7 @@ module.exports = {
         }
     },
 
-    readOffresFiltréPaginé : async function (searchTerm, limit, offset){
+    readOffresFiltrePagine : async function (searchTerm, limit, offset){
         const query = `
         SELECT 
           o.Id AS id,
@@ -100,8 +100,69 @@ module.exports = {
             console.error('Erreur lors de la récupération du nombre total d\'offres (Modèle) :', err);
             throw err;
         }
-    }
+    },
+    readOffresPourCandidat : async function (candidatId, searchTerm, limit, offset) {
+        const query = `
+          SELECT 
+            o.Id AS id,
+            o.State AS etat,
+            o.ExpiryDate AS dateExpiration,
+            o.Details AS details,
+            o.Slots AS nombrePostes,
+            fp.Title AS titre,
+            fp.Supervisor AS superviseur,
+            fp.Location AS localisation,
+            fp.WorkSchedule AS horaire,
+            fp.MinSalary AS minSalaire,
+            fp.MaxSalary AS maxSalaire,
+            fp.Description AS description,
+            org.Name AS organisation,
+            sp.Name AS statut,
+            tm.Name AS typeMetier
+          FROM OffreEmploi o
+          LEFT JOIN FichePoste fp ON o.FichePoste = fp.Id
+          LEFT JOIN Organisation org ON fp.Organisation = org.Siren
+          LEFT JOIN StatutPoste sp ON fp.StatutPoste = sp.Name
+          LEFT JOIN TypeMetier tm ON fp.Type = tm.Name
+          WHERE o.State = 'Published'
+            AND o.Id NOT IN (
+              SELECT OffreEmploi FROM Candidature WHERE Candidat = ?
+            )
+            AND (fp.Title LIKE ? OR org.Name LIKE ?)
+          LIMIT ? OFFSET ?;
+        `;
+        try {
+            const results = await db.query(query, [candidatId, `%${searchTerm}%`, `%${searchTerm}%`, limit, offset]);
+            return results;
+        } catch (err) {
+            console.error('Erreur lors de la récupération des offres pour le candidat (Modèle) :', err);
+            throw err;
+        }
+    },
+    countOffresPourCandidat: async function (candidatId, searchTerm) {
+        const countQuery = `
+          SELECT COUNT(*) AS total
+          FROM OffreEmploi o
+          LEFT JOIN FichePoste fp ON o.FichePoste = fp.Id
+          LEFT JOIN Organisation org ON fp.Organisation = org.Siren
+          WHERE o.State = 'Published'
+            AND o.Id NOT IN (
+              SELECT OffreEmploi FROM Candidature WHERE Candidat = ?
+            )
+            AND (fp.Title LIKE ? OR org.Name LIKE ?);
+        `;
+        try {
+          const countResult = await db.query(countQuery, [candidatId, `%${searchTerm}%`, `%${searchTerm}%`]);
+          return countResult[0].total;
+        } catch (err) {
+          console.error('Erreur lors du comptage des offres pour le candidat (Modèle) :', err);
+          throw err;
+        }
+      },
+      
 
+    
+    
     
     
 }
