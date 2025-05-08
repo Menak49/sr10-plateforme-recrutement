@@ -9,20 +9,22 @@
       rel="stylesheet"
     />
   </head>
-  <body class="bg-light">
+  <body class="bg-light d-flex flex-column min-vh-100">
     <%- include('../partials/navbar', { role: role }) %>
 
     <div class="container mt-4">
       <h2 class="fw-bold">GESTION DES COMPTES UTILISATEURS</h2>
 
-      <div class="input-group mt-3 mb-3 shadow-sm">
+      <form method="GET" class="input-group mt-3 mb-3 shadow-sm">
         <input
           type="text"
           class="form-control"
           placeholder="Rechercher un utilisateur..."
+          name="search"
+          value="<%= searchTerm %>"
         />
-        <button class="btn btn-dark">🔍</button>
-      </div>
+        <button type="submit" class="btn btn-dark">🔍</button>
+      </form>
 
       <div class="row g-3">
         <% utilisateurs.forEach(user => { %>
@@ -56,29 +58,30 @@
 
       <nav aria-label="Pagination" class="mt-4">
         <ul class="pagination justify-content-center">
-          <li class="page-item">
-            <a class="page-link text-dark" href="#">&lt;</a>
+      
+          <!-- Bouton précédent -->
+          <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+            <a class="page-link text-dark" href="?page=<%= currentPage - 1 %>&search=<%= searchTerm %>">&lt;</a>
           </li>
-          <li class="page-item active">
-            <a class="page-link bg-dark border-dark" href="#">1</a>
+      
+          <!-- Pages numérotées -->
+          <% for(let i = 1; i <= totalPages; i++) { %>
+            <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+              <a class="page-link <%= i === currentPage ? 'bg-dark border-dark text-white' : 'text-dark' %>" 
+                 href="?page=<%= i %>&search=<%= searchTerm %>">
+                 <%= i %>
+              </a>
+            </li>
+          <% } %>
+      
+          <!-- Bouton suivant -->
+          <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+            <a class="page-link text-dark" href="?page=<%= currentPage + 1 %>&search=<%= searchTerm %>">&gt;</a>
           </li>
-          <li class="page-item">
-            <a class="page-link text-dark" href="#">2</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link text-dark" href="#">3</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link text-dark" href="#">...</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link text-dark" href="#">9</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link text-dark" href="#">&gt;</a>
-          </li>
+      
         </ul>
       </nav>
+      
     </div>
 
     <%- include('../partials/footer') %>
