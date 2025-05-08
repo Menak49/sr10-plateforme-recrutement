@@ -37,7 +37,7 @@
         >
       </div>
 
-      <form action="/gestionRecruteurDemandes" method="GET">
+      <form action="GestionDemandeRecruteur" method="GET">
         <div class="input-group mt-3 mb-3 shadow-sm">
           <input
             type="text"
@@ -116,7 +116,7 @@
           <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
             <a
               class="page-link text-dark"
-              href="/GestionDemandeRecruteur?page=<%= currentPage-1 %>&search=<%= searchTerm %>"
+              href="GestionDemandeRecruteur?page=<%= currentPage-1 %>&search=<%= searchTerm %>"
               >&lt;</a
             >
           </li>
@@ -126,7 +126,7 @@
           <li class="page-item <%= i === currentPage ? 'active' : '' %>">
             <a
               class="page-link <%= i === currentPage ? 'bg-dark border-dark' : 'text-dark' %>"
-              href="/GestionDemandeRecruteur?page=<%= i %>&search=<%= searchTerm %>"
+              href="GestionDemandeRecruteur?page=<%= i %>&search=<%= searchTerm %>"
               ><%= i %></a
             >
           </li>
@@ -145,7 +145,7 @@
           >
             <a
               class="page-link text-dark"
-              href="/GestionDemandeRecruteur?page=<%= currentPage+1 %>&search=<%= searchTerm %>"
+              href="GestionDemandeRecruteur?page=<%= currentPage+1 %>&search=<%= searchTerm %>"
               >&gt;</a
             >
           </li>

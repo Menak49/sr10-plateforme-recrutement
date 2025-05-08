@@ -59,6 +59,7 @@ router.get('/creerOrganisation', (req, res) => {
 });
 
 
+
 router.get('/gestionUtilisateurs', async(req, res) => {
   try{
     const role = req.session.role || 'admin';
@@ -89,7 +90,8 @@ router.get('/gestionUtilisateurs', async(req, res) => {
       utilisateurs: utilisateurs,
       currentPage: page,
       totalPages: totalPages,
-      searchTerm: searchTerm
+      searchTerm: searchTerm,
+      
     });
   }
   catch (err) {
@@ -109,7 +111,7 @@ router.get('/GestionDemandeRecruteur', async (req, res) => {
     const searchTerm = req.query.search || '';
           
     let results; 
-    results = await recruteur.readAllFiltréPaginé(searchTerm, limit, offset);
+    results = await recruteur.readAllFiltrePagine(searchTerm, limit, offset);
     let countResults;
     countResults = await recruteur.count(searchTerm);
 
