@@ -127,21 +127,41 @@ router.get('/modifierFicheDePoste/:id', async (req, res) => {
 
 
 
-  router.get('/gererFicheDePoste', async (req, res) => {
-    try { 
-      const results = await fiche.readAll();
-      const role = req.session?.role || 'recruteur';
-  
-      res.render('Recruteur/GererFicheDePoste', {
-        fiches: results,
-        role: role
-      });
+router.get('/gererFicheDePoste', async (req, res) => {
+  try {
+    const role = req.session?.role || 'recruteur';
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = 6;
+    const offset = (page - 1) * limit;
+
+    const search = req.query.search?.trim() || '';
+
+    let fiches, totalCount;
+
+    if (search) {
+      fiches = await fiche.searchPage(search, limit, offset);
+      totalCount = await fiche.countSearch(search);
+    } else {
+      fiches = await fiche.readPage(limit, offset);
+      totalCount = await fiche.countAll();
     }
-    catch (err) {
-      console.error('Erreur MySQL:', err);
-      return res.status(500).send('Erreur lors de la récupération des fiches de poste');
-    }
-  });
+
+    const totalPages = Math.ceil(totalCount / limit);
+
+    res.render('Recruteur/GererFicheDePoste', {
+      fiches,
+      currentPage: page,
+      totalPages: totalPages,
+      role: role,
+      search: search // pour remplir le champ input dans la vue
+    });
+  } catch (err) {
+    console.error('Erreur MySQL:', err);
+    res.status(500).send('Erreur lors de la récupération des fiches de poste');
+  }
+});
+
 
 
   router.get('/gererOffres', async (req, res) => {
