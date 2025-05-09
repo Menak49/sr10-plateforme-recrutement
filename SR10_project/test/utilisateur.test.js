@@ -25,7 +25,7 @@ describe('Tests sur la table Utilisateur', () => {
     /* On teste les deux embranchements de la fonction create
     - si le numéros (qui est notre clé unique) existe déjà, on retourne false
     - sinon on crée l'utilisateur*/
-    
+  
     //attention à bien vérifer que l'utilisateur n'existe pas déjà dans la BD, sinon erreur!!
     const newUser = {
       phone: 1005089,
