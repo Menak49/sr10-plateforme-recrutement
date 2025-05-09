@@ -17,8 +17,10 @@ var app = express();
 
 //configuration de la session
 app.use(session({
-  secret: 'ton-secret',   
-  resave: false,
+  secret: 'une string complexe qui sera utilise pour signé',   
+  resave: false,// ne pas forcer l'enregistrement
+  cookie: { secure: false, httpOnly: true }, // true si HTTPS, false sinon
+  name: 'sessionId', // nom du cookie de session
   saveUninitialized: true
 }));
 

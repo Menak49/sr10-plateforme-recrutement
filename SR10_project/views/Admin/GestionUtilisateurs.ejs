@@ -47,7 +47,7 @@
           <%- include('../partials/Confirmation', { 
             modalId: "deleteModalUser-" + user.id,
             message: "Êtes-vous sûr de vouloir supprimer l'utilisateur " + user.nom + " ?",
-            action: "/delete-user/" + user.id
+            action: "delete-user/" + user.id
           }) %>
               </div>
             </div>
