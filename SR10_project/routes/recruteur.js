@@ -164,14 +164,14 @@ router.get('/gererFicheDePoste', async (req, res) => {
 
 
 
-  router.get('/gererOffres', async (req, res) => {
+  router.get('/GererOffres', async (req, res) => {
     try {
       const searchTerm = req.query.search || '';
       const page = parseInt(req.query.page) || 1;
       const limit = 9; 
       const offset = (page - 1) * limit;
   
-      const results = await offre.readOffresFiltréPaginé(searchTerm, limit, offset);
+      const results = await offre.readOffresFiltrePagine(searchTerm, limit, offset);
       const countResult = await offre.nbTotalOffres(searchTerm);  
       const totalOffers = countResult[0] ? countResult[0].total : 0;
       const totalPages = Math.ceil(totalOffers / limit); 
