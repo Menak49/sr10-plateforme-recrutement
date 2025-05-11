@@ -54,6 +54,7 @@ module.exports = {
       throw err;
     }
   },
+  
 
   /* CREATE : Fonction pour insérer un nouvel utilisateur (candidat)
 Lorsque la requête réussit, la fonction retourne un objet contenant 
@@ -173,14 +174,4 @@ des informations sur l'opération SQL du type :
           throw err;
       }
     }
-
-
-
-    
-
 }
-
-
-
-
-
