@@ -69,7 +69,10 @@ describe("Test de la route /candidat/creerOrganisation", () => {
 });
 
 
-
+test("Elle devrait afficher l'accueil recruteur", async () => {
+  const response = await request(app).get("/recruteur/Accueil");
+  expect(response.statusCode).toBe(200);
+});
 
 describe("Test de la route /recruteur/modifierOffre/:id", () => {
   test("Elle devrait répondre au GET avec 200 pour un ID valide", async () => {
