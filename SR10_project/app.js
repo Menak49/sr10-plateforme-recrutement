@@ -19,7 +19,8 @@ var app = express();
 app.use(session({
   secret: 'une string complexe qui sera utilise pour signé',   
   resave: false,// ne pas forcer l'enregistrement
-  cookie: { secure: false, httpOnly: true }, // true si HTTPS, false sinon
+  cookie: { secure: false, httpOnly: true, maxAge: 1000*60*15 //durée de vie max de 15 min
+   }, // true si HTTPS, false sinon
   name: 'sessionId', // nom du cookie de session
   saveUninitialized: true
 }));
