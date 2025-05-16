@@ -189,6 +189,34 @@ router.get('/gererFicheDePoste', async (req, res) => {
     }
  
   });
+
+router.post('/ajouterOffre', async (req, res) => {
+  try {
+        // Récupérer les données du formulaire une par une en utilisant les identificateurs de la vue
+        const state = req.body.state;
+        const expiryDate = req.body.expiryDate;
+        const details = req.body.details;
+        const slots = req.body.slots;
+        const fichePosteId = req.body.fichePosteId;
+
+        // Créer un objet avec les données du formulaire
+        const formData = {
+            State: state,
+            ExpiryDate: expiryDate,
+            Details: details,
+            Slots: slots,
+            FichePoste: fichePosteId
+        };
+        console.log('FormData:', formData);
+
+      const result = await offre.create(formData);
+      res.redirect('/recruteur/GererOffres');
+  } catch (err) {
+      console.error(err);
+      console.log('Erreur lors de la création de l\'offre d\'emploi:', formData);
+      res.status(500).send('Erreur lors de la création de l\'offre');
+  }
+});
   
 
 

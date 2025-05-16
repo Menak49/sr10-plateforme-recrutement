@@ -24,7 +24,7 @@
             </small>
           </div>
 
-          <form action="<%= mode === 'edit' ? '/offres/' + offre.id + '/update' : '/offres/ajouter' %>" method="POST">
+          <form action="/recruteur/ajouterOffre" method="POST">
 
             <div class="mb-3">
               <label for="fichePosteId" class="form-label">Fiche de poste</label>
@@ -36,7 +36,7 @@
               >
                 <option value="" disabled <%= mode === 'edit' ? '' : 'selected' %>>Choisissez une fiche de poste</option>
                 <% fiches.forEach(fiche => { %>
-                <option value="<%= fiche.id %>" <%= mode === 'edit' && offre.FichePoste == fiche.id ? 'selected' : '' %>>
+                <option value="<%= fiche.Id %>" <%= mode === 'edit' && offre.FichePoste == fiche.id ? 'selected' : '' %>>
                   <%= fiche.Title %> - <%= fiche.organisation %>
                 </option>
                 <% }) %>
