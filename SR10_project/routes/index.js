@@ -35,7 +35,7 @@ router.post('/LogIn', async (req, res) => {
   var email = Email
   try {
     const isValid = await users.areValid(Email, password);
-    console.log("email", Email, "password", password);
+    console.log("email", Email, "password", password, "isValid", isValid);
     if (!isValid) {
       return res.status(401).send("Email ou mot de passe incorrect.");
     }
@@ -66,6 +66,16 @@ router.post('/LogIn', async (req, res) => {
     console.error('Erreur lors de la connexion :', err);
     res.status(500).send("Erreur serveur.");
   }
+});
+
+router.get('/logout', (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      console.error('Erreur lors de la déconnexion :', err);
+      return res.status(500).send("Erreur lors de la déconnexion");
+    }
+    res.redirect('/LogIn'); 
+  });
 });
 
 

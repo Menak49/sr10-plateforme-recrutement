@@ -68,7 +68,6 @@ describe("Test de la route /candidat/creerOrganisation", () => {
   });
 });
 
-
 test("Elle devrait afficher l'accueil recruteur", async () => {
   const response = await request(app).get("/recruteur/Accueil");
   expect(response.statusCode).toBe(200);
@@ -196,6 +195,20 @@ describe("Test de la route /admin/GestionDemandeRecruteur", () => {
 describe("Test de la route /admin/organisations", () => {
   test("Elle devrait répondre au GET avec 200", async () => {
     const response = await request(app).get("/admin/organisations");
+    expect(response.statusCode).toBe(200);
+  });
+});
+
+describe("Test de la route /LogIn", () => {
+  test("Elle devrait répondre au GET avec 200", async () => {
+    const response = await request(app).get("/LogIn");
+    expect(response.statusCode).toBe(200);
+  });
+});
+
+describe("Test de la route /SignUp", () => {
+  test("Elle devrait répondre au GET avec 200", async () => {
+    const response = await request(app).get("/SignUp");
     expect(response.statusCode).toBe(200);
   });
 });

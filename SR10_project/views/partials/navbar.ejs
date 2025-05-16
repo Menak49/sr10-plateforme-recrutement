@@ -4,7 +4,6 @@
       <img src="/images/logo2.png" alt="Logo" style="height: 60px;">
       Accueil
     </a>
-    
     <ul class="navbar-nav ms-auto d-flex flex-row gap-3">
       <% if (role === 'admin') { %>
       <li class="nav-item">
@@ -48,6 +47,9 @@
         <a class="nav-link" href="/candidat/privileges">Privilèges</a>
       </li>
       <% } %>
+      <li class="nav-item">
+        <a class="nav-link btn-danger" href="/logout">Déconnexion</a>
+      </li>
     </ul>
   </div>
 </nav>

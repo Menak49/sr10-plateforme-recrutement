@@ -20,13 +20,16 @@ router.get('/Accueil', function(req, res, next) {
 
 router.get('/parcourir', async (req, res) => {
   try {
+    const userId = req.session.user?.phone ;//|| 223344556
+    const role = req.session.role || 'candidat';
+    if (!userId) {
+      return res.redirect('/LogIn');
+    }
     const searchTerm = req.query.search || ''; 
     const page = parseInt(req.query.page) || 1;
     const limit = 9;
     const offset = (page - 1) * limit;
 
-    const userId = req.session.user || 223344556;
-    const role = req.session.role || 'candidat';
 
     let offres, total;
 
