@@ -57,10 +57,13 @@ router.get('/parcourir', async (req, res) => {
 
 
 router.get('/candidatures', async (req, res) => {
+  console.log("session");
   try {
-    const userId = req.session.user || 223344556;
+    const userId = req.session.user?.phone;//|| 223344556
     const role = req.session.role || 'candidat';
-    
+    if (!userId) {
+      return res.redirect('/LogIn');
+    }
     const currentPage = parseInt(req.query.page) || 1;
     const limit = 5;
     const offset = (currentPage - 1) * limit;
@@ -88,11 +91,11 @@ router.get('/candidatures', async (req, res) => {
 
 router.get('/privileges', (req, res) => {
   // Récupérer l'ID de l'utilisateur depuis la session
-  const userId = req.session.user || 223344556;
+  const userId = req.session.user ;//|| 223344556
   
   // Si l'utilisateur n'est pas connecté, rediriger vers la page de connexion
   if (!userId) {
-    return res.redirect('/login');
+    return res.redirect('/LogIn');
   }
   
   const role = req.session.role || 'candidat';
