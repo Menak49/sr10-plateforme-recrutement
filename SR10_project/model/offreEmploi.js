@@ -5,6 +5,18 @@ db.query = util.promisify(db.query);
 
 module.exports = {
 
+  create: async (data) => {
+    try {
+        const { State, ExpiryDate, Details, Slots, FichePoste } = data;
+        const query = 'INSERT INTO OffreEmploi (State, ExpiryDate, Details, Slots, FichePoste) VALUES (?, ?, ?, ?, ?)';
+        const results = await db.query(query, [State, ExpiryDate, Details, Slots, FichePoste]);
+        console.log('Offre d\'emploi créée avec succès:', results);
+    } catch (error) {
+        throw error;
+    }
+},
+
+
     read: async function (id) {
        const query = `
         SELECT 
