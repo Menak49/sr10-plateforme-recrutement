@@ -7,21 +7,20 @@ const organisation = require('../model/organisation.js');
 
 
 
-router.get('/Accueil', function(req, res, next) {
-  var role =  req.session.role ||'candidat';  
-  if (!role) {
-    //role = 'candidat'
-    //return res.redirect('/connexion'); // on verra plus tard
-  }
 
-  res.render('WelcomePage', { role: role });
+router.get('/Accueil', function(req, res, next) {
+  const userId = req.session.user?.phone ;//|| 223344556
+  if (!userId) {
+    return res.redirect('/LogIn');
+  }
+  res.render('WelcomePage', { role: 'candidat',
+      userId: userId, });
 });
 
 
 router.get('/parcourir', async (req, res) => {
   try {
     const userId = req.session.user?.phone ;//|| 223344556
-    const role = req.session.role || 'candidat';
     if (!userId) {
       return res.redirect('/LogIn');
     }
@@ -45,11 +44,12 @@ router.get('/parcourir', async (req, res) => {
     const totalPages = Math.ceil(total / limit);
 
     return res.render('Candidat/ParcourirOffre', {
-      role,
+      role: 'candidat',
       offres,
       currentPage: page,
       totalPages,
       searchTerm,
+      userId: userId,
     });
   } catch (err) {
     console.error("Erreur complète :", err);
@@ -63,7 +63,6 @@ router.get('/candidatures', async (req, res) => {
   console.log("session");
   try {
     const userId = req.session.user?.phone;//|| 223344556
-    const role = req.session.role || 'candidat';
     if (!userId) {
       return res.redirect('/LogIn');
     }
@@ -77,11 +76,12 @@ router.get('/candidatures', async (req, res) => {
     const totalPages = Math.ceil(total / limit);
 
     res.render('Candidat/Candidatures', {
-      role,
+      role : 'candidat',
       candidatures,
       currentPage,
       totalPages,
-      searchTerm
+      searchTerm,
+      userId: userId,
     });
   } catch (err) {
     console.error(err);
@@ -94,12 +94,10 @@ router.get('/candidatures', async (req, res) => {
 
 router.get('/privileges', (req, res) => {
   // Récupérer l'ID de l'utilisateur depuis la session
-  const userId = req.session.user ;//|| 223344556
-  
-  // Si l'utilisateur n'est pas connecté, rediriger vers la page de connexion
-  if (!userId) {
-    return res.redirect('/LogIn');
-  }
+  const userId = req.session.user?.phone ;//|| 223344556
+    if (!userId) {
+      return res.redirect('/LogIn');
+    }
   
   const role = req.session.role || 'candidat';
   
@@ -116,10 +114,16 @@ router.get('/privileges', (req, res) => {
 
 router.get('/devenirRecruteur', async (req, res) => {
   try {
+    const userId = req.session.user?.phone ;//|| 223344556
+    if (!userId) {
+      return res.redirect('/LogIn');
+    }
     let results;
     results = await organisation.readAll();
-    role = req.session.role || 'candidat';
-    return res.render('Privileges/DevenirRecruteur', {role: role, organisations: results});
+    return res.render('Privileges/DevenirRecruteur', 
+      {role: 'candidat',
+       organisations: results,
+      userId: userId,});
   }
   catch (err) {
     console.log(err);
@@ -130,10 +134,14 @@ router.get('/devenirRecruteur', async (req, res) => {
 
 
 router.get('/creerOrganisation', (req, res) => {
-  const role = req.session.role || 'candidat';
+  const userId = req.session.user?.phone ;//|| 223344556
+    if (!userId) {
+      return res.redirect('/LogIn');
+    }
 
     res.render('Privileges/creerOrga', {
-      role: role
+      role: 'candidat',
+      userId: userId,
     });
   });
 
