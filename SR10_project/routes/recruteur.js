@@ -8,13 +8,15 @@ const metier = require('../model/typeMetier.js');
 const organisation = require('../model/organisation.js');
 
 router.get('/Accueil', function(req, res, next) {
-  var role =  req.session.role ||'recruteur';  
-  if (!role) {
-    //role = 'candidat'
-    //return res.redirect('/connexion'); // on verra plus tard
+  const userId = req.session.user?.phone ;//|| 223344556
+  if (!userId) {
+    return res.redirect('/LogIn');
   }
 
-  res.render('WelcomePage', { role: role });
+  res.render('WelcomePage', { role: 'candidat',
+      userId: userId,
+      role:'admin',
+      roles:req.session.user?.roles || []  });
 });
 
 

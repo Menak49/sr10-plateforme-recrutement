@@ -178,7 +178,8 @@ des informations sur l'opération SQL du type :
     const roles = [];
   // Le select 1 permet de savoir si le user est dans la table
     const adminRows = await db.query('SELECT 1 FROM Administrateur WHERE User = ?', [userId]);
-    if (adminRows.length > 0) roles.push('administrateur');
+    console.log(adminRows)
+    if (adminRows.length > 0) roles.push('admin');
 
     const recruteurRows = await db.query('SELECT 1 FROM Recruteur WHERE User = ?', [userId]);
     if (recruteurRows.length > 0) roles.push('recruteur');

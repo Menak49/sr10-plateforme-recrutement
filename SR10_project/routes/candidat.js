@@ -15,6 +15,7 @@ router.get('/Accueil', function(req, res, next) {
   }
   res.render('WelcomePage', { role: 'candidat',
       userId: userId,
+      role:'candidat',
       roles:req.session.user?.roles || []  });
 });
 

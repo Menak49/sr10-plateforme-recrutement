@@ -13,8 +13,11 @@ router.get('/Accueil', function(req, res, next) {
     return res.redirect('/LogIn');
   }
   
-    res.render('WelcomePage', { role: 'admin', });
-  });
+    res.render('WelcomePage', { role: 'candidat',
+      userId: userId,
+      role:'admin',
+      roles:req.session.user?.roles || []  });
+});
 
 
 router.get('/devenirRecruteur', async (req, res) => {

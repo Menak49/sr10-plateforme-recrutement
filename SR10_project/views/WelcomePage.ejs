@@ -39,19 +39,21 @@
         </div>
       </div>
       <div class="position-fixed bottom-0 end-0 m-4 d-flex flex-column gap-2">
-        <% if (role !== 'admin') { %>
-        <a href="/admin/accueil">
-          <button type="button" class="btn btn-dark">Espace Admin</button>
-        </a>
-        <% } %> <% if (role !== 'recruteur') { %>
-        <a href="/recruteur/accueil">
-          <button type="button" class="btn btn-dark">Espace Recruteur</button>
-        </a>
-        <% } %> <% if (role !== 'candidat') { %>
-        <a href="/candidat/accueil">
-          <button type="button" class="btn btn-dark">Espace Candidat</button>
-        </a>
-        <% } %>
+        <% if (roles.includes('admin')&& role != 'admin') { %>
+  <a href="/admin/accueil">
+    <button type="button" class="btn btn-dark">Espace Admin</button>
+  </a>
+<% } %>
+<% if (roles.includes('recruteur') && role != 'recruteur') { %>
+  <a href="/recruteur/accueil">
+    <button type="button" class="btn btn-dark">Espace Recruteur</button>
+  </a>
+<% } %>
+<% if (roles.includes('candidat') && role != 'candidat') { %>
+  <a href="/candidat/accueil">
+    <button type="button" class="btn btn-dark">Espace Candidat</button>
+  </a>
+<% } %>
       </div>
 
       <%- include('partials/footer') %>
