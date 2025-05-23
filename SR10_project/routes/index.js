@@ -48,19 +48,19 @@ router.post('/LogIn', async (req, res) => {
     const user = userData[0]; // données utilisateur
 
     // Déterminer le rôle à partir du Status
-    let role = "candidat";
-
+    let roles = await users.getRoles(user.Phone);
+    console.log(roles)
     // Initialiser la session
     req.session.user = {
       phone: user.Phone,
       email: user.Email,
       nom: user.LastName,
       prenom: user.FirstName,
-      role: role
+      roles: roles
     };
 
     // Rediriger vers la page d'accueil du rôle
-    res.redirect(`/${role}/Accueil`);
+    res.redirect(`/candidat/Accueil`);
 
   } catch (err) {
     console.error('Erreur lors de la connexion :', err);

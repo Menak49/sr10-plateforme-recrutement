@@ -174,4 +174,25 @@ des informations sur l'opération SQL du type :
           throw err;
       }
     }
+    ,
+    getRoles : async function(userId) {
+  try {
+    const roles = [];
+  // Le select 1 permet de savoir si le user est dans la table
+    const adminRows = await db.query('SELECT 1 FROM Administrateur WHERE User = ?', [userId]);
+    if (adminRows.length > 0) roles.push('administrateur');
+
+    const recruteurRows = await db.query('SELECT 1 FROM Recruteur WHERE User = ?', [userId]);
+    if (recruteurRows.length > 0) roles.push('recruteur');
+
+    const candidatRows = await db.query('SELECT 1 FROM Candidat WHERE User = ?', [userId]);
+    if (candidatRows.length > 0) roles.push('candidat');
+
+    return roles;
+  } catch (err) {
+    console.error('Erreur lors de la récupération des rôles :', err);
+    throw err;
+  }
+}
+
 }
