@@ -45,7 +45,7 @@ module.exports = {
             f.Title AS titre,
             org.Name AS organisation,
             f.Location AS localisation,
-            sp.Name AS contrat -- on suppose que StatutPoste = type de contrat
+            sp.Name AS contrat
         FROM OffreEmploi o
         JOIN FichePoste f ON o.FichePoste = f.Id
         JOIN Organisation org ON f.Organisation = org.Siren

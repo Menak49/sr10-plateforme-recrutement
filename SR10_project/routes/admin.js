@@ -8,22 +8,27 @@ const recruteur = require('../model/recruteurBecomeQuery.js')
 
 
 router.get('/Accueil', function(req, res, next) {
-    var role =  req.session.role ||'admin';  
-    if (!role) {
-      //role = 'candidat'
-      //return res.redirect('/connexion'); // on verra plus tard
-    }
+    const userId = req.session.user?.phone ;//|| 223344556
+  if (!userId) {
+    return res.redirect('/LogIn');
+  }
   
-    res.render('WelcomePage', { role: role });
+    res.render('WelcomePage', { role: 'admin', });
   });
 
 
 router.get('/devenirRecruteur', async (req, res) => {
   try {
+    const userId = req.session.user?.phone ;//|| 223344556
+  if (!userId) {
+    return res.redirect('/LogIn');
+  }
     let results;
     results = await organisation.readAll();
     role = req.session.role || 'candidat';
-    return res.render('Privileges/DevenirRecruteur', {role: role, organisations: results});
+    return res.render('Privileges/DevenirRecruteur', 
+      {role: 'admin',
+         organisations: results});
   }
   catch (err) {
     console.log(err);
@@ -34,17 +39,16 @@ router.get('/devenirRecruteur', async (req, res) => {
 
 router.get('/privileges', (req, res) => {
   // Récupérer l'ID de l'utilisateur depuis la session
-  const userId = req.session.user || 1234567890;
-  
+  const userId = req.session.user?.phone ;//|| 223344556
   if (!userId) {
-    return res.redirect('/login');
+    return res.redirect('/LogIn');
   }
   
   const role = req.session.role || 'admin';
   const pageTitle = 'Élévation de Privilèges';
   
   res.render('Privileges/Privileges', {
-    role: role,
+    role: 'admin',
     title: pageTitle,
     userId: userId
   });
@@ -52,9 +56,12 @@ router.get('/privileges', (req, res) => {
 
 
 router.get('/creerOrganisation', (req, res) => {
-  const role = req.session.role || 'admin';
+  const userId = req.session.user?.phone ;//|| 223344556
+  if (!userId) {
+    return res.redirect('/LogIn');
+  }
   res.render('Privileges/creerOrga', {
-    role: role
+    role: 'admin',
   });
 });
 
@@ -62,7 +69,10 @@ router.get('/creerOrganisation', (req, res) => {
 
 router.get('/gestionUtilisateurs', async(req, res) => {
   try{
-    const role = req.session.role || 'admin';
+    const userId = req.session.user?.phone ;//|| 223344556
+  if (!userId) {
+    return res.redirect('/LogIn');
+  }
     const page = parseInt(req.query.page) || 1;
     const limit = 9;
     const offset = (page - 1) * limit;
@@ -79,14 +89,14 @@ router.get('/gestionUtilisateurs', async(req, res) => {
         nom: `${user.LastName} ${user.FirstName}`,
         email: user.Email,
         status: user.Status,
-        role: user.Role
+        role: 'admin',
       };
     });
       
     const totalPages = Math.ceil(countResults / limit);
     
     res.render('Admin/gestionUtilisateurs', {
-      role: role,
+      role: 'admin',
       utilisateurs: utilisateurs,
       currentPage: page,
       totalPages: totalPages,
@@ -104,8 +114,10 @@ router.get('/gestionUtilisateurs', async(req, res) => {
 
 router.get('/GestionDemandeRecruteur', async (req, res) => {
   try{
-    const role = req.session.role || 'admin';
-    const page = parseInt(req.query.page) || 1;
+const userId = req.session.user?.phone ;//|| 223344556
+  if (!userId) {
+    return res.redirect('/LogIn');
+  }    const page = parseInt(req.query.page) || 1;
     const limit = 9; 
     const offset = (page - 1) * limit;
     const searchTerm = req.query.search || '';
@@ -129,7 +141,7 @@ router.get('/GestionDemandeRecruteur', async (req, res) => {
     const totalPages = Math.ceil(countResults / limit);
     
     res.render('Admin/GestionDemandeRecruteur', {
-      role: role,
+      role: 'admin',
       demandes: demandes,
       currentPage: page,
       totalPages: totalPages,
@@ -148,7 +160,10 @@ router.get('/GestionDemandeRecruteur', async (req, res) => {
 
 router.get('/organisations', async(req, res) => {
   try{
-    const role = req.session.role || 'admin';
+    const userId = req.session.user?.phone ;//|| 223344556
+  if (!userId) {
+    return res.redirect('/LogIn');
+  }
     const page = parseInt(req.query.page) || 1;
     const limit = 9;
     const offset = (page - 1) * limit;
@@ -170,7 +185,7 @@ router.get('/organisations', async(req, res) => {
     const totalPages = Math.ceil(countResults / limit);
   
     res.render('Admin/GestionOrganisation', {
-      role: role,
+      role: 'admin',
       organisations: organisations,
       currentPage: page,
       totalPages: totalPages,

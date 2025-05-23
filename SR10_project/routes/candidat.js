@@ -32,14 +32,10 @@ router.get('/parcourir', async (req, res) => {
 
     let offres, total;
 
-    if (role === 'candidat') {
-      offres = await offre.readOffresPourCandidat(userId, searchTerm, limit, offset);
-      total = await offre.countOffresPourCandidat(userId, searchTerm);
-    } else {
-      offres = await offre.readOffresFiltrePagine(searchTerm, limit, offset);
-      const countResult = await offre.nbTotalOffres(searchTerm);
-      total = countResult[0].total;
-    }
+
+    offres = await offre.readOffresPourCandidat(userId, searchTerm, limit, offset);
+    total = await offre.countOffresPourCandidat(userId, searchTerm);
+    
 
     const totalPages = Math.ceil(total / limit);
 
