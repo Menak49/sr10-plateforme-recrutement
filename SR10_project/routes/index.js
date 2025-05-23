@@ -5,11 +5,12 @@ var WelcomePagerouter = require('./WelcomePage');
 var candidatRouter = require('./candidat');
 var adminRouter = require('./admin');
 var recruteurRouter = require('./recruteur');
+const { isAuthenticated, authorizeRole } = require('../middlewares/authentification');
 
 router.use('/Accueil', WelcomePagerouter);
-router.use('/candidat', candidatRouter);
-router.use('/recruteur', recruteurRouter);
-router.use('/admin', adminRouter);
+router.use('/candidat', isAuthenticated, candidatRouter);
+router.use('/recruteur', isAuthenticated, authorizeRole('recruteur'), recruteurRouter);
+router.use('/admin', isAuthenticated, authorizeRole('admin'), adminRouter);
 
 
 /* GET home page. */

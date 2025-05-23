@@ -118,23 +118,22 @@ des informations sur l'opération SQL du type :
       const searchCondition = searchTerm ? 
         `WHERE Utilisateur.LastName LIKE ? OR Utilisateur.FirstName LIKE ? OR Utilisateur.Email LIKE ?` : 
         '';
-      
+
       const query = `
-        SELECT Utilisateur.Phone, Utilisateur.LastName, Utilisateur.FirstName, Utilisateur.Email, Utilisateur.Status,
+      SELECT Utilisateur.Phone, Utilisateur.LastName, Utilisateur.FirstName, Utilisateur.Email, Utilisateur.Status,
         CASE 
           WHEN Administrateur.User IS NOT NULL THEN 'Administrateur'
           WHEN Recruteur.User IS NOT NULL THEN 'Recruteur'
-          WHEN Candidat.User IS NOT NULL THEN 'Candidat'
+          WHEN Utilisateur.Phone IS NOT NULL THEN 'Candidat'
           ELSE 'Utilisateur'
         END AS Role
-        FROM Utilisateur
-        LEFT JOIN Administrateur ON Utilisateur.Phone = Administrateur.User
-        LEFT JOIN Recruteur ON Utilisateur.Phone = Recruteur.User
-        LEFT JOIN Candidat ON Utilisateur.Phone = Candidat.User
-        ${searchCondition}
-        ORDER BY Utilisateur.LastName ASC
-        LIMIT ? OFFSET ?
-      `;
+      FROM Utilisateur
+      LEFT JOIN Administrateur ON Utilisateur.Phone = Administrateur.User
+      LEFT JOIN Recruteur ON Utilisateur.Phone = Recruteur.User
+      ${searchCondition}
+      ORDER BY Utilisateur.LastName ASC
+      LIMIT ? OFFSET ?
+    `;
       
       const queryParams = searchTerm ? 
         [`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`, limit, offset] : 
@@ -148,7 +147,6 @@ des informations sur l'opération SQL du type :
           console.error('Erreur lors de la récupération des recruteurs(Modèle) :', err);
           throw err;
       }
-    
     },
 
     count: async function(searchTerm) {
@@ -185,8 +183,7 @@ des informations sur l'opération SQL du type :
     const recruteurRows = await db.query('SELECT 1 FROM Recruteur WHERE User = ?', [userId]);
     if (recruteurRows.length > 0) roles.push('recruteur');
 
-    const candidatRows = await db.query('SELECT 1 FROM Candidat WHERE User = ?', [userId]);
-    if (candidatRows.length > 0) roles.push('candidat');
+    roles.push('candidat');
 
     return roles;
   } catch (err) {

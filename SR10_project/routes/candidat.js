@@ -14,7 +14,8 @@ router.get('/Accueil', function(req, res, next) {
     return res.redirect('/LogIn');
   }
   res.render('WelcomePage', { role: 'candidat',
-      userId: userId, });
+      userId: userId,
+      roles:req.session.user?.roles || []  });
 });
 
 
