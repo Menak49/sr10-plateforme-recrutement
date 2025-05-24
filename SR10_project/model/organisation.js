@@ -5,6 +5,24 @@ db.query = util.promisify(db.query);
 
 module.exports = {
 
+    read: async function (recruteurPhone) {
+      /*permet de récupérer l'organisation à laquelle appartient un recruteur*/
+    const query = `
+        SELECT o.*
+        FROM Organisation o
+        JOIN Recruteur r ON o.Siren = r.Organization
+        WHERE r.User = ?
+    `;
+    try{
+      const result = await db.query(query, [recruteurPhone]);
+      return result;
+    } catch (err) {
+      console.error('Erreur lors de la récupération de l organisation associée au recruteur :', err);
+      throw err;
+    }
+    
+    },
+
     readAll: async function () {
         const query = `
         SELECT Siren, Name 
