@@ -5,7 +5,34 @@ db.query = util.promisify(db.query);
 
 module.exports = {
 
-    read: async function (ficheId){
+  create: async (data) => {
+    try {
+        const sql = `
+        INSERT INTO FichePoste 
+        (Title, Supervisor, Location, WorkSchedule, MinSalary, MaxSalary, Description, Organisation, StatutPoste, Recruteur, Type)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+    const params = [
+        data.title,
+        data.supervisor,
+        data.location,
+        data.workSchedule,
+        data.minSalary,
+        data.maxSalary,
+        data.description,
+        data.organisation,
+        data.statutPoste,
+        data.recruteur,
+        data.type
+    ];
+    return db.query(sql, params);
+    } catch (error) {
+        throw error;
+    }
+},  
+  
+    
+  read: async function (ficheId){
         const query = 'SELECT * FROM FichePoste WHERE Id = ?'
         try{
             const result = await db.query(query,[ficheId])

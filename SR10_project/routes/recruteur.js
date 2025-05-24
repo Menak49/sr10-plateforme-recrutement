@@ -78,7 +78,7 @@ router.get('/ajouterFicheDePoste', async (req, res) => {
   try{
     const statuts = await statut.readAll()
     const metiers = await metier.readAll()
-    const organisations = await organisation.readAll()
+    const organisations = await organisation.read(req.session.user.phone)
           
     res.render('Recruteur/PublierFichePoste', {
       mode: 'create',
@@ -220,6 +220,21 @@ router.post('/ajouterOffre', async (req, res) => {
   }
 });
   
+
+
+router.post('/ajouterFicheDePoste', async (req, res) => {
+    try {
+        const formData = req.body;
+        formData.recruteur = req.session.user.phone;
+        console.log('FormData:', formData);
+        await fiche.create(formData);
+        res.redirect('/recruteur/gererFicheDePoste');
+    } catch (error) {
+        console.error(error);
+        console.log('Erreur lors de la création de la fiche de poste:', formData);
+        res.status(500).send('Erreur lors de la création de la fiche de poste');
+    }
+});
 
 
   router.get('/privileges', (req, res) => {
