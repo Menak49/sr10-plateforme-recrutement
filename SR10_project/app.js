@@ -11,9 +11,28 @@ var session = require('express-session');
 // importation des routes
 var indexRouter = require('./routes/index');
 
+const rateLimit = require('express-rate-limit');
+
+// Limite à 5 tentatives par heure par IP sur la route /LogIn
+const loginLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // h minutes
+  max: 5, // 5 tentatives max
+  handler: (req, res) => {
+    // Redirige vers la page de connexion avec un message d’erreur
+    res.redirect('/LogIn?error=Trop%20de%20tentatives%20de%20connexion%2C%20réessayez%20plus%20tard.');
+  },
+  message: "Trop de tentatives de connexion, réessayez plus tard.",
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+
 
 //création de l'application Express
 var app = express();
+
+
+app.post('/LogIn', loginLimiter);
 
 //configuration de la session
 app.use(session({

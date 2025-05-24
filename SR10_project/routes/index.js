@@ -26,7 +26,10 @@ router.get('/SignUp', function(req, res, next) {
 });
 
 router.get('/LogIn', function(req, res, next) {
-  res.render('LogIn', { title: 'Accueil', text: 'Bienvenue sur notre site de gestion des offres d\'emploi !' });
+  res.render('LogIn', { title: 'Accueil', 
+    text: 'Bienvenue sur notre site de gestion des offres d\'emploi !',
+  error: req.query.error // récupère le message d’erreur
+    });
 });
 
 const users = require('../model/utilisateur.js');
@@ -38,8 +41,8 @@ router.post('/LogIn', async (req, res) => {
     const isValid = await users.areValid(Email, password);
     console.log("email", Email, "password", password, "isValid", isValid);
     if (!isValid) {
-      return res.status(401).send("Email ou mot de passe incorrect.");
-    }
+  return res.redirect('/LogIn?error=Email%20ou%20mot%20de%20passe%20incorrect.');
+}
 
     const userData = await users.read(email);
     if (userData.length === 0) {
