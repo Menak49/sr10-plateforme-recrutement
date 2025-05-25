@@ -13,7 +13,7 @@ router.get('/Accueil', function(req, res, next) {
     return res.redirect('/LogIn');
   }
 
-  res.render('WelcomePage', { role: 'candidat',
+  res.render('WelcomePage', {
       userId: userId,
       role:'recruteur',
       roles:req.session.user?.roles || []  });

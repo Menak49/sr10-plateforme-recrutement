@@ -4,7 +4,8 @@ var db = require('../model/db');
 
 const organisation = require('../model/organisation.js');
 const utilisateur = require('../model/utilisateur.js');
-const recruteur = require('../model/recruteurBecomeQuery.js')
+const recruteur = require('../model/recruteurBecomeQuery.js');
+const recruteurBecomeQuery = require('../model/recruteurBecomeQuery.js');
 
 
 router.get('/Accueil', function(req, res, next) {
@@ -28,8 +29,7 @@ router.get('/devenirRecruteur', async (req, res) => {
   }
     let results;
     results = await organisation.readAll();
-    role = req.session.role || 'candidat';
-    return res.render('Privileges/DevenirRecruteur', 
+      return res.render('Privileges/DevenirRecruteur', 
       {role: 'admin',
          organisations: results});
   }
@@ -156,6 +156,17 @@ const userId = req.session.user?.phone ;//|| 223344556
     res.status(500).send("Erreur lors de la récupération des demandes de recruteur (Contrôleur)");
   }
   
+});
+
+router.post('/refuserDemandeRecruteur/:id', async (req, res) => {
+  const userId = req.params.id;
+  try {
+    await recruteurBecomeQuery.deleteById(userId);
+    res.redirect('/admin/GestionDemandeRecruteur');
+  } catch (err) {
+    console.error('Erreur lors de la suppression de la demande :', err);
+    res.status(500).send('Erreur lors de la suppression');
+  }
 });
 
 

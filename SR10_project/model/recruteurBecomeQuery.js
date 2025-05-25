@@ -69,6 +69,15 @@ module.exports = {
             console.error('Erreur lors de la récupération du nombre total de recruteurs (Modèle) :', err);
             throw err;
         }
+    },
+    deleteById: async function(id) {
+    const query = `DELETE FROM RecruteurBecomeQuery WHERE Id = ?`;
+    try {
+        await db.query(query, [id]);
+    } catch (err) {
+        console.error('Erreur lors de la suppression de la demande (Modèle) :', err);
+        throw err;
     }
+}
 
 }

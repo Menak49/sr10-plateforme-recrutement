@@ -50,17 +50,7 @@
         </div>
       </form>
 
-      <div class="mb-3">
-        <div class="card">
-          <div class="card-body">
-            <h6 class="fw-bold">Clé</h6>
-            <div class="d-flex gap-2">
-              <span class="badge bg-dark py-2 px-3">En attente</span>
-              <span class="badge bg-success py-2 px-3">Validé</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      
 
       <div class="row g-3">
         <% demandes.forEach(demande => { %>
@@ -71,24 +61,15 @@
               <p class="text-muted"><%= demande.email %></p>
               <p class="small mb-2">Message: <%= demande.message %></p>
               <div class="d-flex align-items-center mb-2">
-                <span
-                  class="badge <%= demande.statut === 'Validé' ? 'bg-success' : 'bg-dark' %> me-2"
-                >
+
                   <%= demande.statut %>
                 </span>
               </div>
               <div class="d-flex justify-content-end mt-3 gap-2">
-                <% if(demande.statut !== 'Validé') { %>
                 <a
                   href="/demandes/recruteur/valider/<%= demande.id %>"
                   class="btn btn-sm btn-success"
                   >Valider</a
-                >
-                <% } %>
-                <a
-                  href="/demandes/recruteur/voir/<%= demande.id %>"
-                  class="btn btn-sm btn-outline-dark"
-                  >Voir</a
                 >
                 <button
                 class="btn btn-sm btn-outline-danger"
@@ -100,7 +81,7 @@
                 <%- include('../partials/Confirmation', { 
                   modalId: "deleteModalDemande-" + demande.id,
                   message: "Êtes-vous sûr de vouloir refuser cette demande ?",
-                  action: "/demandes/recruteur/refuser/" + demande.id
+                  action: "/admin/refuserDemandeRecruteur/" + demande.id
                 }) %>
                 
               </div>
