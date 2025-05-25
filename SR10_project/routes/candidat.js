@@ -4,7 +4,7 @@ const router = express.Router();
 const offre = require('../model/offreEmploi.js');
 const candidature = require('../model/candidature.js');
 const organisation = require('../model/organisation.js');
-
+const recruteurBecomeQuery = require('../model/recruteurBecomeQuery.js');
 
 
 
@@ -126,6 +126,29 @@ router.get('/devenirRecruteur', async (req, res) => {
   catch (err) {
     console.log(err);
     res.status(500).send("Erreur lors de la récupération des organisations (Contrôleur)");
+  }
+});
+
+router.post('/EnvoyerDemandeRecruteur', async (req, res) => {
+  try {
+    const userId = req.session.user?.phone;
+    const organisation = req.body.organisation;
+    const responsabilite = req.body.responsabilite;
+    console.log("userId", userId, "organisation", organisation, "responsabilite", responsabilite);
+    if (!userId || !organisation) {
+      return res.status(400).send('Informations manquantes');
+    }
+
+    await recruteurBecomeQuery.create({
+      candidat: userId,
+      organisation: organisation,
+      responsabilite: responsabilite,
+    });
+
+    res.redirect('/candidat/Accueil');
+  } catch (err) {
+    console.error('Erreur lors de l\'envoi de la demande recruteur :', err);
+    res.status(500).send('Erreur lors de l\'envoi de la demande');
   }
 });
 

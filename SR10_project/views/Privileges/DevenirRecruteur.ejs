@@ -39,8 +39,7 @@
 
       <form
         method="POST"
-        action="/recruteur/demande"
-        enctype="multipart/form-data"
+         action="/candidat/EnvoyerDemandeRecruteur" 
       >
         <div class="mb-3">
           <label for="organisation" class="form-label"
@@ -54,7 +53,7 @@
             <% if (organisations && organisations.length > 0) { %>
             <option value="" selected disabled>Choisir une organisation</option>
             <% organisations.forEach(org => { %>
-            <option value="<%= org.id %>"><%= org.Name %></option>
+            <option value="<%= org.Siren %>"><%= org.Name %></option>
             <% }) %> <% } else { %>
             <option disabled>Aucune organisation disponible</option>
             <% } %>
@@ -85,8 +84,8 @@
         </div>
 
         <div class="d-flex gap-2">
-          <a href="/" class="btn btn-outline-light">annuler</a>
-          <button type="submit" class="btn btn-light text-dark">envoyer</button>
+          <a href="/" class="btn btn-outline-light">Annuler</a>
+          <button type="submit" class="btn btn-light text-dark">Envoyer</button>
         </div>
       </form>
     </div>

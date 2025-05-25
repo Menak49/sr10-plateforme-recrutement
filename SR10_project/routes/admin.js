@@ -170,6 +170,17 @@ router.post('/refuserDemandeRecruteur/:id', async (req, res) => {
 });
 
 
+router.post('/accepterDemandeRecruteur/:id', async (req, res) => {
+  const demandeId = req.params.id;
+  try {
+    await recruteurBecomeQuery.accepterDemande(demandeId); // Utilisation du modèle
+
+    res.redirect('/admin/GestionDemandeRecruteur');
+  } catch (err) {
+    console.error('Erreur lors de l\'acceptation de la demande :', err);
+    res.status(500).send('Erreur lors de l\'acceptation de la demande');
+  }
+});
 
 
 router.get('/organisations', async(req, res) => {

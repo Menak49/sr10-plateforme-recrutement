@@ -78,6 +78,37 @@ module.exports = {
         console.error('Erreur lors de la suppression de la demande (Modèle) :', err);
         throw err;
     }
-}
+},
+accepterDemande: async function(demandeId) {
+    try {
+        // Récupérer le numéro du candidat à partir de la demande
+        const rows = await db.query(
+            'SELECT Candidat, Organisation FROM RecruteurBecomeQuery WHERE Id = ?', [demandeId]
+        );
+        if (!rows[0]) throw new Error('Demande non trouvée');
+        const userId = rows[0].Candidat;
+        const organisation = rows[0].Organisation;
+
+        // Ajouter dans la table Recruteur
+        await db.query('INSERT INTO Recruteur (User, Organization) VALUES (?, ?)', [userId, organisation]);
+        await db.query('DELETE FROM RecruteurBecomeQuery WHERE Id = ?', [demandeId]);
+
+    } catch (err) {
+        console.error('Erreur lors de l\'acceptation de la demande (Modèle) :', err);
+        throw err;
+    }
+},create: async function({ candidat, organisation, message }) {
+    const query = `
+        INSERT INTO RecruteurBecomeQuery (Candidat, Organisation, Message)
+        VALUES (?, ?, ?)
+    `;
+    try {
+        await db.query(query, [candidat, organisation, message]);
+    } catch (err) {
+        console.error('Erreur lors de la création de la demande (Modèle) :', err);
+        throw err;
+    }
+},
+
 
 }
