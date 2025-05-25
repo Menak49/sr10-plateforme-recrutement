@@ -132,7 +132,7 @@ router.get('/modifierFicheDePoste/:id', async (req, res) => {
 router.get('/gererFicheDePoste', async (req, res) => {
   try {
     const role = req.session?.role || 'recruteur';
-
+    const userId = req.session?.user?.phone ; 
     const page = parseInt(req.query.page) || 1;
     const limit = 6;
     const offset = (page - 1) * limit;
@@ -142,11 +142,11 @@ router.get('/gererFicheDePoste', async (req, res) => {
     let fiches, totalCount;
 
     if (search) {
-      fiches = await fiche.searchPage(search, limit, offset);
-      totalCount = await fiche.countSearch(search);
+      fiches = await fiche.searchByUserId(userId, search, limit, offset);
+      totalCount = await fiche.countSearchByUserId(userId, search);
     } else {
-      fiches = await fiche.readPage(limit, offset);
-      totalCount = await fiche.countAll();
+      fiches = await fiche.getByUserId(userId, limit, offset);
+      totalCount = await fiche.countByUserId();
     }
 
     const totalPages = Math.ceil(totalCount / limit);
