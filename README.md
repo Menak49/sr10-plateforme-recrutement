@@ -117,6 +117,72 @@ Pour faire des tests complets de l'application, il faudrait le décliner sur tou
 - recup page qui existe pas => page qui existe pas
 
 
+## TD4 : formulaires et sessions
+
+### Formulaires
+
+Pour ajouter et modifier des données dans notre base de données, on utilise des formulaires. On présente ici l'exemple du formulaire de **création de compte**.
+
+D'abord, pour rendre le formulaire accessible à l'utilisateur, on crée une vue EJS avec des champs à remplir qu'on affiche avec une requête GET :
+
+```javascript
+//CONTROLEUR
+router.get('/SignUp', function(req, res, next) {
+  res.render('SignUp', { title: 'Accueil', text: 'Bienvenue' });
+});
+```
+
+Une fois la vue affichée, l'utilisateur peut remplir les différents champs puis, grâce à un bouton, envoyer les valeurs remplies dans un objet `body` avec une requête POST. Le contrôleur récupère ces données et demande la création d'un nouvel utilisateur au modèle à partir de ces données.
+
+
+```javascript
+//CONTROLEUR
+router.post('/SignUp', async (req, res) => {
+    //récupération des valeurs de l'objet body de la requête req
+    const { phone, lastname, firstname, email, password } = req.body;
+    const status = 'Active'; //par défaut, on active le compte
+    //appelle le modèle
+    await users.create(phone, lastname, firstname, status, password, email);
+    // Redirection vers la page de connexion
+    res.redirect('/LogIn');
+});
+```
+
+Le contrôleur fait une requête SQL à la base de données pour insérer dans les champs de la table Utilisateur les valeurs transmises par le contrôleur:
+
+```javascript
+//MODELE
+create: async function (phone, lastName, firstName, status, password, email) {
+    const query = 'INSERT INTO Utilisateur (Phone, LastName, FirstName, Status, Password, Email) VALUES (?, ?, ?, ?, ?, ?)';
+    const result = await db.query(query, [phone, lastName, firstName, status, password, email]);
+    return result
+  },
+  ```
+
+
+#### Vérification du bon fonctionnement
+
+
+On ajoute une ligne ```console.log("req.body", req.body);``` dans le contrôleur pour vérifier qu'on récupère bien les valeurs rentrées par l'utilisateur. Ici, on voit d'abord l'affichage de la vue avec GET, puis la récupération de l'objet body par le controleur dans la requête POST, puis la redirection vers la page /LogIn avec GET.
+
+```bash
+GET /SignUp 304 12.952 ms - -
+req.body [Object: null prototype] {
+  phone: '668',
+  lastname: 'Jean',
+  firstname: 'Cholet',
+  email: 'jean@gmail.com',
+  password: 'MDP8--_'
+}
+POST /SignUp 302 239.308 ms - 56
+GET /LogIn 304 8.249 ms - -
+```
+
+
+### Sessions 
+
+gestion des sessions pour sécuriser notre application
+
 
 
 

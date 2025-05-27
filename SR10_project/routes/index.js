@@ -6,6 +6,7 @@ var candidatRouter = require('./candidat');
 var adminRouter = require('./admin');
 var recruteurRouter = require('./recruteur');
 const { isAuthenticated, authorizeRole } = require('../middlewares/authentification');
+const users = require('../model/utilisateur.js');
 
 router.use('/Accueil', WelcomePagerouter);
 router.use('/candidat', isAuthenticated, candidatRouter);
@@ -26,9 +27,9 @@ router.get('/SignUp', function(req, res, next) {
 });
 
 router.post('/SignUp', async (req, res) => {
+  console.log("req.body", req.body);
   const { phone, lastname, firstname, email, password } = req.body;
-  const status = 'Active'; // ou autre logique selon ton besoin
-
+  const status = 'Active';
   try {
     const result = await users.create(phone, lastname, firstname, status, password, email);
     if (!result) {
@@ -49,7 +50,7 @@ router.get('/LogIn', function(req, res, next) {
     });
 });
 
-const users = require('../model/utilisateur.js');
+
 
 router.post('/LogIn', async (req, res) => {
   const { Email, password } = req.body;
