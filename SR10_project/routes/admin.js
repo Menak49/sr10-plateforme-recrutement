@@ -47,13 +47,13 @@ router.get('/privileges', (req, res) => {
     return res.redirect('/LogIn');
   }
   
-  const role = req.session.role || 'admin';
   const pageTitle = 'Élévation de Privilèges';
   
   res.render('Privileges/Privileges', {
     role: 'admin',
     title: pageTitle,
-    userId: userId
+    userId: userId,
+    roles:req.session.user?.roles || [] 
   });
 });
 

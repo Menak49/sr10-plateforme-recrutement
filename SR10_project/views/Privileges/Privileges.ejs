@@ -32,7 +32,7 @@
             </svg>
           </i>
           <!-- On s'occupera plus tard (en fonction des privilige du client connecté) d'afficher ce qu'il exactement ce qu'il lui faut) -->
-          <% if (role === 'candidat') { %> Vous n'avez pas encore de compte
+          <% if (roles.includes('recruteur') && roles.includes('admin')) { %> Vous n'avez pas encore de compte
           administrateur ou recruteur. Pour pouvoir faire la demande, un mail de
           confirmation vous sera envoyé. Vous pourrez également créer une
           organisation, un compte recruteur doit être rattaché à une
@@ -45,91 +45,92 @@
       </div>
 
       <div class="row">
-        <% if (role !== 'admin') { %>
-        <div class="col-md-6 mb-4">
-          <div class="card bg-dark text-white border border-secondary">
-            <div class="card-body">
-              <h5 class="card-title mb-3">Devenir administrateur</h5>
-              <p class="card-text text-light">Gérer le back-office</p>
-              <a href="devenirAdmin" class="btn btn-outline-light w-75 me-2">
-                Demander
-              </a>
-            </div>
-          </div>
-        </div>
-        <% } %> <% if (role !== 'recruteur') { %>
-        <div class="col-md-6 mb-4">
-          <div class="card bg-dark text-white border border-secondary">
-            <div class="card-body">
-              <h5 class="card-title mb-3">Devenir recruteur</h5>
-              <p class="card-text text-light">Gérer le formulaire recruteur</p>
-              <div class="d-flex justify-content-between">
-                <a
-                  href="devenirRecruteur"
-                  class="btn btn-outline-light w-75 me-2"
-                >
-                  Demander
-                </a>
-                <button class="btn btn-outline-light">
-                  <!-- on gérera aussi l'affichage de ça en fonction des sessions -->
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    class="bi bi-download"
-                    viewBox="0 0 16 16"
-                  >
-                    <path
-                      d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"
-                    />
-                    <path
-                      d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <% } %>
+  <% if (!roles.includes('admin')) { %>
+  <div class="col-md-6 mb-4">
+    <div class="card bg-dark text-white border border-secondary">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Devenir administrateur</h5>
+        <p class="card-text text-light">Gérer le back-office</p>
+        <a href="devenirAdmin" class="btn btn-outline-light w-75 me-2">
+          Demander
+        </a>
+      </div>
+    </div>
+  </div>
+  <% } %>
 
-        <div class="col-md-6 mb-4">
-          <div class="card bg-dark text-white border border-secondary">
-            <div class="card-body">
-              <h5 class="card-title mb-3">Créer une organisation</h5>
-              <p class="card-text text-light">
-                Remplir le formulaire d'organisation
-              </p>
-              <div class="d-flex justify-content-between">
-                <a
-                  href="creerOrganisation"
-                  class="btn btn-outline-light w-75 me-2"
-                >
-                  Demander
-                </a>
-                <button class="btn btn-outline-light">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    class="bi bi-download"
-                    viewBox="0 0 16 16"
-                  >
-                    <path
-                      d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"
-                    />
-                    <path
-                      d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
+  <% if (!roles.includes('recruteur')) { %>
+  <div class="col-md-6 mb-4">
+    <div class="card bg-dark text-white border border-secondary">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Devenir recruteur</h5>
+        <p class="card-text text-light">Gérer le formulaire recruteur</p>
+        <div class="d-flex justify-content-between">
+          <a
+            href="devenirRecruteur"
+            class="btn btn-outline-light w-75 me-2"
+          >
+            Demander
+          </a>
+          <button class="btn btn-outline-light">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-download"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"
+              />
+              <path
+                d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"
+              />
+            </svg>
+          </button>
         </div>
       </div>
+    </div>
+  </div>
+  <% } %>
+
+  <div class="col-md-6 mb-4">
+    <div class="card bg-dark text-white border border-secondary">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Créer une organisation</h5>
+        <p class="card-text text-light">
+          Remplir le formulaire d'organisation
+        </p>
+        <div class="d-flex justify-content-between">
+          <a
+            href="creerOrganisation"
+            class="btn btn-outline-light w-75 me-2"
+          >
+            Demander
+          </a>
+          <button class="btn btn-outline-light">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-download"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"
+              />
+              <path
+                d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
       
 

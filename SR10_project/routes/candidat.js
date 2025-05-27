@@ -104,7 +104,8 @@ router.get('/privileges', (req, res) => {
   res.render('Privileges/Privileges', {
     role: role,
     title: pageTitle,
-    userId: userId
+    userId: userId,
+    roles: req.session.user?.roles
   });
 });
 
@@ -159,6 +160,7 @@ router.get('/creerOrganisation', (req, res) => {
     if (!userId) {
       return res.redirect('/LogIn');
     }
+    
 
     res.render('Privileges/creerOrga', {
       role: 'candidat',

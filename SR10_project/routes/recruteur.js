@@ -244,14 +244,14 @@ router.post('/ajouterFicheDePoste', async (req, res) => {
       return res.redirect('/login');
     }
     
-    const role = req.session.role || 'recruteur';
     
     const pageTitle = 'Élévation de Privilèges';
-    
+    console.log('Rôle de l\'utilisateur:', req.session.user?.roles );
     res.render('Privileges/Privileges', {
-      role: role,
+      role: 'recruteur',
       title: pageTitle,
-      userId: userId
+      userId: userId,
+      roles: req.session.user?.roles
     });
   });
 
