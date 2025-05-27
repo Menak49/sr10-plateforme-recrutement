@@ -169,5 +169,45 @@ router.get('/creerOrganisation', (req, res) => {
   });
 
 
+router.post('/delete-candidature/:id', async (req, res) => {
+  const candidatureId = req.params.id;
+  try {
+    await candidature.deleteById(candidatureId);
+    res.redirect('/candidat/candidatures');
+  } catch (err) {
+    console.error('Erreur lors de la suppression de la candidature :', err);
+    res.status(500).send('Erreur lors de la suppression de la candidature');
+  }
+});
+
+router.get('/modifierCandidature/:id', async (req, res) => {
+  const candidatureId = req.params.id;
+  try {
+    const candidature = await candidature.findById(candidatureId); 
+    res.render('Candidat/modifierCandidature', { candidature });
+  } catch (err) {
+    console.error('Erreur lors de la récupération de la candidature :', err);
+    res.status(500).send('Erreur lors de la récupération de la candidature');
+  }
+});
+
+router.post('/modifierCandidature/:id', async (req, res) => {
+  const candidatureId = req.params.id;
+  const { titre, localisation, contrat, ...autresChamps } = req.body;
+  try {
+    await candidature.updateById(candidatureId, {
+      titre,
+      localisation,
+      contrat,
+      ...autresChamps
+    });
+    res.redirect('/candidat/candidatures');
+  } catch (err) {
+    console.error('Erreur lors de la modification de la candidature :', err);
+    res.status(500).send('Erreur lors de la modification de la candidature');
+  }
+});
+
+
 
 module.exports = router;

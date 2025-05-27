@@ -105,5 +105,61 @@ module.exports = {
       console.error("Erreur lors du comptage des candidatures :", err);
       throw err;
     }
+  },
+  deleteById: async function(candidatureId) {
+  const query = `DELETE FROM Candidature WHERE Id = ?`;
+  try {
+    await db.query(query, [candidatureId]);
+  } catch (err) {
+    console.error('Erreur lors de la suppression de la candidature :', err);
+    throw err;
   }
+},
+
+findById: async function(candidatureId) {
+  const query = `
+    SELECT 
+      c.Id AS candidature_id,
+      DATE_FORMAT(c.Date, '%Y-%m-%d') AS date_candidature,
+      f.Title AS titre,
+      org.Name AS organisation,
+      f.Location AS localisation,
+      sp.Name AS contrat,
+      GROUP_CONCAT(pd.Name, '::', pd.Chemin SEPARATOR '||') AS pieces
+    FROM Candidature c
+    JOIN OffreEmploi o ON c.OffreEmploi = o.Id
+    JOIN FichePoste f ON o.FichePoste = f.Id
+    JOIN Organisation org ON f.Organisation = org.Siren
+    LEFT JOIN StatutPoste sp ON f.StatutPoste = sp.Name
+    LEFT JOIN CandidaturePieceDossier cpd ON c.Id = cpd.Candidature
+    LEFT JOIN PieceDossier pd ON cpd.PieceDossier = pd.Id
+    WHERE c.Id = ?
+    GROUP BY c.Id, f.Title, org.Name, f.Location, sp.Name, c.Date
+    LIMIT 1
+  `;
+  try {
+    const rows = await db.query(query, [candidatureId]);
+    return rows[0];
+  } catch (err) {
+    console.error('Erreur lors de la récupération de la candidature :', err);
+    throw err;
+  }
+},
+
+updateById: async function(candidatureId, data) {
+  const { titre, localisation, contrat } = data;
+  const query = `
+    UPDATE Candidature c
+    JOIN OffreEmploi o ON c.OffreEmploi = o.Id
+    JOIN FichePoste f ON o.FichePoste = f.Id
+    SET f.Title = ?, f.Location = ?, f.StatutPoste = ?
+    WHERE c.Id = ?
+  `;
+  try {
+    await db.query(query, [titre, localisation, contrat, candidatureId]);
+  } catch (err) {
+    console.error('Erreur lors de la mise à jour de la candidature :', err);
+    throw err;
+  }
+}
 };

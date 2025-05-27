@@ -48,10 +48,9 @@
             <%- include('../partials/Confirmation', {
               modalId: "deleteModalCandidature-" + c.candidature_id,
               message: "Êtes-vous sûr de vouloir annuler cette candidature ?",
-              action: "/delete-candidature/" + c.candidature_id
+              action: "/candidat/delete-candidature/" + c.candidature_id
             }) %>
-            <a href="#" class="btn btn-sm btn-outline-secondary">Modifier</a>
-          </div>
+            <a href="/candidat/modifierCandidature/<%= c.candidature_id %>" class="btn btn-sm btn-outline-secondary">Modifier</a>          </div>
 
           <% if (c.pieces) { const docs = c.pieces.split('||'); %>
           <div class="mt-3">
