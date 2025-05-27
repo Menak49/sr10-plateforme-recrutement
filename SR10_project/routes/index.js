@@ -25,6 +25,23 @@ router.get('/SignUp', function(req, res, next) {
   res.render('SignUp', { title: 'Accueil', text: 'Bienvenue sur notre site de gestion des offres d\'emploi !' });
 });
 
+router.post('/SignUp', async (req, res) => {
+  const { phone, lastname, firstname, email, password } = req.body;
+  const status = 'Active'; // ou autre logique selon ton besoin
+
+  try {
+    const result = await users.create(phone, lastname, firstname, status, password, email);
+    if (!result) {
+      // Utilisateur déjà existant
+      return res.render('SignUp', { error: "Ce numéro de téléphone est déjà utilisé.", title: 'Accueil', text: 'Bienvenue sur notre site de gestion des offres d\'emploi !' });
+    }
+    // Succès, redirection vers la page de connexion
+    res.redirect('/LogIn');
+  } catch (err) {
+    res.render('SignUp', { error: "Erreur lors de l'inscription.", title: 'Accueil', text: 'Bienvenue sur notre site de gestion des offres d\'emploi !' });
+  }
+});
+
 router.get('/LogIn', function(req, res, next) {
   res.render('LogIn', { title: 'Accueil', 
     text: 'Bienvenue sur notre site de gestion des offres d\'emploi !',
