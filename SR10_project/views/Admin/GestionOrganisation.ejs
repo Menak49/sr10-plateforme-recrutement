@@ -14,7 +14,9 @@
 
     <div class="container mt-5">
       <h2 class="mb-4 text-center">Organisations enregistrées</h2>
-
+      <div class="alert alert-secondary py-2 mb-2 text-center" style="font-size: 0.95em;">
+  <strong>Astuce :</strong> Pour afficher uniquement les associations en attente de validation, tapez <span class="fw-bold">StandBy</span> dans la barre de recherche.
+</div>
       <form method="get" action="organisations" class="mb-4 text-center">
         <div class="input-group mt-3 mb-3 shadow-sm">
           <input
@@ -71,14 +73,14 @@
                         <%- include('../partials/Confirmation', { 
                           modalId: 'deleteModalOrganisation-' + org.siren, 
                           message: 'Êtes-vous sûr de vouloir refuser cette organisation ?', 
-                          action: '/RefuserOrganisation/'+ org.siren, 
+                          action: '/admin/RefuserOrganisation/'+ org.siren, 
                           siren: org.siren 
                         }) %>
                         
                         <%- include('../partials/Confirmation', { 
                           modalId: 'validModalOrganisation-' + org.siren, 
                           message: 'Êtes-vous sûr de vouloir valider cette organisation ?', 
-                          action: '/ValiderOrganisation/'+ org.siren,
+                          action: '/admin/ValiderOrganisation/'+ org.siren,
                           siren: org.siren 
                         }) %>
                       </div>

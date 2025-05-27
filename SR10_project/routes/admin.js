@@ -14,7 +14,7 @@ router.get('/Accueil', function(req, res, next) {
     return res.redirect('/LogIn');
   }
   
-    res.render('WelcomePage', { role: 'candidat',
+    res.render('WelcomePage', {
       userId: userId,
       role:'admin',
       roles:req.session.user?.roles || []  });
@@ -113,6 +113,18 @@ router.get('/gestionUtilisateurs', async(req, res) => {
   }
 });
 
+
+router.post('/delete-user/:id', async (req, res) => {
+  const userId = req.params.id;
+  try {
+    await organisation.setCreatorNull(userId);
+    await utilisateur.deleteUser(userId); 
+    res.redirect('/admin/gestionUtilisateurs');
+  } catch (err) {
+    console.error('Erreur lors de la suppression de l\'utilisateur :', err);
+    res.status(500).send('Erreur lors de la suppression de l\'utilisateur');
+  }
+});
 
 
 router.get('/GestionDemandeRecruteur', async (req, res) => {
@@ -224,5 +236,26 @@ router.get('/organisations', async(req, res) => {
   
 });
 
+router.post('/ValiderOrganisation/:siren', async (req, res) => {
+  const siren = req.params.siren;
+  try {
+    await organisation.updateStatut(siren, 'Valide');
+    res.redirect('/admin/organisations');
+  } catch (err) {
+    console.error('Erreur lors de la validation de l\'organisation :', err);
+    res.status(500).send('Erreur lors de la validation');
+  }
+});
+
+router.post('/RefuserOrganisation/:siren', async (req, res) => {
+  const siren = req.params.siren;
+  try {
+    await organisation.deleteByID(siren);
+    res.redirect('/admin/organisations');
+  } catch (err) {
+    console.error('Erreur lors du refus de l\'organisation :', err);
+    res.status(500).send('Erreur lors du refus');
+  }
+});
 
 module.exports = router;

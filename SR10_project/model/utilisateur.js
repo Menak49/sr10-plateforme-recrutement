@@ -103,10 +103,10 @@ des informations sur l'opération SQL du type :
   }, */
   
     // Fonction pour supprimer un utilisateur (candidat)
-    deleteUser: async function (email) {
-      const query = 'DELETE FROM Utilisateur WHERE Email = ?';
+    deleteUser: async function (phone) {
+      const query = 'DELETE FROM Utilisateur WHERE Phone = ?';
       try {
-        const result = await db.query(query, [email]);
+        const result = await db.query(query, [phone]);
         return result
       } catch (err) {
         console.error('Erreur MySQL : ', err);

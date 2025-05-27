@@ -27,6 +27,7 @@ module.exports = {
         const query = `
         SELECT Siren, Name 
         FROM Organisation
+        WHERE Status = 'Valide'
         ORDER BY Name ASC
         `;
         try {
@@ -91,7 +92,32 @@ module.exports = {
         console.error('Erreur lors de la récupération du nombre total de recruteurs (Modèle) :', err);
         throw err;
       }
-    }
+    },
+    updateStatut: async function(siren, statut) {
+  const query = `UPDATE Organisation SET Status = ? WHERE Siren = ?`;
+  try {
+    await db.query(query, [statut, siren]);
+  } catch (err) {
+    throw err;
+  }
+},
+
+deleteByID: async function(siren) {
+  const query = `DELETE FROM Organisation WHERE Siren = ?`;
+  try {
+    await db.query(query, [siren]);
+  } catch (err) {
+    throw err;
+  }
+},
+setCreatorNull: async function(idUser) {
+  const query = `UPDATE Organisation SET Creator = NULL WHERE Creator = ?`;
+  try {
+    await db.query(query, [idUser]);
+  } catch (err) {
+    throw err;
+  }
+}
       
 
 
