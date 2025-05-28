@@ -4,6 +4,7 @@ const router = express.Router();
 const offre = require('../model/offreEmploi.js');
 const candidature = require('../model/candidature.js');
 const organisation = require('../model/organisation.js');
+const typeOrganisation = require('../model/typeOrganisation.js');
 const recruteurBecomeQuery = require('../model/recruteurBecomeQuery.js');
 
 
@@ -155,18 +156,36 @@ router.post('/EnvoyerDemandeRecruteur', async (req, res) => {
 
 
 
-router.get('/creerOrganisation', (req, res) => {
+router.get('/creerOrganisation', async (req, res) => {
   const userId = req.session.user?.phone ;//|| 223344556
     if (!userId) {
       return res.redirect('/LogIn');
     }
-    
-
-    res.render('Privileges/creerOrga', {
+    let types
+    types = await typeOrganisation.readAll(); // récupère tous les types
+    return res.render('Privileges/creerOrga', {
       role: 'candidat',
       userId: userId,
+      types: types
     });
   });
+
+
+  router.post('/creerOrganisation', async (req, res) => {
+  try {
+    const userId = req.session.user?.phone;
+    if (!userId) {
+      return res.redirect('/LogIn');
+    }
+    console.log(req.body);
+    const { siren, name, headquarters, type } = req.body;
+    await organisation.create(siren, name, headquarters, type, userId);
+    return res.redirect('/candidat/privileges');
+  } catch (err) {
+    console.error('CONTROLEUR : Erreur lors de la création de l\'organisation :', err);
+    return res.status(500).send("CONTROLEUR : Erreur lors de la création de l'organisation");
+  }
+});
 
 
 router.post('/delete-candidature/:id', async (req, res) => {

@@ -5,7 +5,22 @@ db.query = util.promisify(db.query);
 
 module.exports = {
 
-    read: async function (recruteurPhone) {
+  create: async function(siren, name, headquarters, type, creator) {
+  const query = `
+    INSERT INTO Organisation (Siren, Name, Headquarters, Status, Type, Creator)
+    VALUES (?, ?, ?, 'StandBy', ?, ?)
+  `;
+  try {
+    const result = await db.query(query, [siren, name, headquarters, type, creator]);
+    return result;
+  } catch (err) {
+    console.error('MODELE : Erreur lors de la création de l\'organisation :', err);
+    throw err;
+  }
+},
+  
+  
+  read: async function (recruteurPhone) {
       /*permet de récupérer l'organisation à laquelle appartient un recruteur*/
     const query = `
         SELECT o.*

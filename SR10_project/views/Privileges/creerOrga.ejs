@@ -39,56 +39,51 @@
 
       <form
         method="POST"
-        action="/organisation/creer"
-        enctype="multipart/form-data"
+        action="/candidat/creerOrganisation"
       >
         <div class="mb-3">
-          <label for="nom" class="form-label"
+          <label for="name" class="form-label"
             >Nom de l'organisation pour laquelle vous travaillez</label
           >
           <input
             type="text"
             class="form-control bg-dark text-white border-secondary"
-            id="nom"
-            name="nom"
+            id="name"
+            name="name"
             required
           />
         </div>
 
         <div class="mb-3">
-          <label for="siret" class="form-label">Siret</label>
+          <label for="siren" class="form-label">Siret</label>
           <input
             type="text"
             class="form-control bg-dark text-white border-secondary"
-            id="siret"
-            name="siret"
+            id="siren"
+            name="siren"
             required
           />
         </div>
 
         <div class="mb-3">
-          <label for="type" class="form-label"
-            >Type (association, SARL, SAS, etc.)</label
-          >
-          <input
-            type="text"
-            class="form-control bg-dark text-white border-secondary"
-            id="type"
-            name="type"
-            placeholder="Association, SARL, SAS, etc."
-            required
-          />
+            <label for="type" class="form-label">Type (association, SARL, SAS, etc.)</label>
+            <select class="form-control bg-dark text-white border-secondary" id="type" name="type" required>
+            <option value="">Sélectionnez un type</option>
+            <% types.forEach(function(type) { %>
+              <option value="<%= type.Name %>"><%= type.Name %></option>
+            <% }); %>
+          </select>
         </div>
 
         <div class="mb-3">
-          <label for="statut" class="form-label"
+          <label for="headquarters" class="form-label"
             >Siège social (adresse administrative)</label
           >
           <input
             type="text"
             class="form-control bg-dark text-white border-secondary"
-            id="siege"
-            name="siege"
+            id="headquarters"
+            name="headquarters"
             required
           />
         </div>
