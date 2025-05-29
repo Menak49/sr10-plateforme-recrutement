@@ -37,7 +37,7 @@ router.post('/SignUp', async (req, res) => {
       return res.render('SignUp', { error: "Ce numéro de téléphone est déjà utilisé.", title: 'Accueil', text: 'Bienvenue sur notre site de gestion des offres d\'emploi !' });
     }
     // Succès, redirection vers la page de connexion
-    res.redirect('/LogIn');
+    res.redirect('/LogIn?success=1');
   } catch (err) {
     res.render('SignUp', { error: "Erreur lors de l'inscription.", title: 'Accueil', text: 'Bienvenue sur notre site de gestion des offres d\'emploi !' });
   }
@@ -46,8 +46,9 @@ router.post('/SignUp', async (req, res) => {
 router.get('/LogIn', function(req, res, next) {
   res.render('LogIn', { title: 'Accueil', 
     text: 'Bienvenue sur notre site de gestion des offres d\'emploi !',
-  error: req.query.error // récupère le message d’erreur
-    });
+    success: req.query.success,
+    error: req.query.error // récupère le message d’erreur
+  });
 });
 
 
