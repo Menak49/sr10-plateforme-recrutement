@@ -6,6 +6,7 @@ const fiche = require('../model/fichePoste.js');
 const statut = require('../model/statutPoste.js');
 const metier = require('../model/typeMetier.js');
 const organisation = require('../model/organisation.js');
+const typeOrganisation = require('../model/typeOrganisation.js');
 
 router.get('/Accueil', function(req, res, next) {
   const userId = req.session.user?.phone ;//|| 223344556
@@ -251,10 +252,22 @@ router.post('/ajouterFicheDePoste', async (req, res) => {
       role: 'recruteur',
       title: pageTitle,
       userId: userId,
-      roles: req.session.user?.roles
+      roles: req.session.user?.roles,
+      success: req.query.success
     });
   });
 
+  router.get('/creerOrganisation', async (req, res) => {
+  const userId = req.session.user?.phone;
+  if (!userId) {
+    return res.redirect('/LogIn');
+  }
+  const types = await typeOrganisation.readAll();
+  res.render('Privileges/creerOrga', {
+    role: 'recruteur',
+    types: types
+  });
+});
 
   
 

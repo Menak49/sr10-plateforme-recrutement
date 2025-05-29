@@ -6,6 +6,7 @@ const organisation = require('../model/organisation.js');
 const utilisateur = require('../model/utilisateur.js');
 const recruteur = require('../model/recruteurBecomeQuery.js');
 const recruteurBecomeQuery = require('../model/recruteurBecomeQuery.js');
+const typeOrganisation = require('../model/typeOrganisation.js');
 
 
 router.get('/Accueil', function(req, res, next) {
@@ -53,18 +54,21 @@ router.get('/privileges', (req, res) => {
     role: 'admin',
     title: pageTitle,
     userId: userId,
-    roles:req.session.user?.roles || [] 
+    roles:req.session.user?.roles || [],
+    success: req.query.success
   });
 });
 
 
-router.get('/creerOrganisation', (req, res) => {
-  const userId = req.session.user?.phone ;//|| 223344556
+router.get('/creerOrganisation', async (req, res) => {
+  const userId = req.session.user?.phone;
   if (!userId) {
     return res.redirect('/LogIn');
   }
+  const types = await typeOrganisation.readAll();
   res.render('Privileges/creerOrga', {
     role: 'admin',
+    types: types
   });
 });
 
