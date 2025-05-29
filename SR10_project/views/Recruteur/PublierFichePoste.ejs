@@ -11,7 +11,6 @@
   </head>
   <body class="bg-dark text-light">
     <%- include('../partials/navbar', { title: mode === 'edit' ? 'Modifier une fiche de poste' : 'Créer une fiche de poste' }) %>
-
     <div class="container mt-3">
       <div class="card bg-light text-dark mb-3">
         <div class="card-body">
@@ -28,7 +27,7 @@
 
           <form action="/recruteur/ajouterFicheDePoste" method="POST">
             <div class="mb-3">
-              <label for="title" class="form-label">Intitulé de l'offre</label>
+              <label for="title" class="form-label"><b>Intitulé de l'offre</b></label>
               <input
                 type="text"
                 class="form-control form-control-sm"
@@ -40,7 +39,7 @@
             </div>
 
             <div class="mb-3">
-              <label for="statutPoste" class="form-label">Statut du poste</label>
+              <label for="statutPoste" class="form-label"><b>Statut du poste</b></label>
               <select class="form-select form-select-sm" id="statutPoste" name="statutPoste" required>
                 <option value="" disabled <%= mode === 'edit' ? '' : 'selected' %>>Sélectionnez un statut</option>
                 <% statuts.forEach(statut => { %>
@@ -52,7 +51,7 @@
             </div>
 
             <div class="mb-3">
-              <label for="supervisor" class="form-label">Responsable hiérarchique</label>
+              <label for="supervisor" class="form-label"><b>Responsable hiérarchique</b></label>
               <input
                 type="text"
                 class="form-control form-control-sm"
@@ -64,7 +63,7 @@
             </div>
 
             <div class="mb-3">
-              <label for="type" class="form-label">Type de métier</label>
+              <label for="type" class="form-label"><b>Type de métier</b></label>
               <select class="form-select form-select-sm" id="type" name="type" required>
                 <option value="" disabled <%= mode === 'edit' ? '' : 'selected' %>>Sélectionnez un type</option>
                 <% metiers.forEach(metier => { %>
@@ -76,7 +75,7 @@
             </div>
 
             <div class="mb-3">
-              <label for="location" class="form-label">Localisation de la mission</label>
+              <label for="location" class="form-label"><b>Localisation de la mission</b></label>
               <input
                 type="text"
                 class="form-control form-control-sm"
@@ -88,7 +87,7 @@
             </div>
 
             <div class="mb-3">
-              <label for="workSchedule" class="form-label">Rythme</label>
+              <label for="workSchedule" class="form-label"><b>Rythme</b></label>
               <input
                 type="text"
                 class="form-control form-control-sm"
@@ -98,14 +97,10 @@
                 required
               />
             </div>
-          </div>
-      </div>
 
-      <div class="card bg-light text-dark">
-        <div class="card-body">
             <div class="row mb-3">
               <div class="col-md-6">
-                <label for="minSalary" class="form-label">Salaire minimum</label>
+                <label for="minSalary" class="form-label"><b>Salaire minimum</b></label>
                 <div class="input-group">
                   <input
                     type="number"
@@ -119,7 +114,7 @@
                 </div>
               </div>
               <div class="col-md-6">
-                <label for="maxSalary" class="form-label">Salaire maximum</label>
+                <label for="maxSalary" class="form-label"><b>Salaire maximum</b></label>
                 <div class="input-group">
                   <input
                     type="number"
@@ -135,7 +130,7 @@
             </div>
 
             <div class="mb-3">
-              <label for="description" class="form-label">Description</label>
+              <label for="description" class="form-label"><b>Description</b></label>
               <textarea
                 class="form-control form-control-sm"
                 id="description"
@@ -146,7 +141,7 @@
             </div>
 
             <div class="mb-3">
-              <label for="organisation" class="form-label">Organisation</label>
+              <label for="organisation" class="form-label"><b>Organisation</b></label>
               <select class="form-select form-select-sm" id="organisation" name="organisation" required>
                 <option value="" disabled <%= mode === 'edit' ? '' : 'selected' %>>Sélectionnez une organisation</option>
                 <% organisations.forEach(org => { %>
@@ -158,7 +153,7 @@
             </div>
 
             <div class="text-end mt-4">
-              <a href="/fiches" class="btn btn-secondary me-2">Annuler</a>
+              <a href="/recruteur/gererFicheDePoste" class="btn btn-secondary me-2">Annuler</a>
               <button type="submit" class="btn btn-dark"><%= mode === 'edit' ? 'Mettre à jour' : 'Créer' %></button>
             </div>
           </form>

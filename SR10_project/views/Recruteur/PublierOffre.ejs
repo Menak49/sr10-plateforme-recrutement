@@ -27,7 +27,7 @@
           <form action="/recruteur/ajouterOffre" method="POST">
 
             <div class="mb-3">
-              <label for="fichePosteId" class="form-label">Fiche de poste</label>
+              <label for="fichePosteId" class="form-label"><b>Fiche de poste</b></label>
               <select
                 class="form-select form-select-sm"
                 id="fichePosteId"
@@ -44,7 +44,7 @@
             </div>
 
             <div class="mb-3">
-              <label for="state" class="form-label">État de l'offre</label>
+              <label for="state" class="form-label"><b>État de l'offre</b></label>
               <select
                 class="form-select form-select-sm"
                 id="state"
@@ -59,7 +59,7 @@
             </div>
 
             <div class="mb-3">
-              <label for="expiryDate" class="form-label">Date limite</label>
+              <label for="expiryDate" class="form-label"><b>Date limite</b></label>
               <input
                 type="date"
                 class="form-control form-control-sm"
@@ -71,7 +71,7 @@
             </div>
 
             <div class="mb-3">
-              <label for="details" class="form-label">Détails supplémentaires</label>
+              <label for="details" class="form-label"><b>Détails supplémentaires</b></label>
               <textarea
                 class="form-control form-control-sm"
                 id="details"
@@ -82,7 +82,7 @@
             </div>
 
             <div class="mb-3">
-              <label for="slots" class="form-label">Nombre de postes ouverts</label>
+              <label for="slots" class="form-label"><b>Nombre de postes ouverts</b></label>
               <input
                 type="number"
                 class="form-control form-control-sm"
@@ -95,7 +95,7 @@
             </div>
 
             <div class="mb-3">
-              <label class="form-label">Pièces à joindre</label>
+              <label class="form-label"><b>Pièces à joindre</b></label>
               <% if (typeof pieces !== 'undefined' && pieces.length > 0) { %>
                 <% pieces.forEach(piece => { %>
                   <div class="form-check">
@@ -111,7 +111,7 @@
             </div>
 
             <div class="text-end">
-              <a href="/offres" class="btn btn-secondary me-2">Annuler</a>
+              <a href="/recruteur/GererOffres" class="btn btn-secondary me-2">Annuler</a>
               <button type="submit" class="btn btn-dark">
                 <%= mode === 'edit' ? 'Mettre à jour' : 'Publier' %>
               </button>
