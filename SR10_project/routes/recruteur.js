@@ -159,7 +159,8 @@ router.get('/gererFicheDePoste', async (req, res) => {
       currentPage: page,
       totalPages: totalPages,
       role: role,
-      search: search // pour remplir le champ input dans la vue
+      search: search, // pour remplir le champ input dans la vue
+      success: req.query.success
     });
   } catch (err) {
     console.error('Erreur MySQL:', err);
@@ -196,7 +197,7 @@ router.post('/ajouterFicheDePoste', async (req, res) => {
         formData.recruteur = req.session.user.phone;
         console.log('FormData:', formData);
         await fiche.create(formData);
-        res.redirect('/recruteur/gererFicheDePoste');
+        res.redirect('/recruteur/gererFicheDePoste?success=1');
     } catch (error) {
         console.error(error);
         console.log('Erreur lors de la création de la fiche de poste:', formData);
