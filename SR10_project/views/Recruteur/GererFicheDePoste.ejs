@@ -45,8 +45,18 @@
                 <%= fiche.minSalaire %>€ - <%= fiche.maxSalaire %>€ / semaine
               </p>
               <div class="d-flex justify-content-end gap-2">
-                <a href="/supprimerFicheDePoste/<%= fiche.id %>" class="btn btn-outline-danger">Supprimer</a>
-
+                <button 
+                  class="btn btn-outline-danger"
+                  data-bs-toggle="modal"
+                  data-bs-target="#deleteModalFiche-<%= fiche.id %>"
+                >
+                  Supprimer
+                </button>
+                <%- include('../partials/Confirmation', {
+                  modalId: "deleteModalFiche-" + fiche.id,
+                  message: "Êtes-vous sûr de vouloir supprimer cette fiche de poste ?",
+                  action: "/recruteur/supprimerFicheDePoste/" + fiche.id
+                }) %>
                 <a href="modifierFicheDePoste/<%= fiche.id %>" class="btn btn-outline-secondary">Modifier</a>
               </div>
             </div>
@@ -84,7 +94,7 @@
 
     <%- include('../partials/toast', {
       showToast: (success == 1 || success == '1'),
-      toastContent: "La fiche de poste a bien été ajoutée"
+      toastContent: "Vos fiches de poste ont été mises à jour avec succès.",
     }) %>
 
   </body>

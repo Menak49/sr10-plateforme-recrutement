@@ -144,7 +144,8 @@ router.get('/modifierOffre/:id', async(req, res) => {
 
 /* - manque router.post('/modifierFicheDePoste/:id') 
 qui devrait appeler fichePoste.update(ficheId) dans le modèle
-- pb requête SQL pour récup fiches de postes de l'orga à laquelle appartient recruteur? */
+- pb requête SQL pour récup fiches de postes de l'orga à laquelle appartient recruteur? 
+- supprimer marche pas encore*/
 
 router.get('/gererFicheDePoste', async (req, res) => {
   try {
@@ -247,6 +248,17 @@ router.get('/modifierFicheDePoste/:id', async (req, res) => {
   catch (err) {
     console.error('Erreur lors de la récupération de la fiche de poste :', err);
     return res.status(500).send('Erreur serveur');
+  }
+});
+
+router.post('/supprimerFicheDePoste/:id', async (req, res) => {
+  const ficheId = req.params.id;
+  try {
+    await fiche.delete(ficheId);
+    res.redirect('/recruteur/gererFicheDePoste?success=1');
+  } catch (err) {
+    console.error('Erreur lors de la suppression de la fiche de poste :', err);
+    res.status(500).send('Erreur lors de la suppression de la fiche de poste');
   }
 });
 

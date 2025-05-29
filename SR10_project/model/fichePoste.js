@@ -30,6 +30,16 @@ module.exports = {
         throw error;
     }
 },  
+
+  delete: async function(ficheId) {
+    const query = 'DELETE FROM FichePoste WHERE Id = ?';
+    try {
+      await db.query(query, [ficheId]);
+    } catch (err) {
+      console.error('Erreur lors de la suppression de la fiche de poste (Modèle) :', err);
+      throw err;
+    }
+  },
   
     
   read: async function (ficheId){
