@@ -9,7 +9,7 @@
       rel="stylesheet"
     />
   </head>
-  <body class="bg-light">
+  <body class="bg-light d-flex flex-column min-vh-100">
     <%- include('../partials/navbar', { role: role }) %>
 
     <div class="container mt-4">
@@ -49,8 +49,8 @@
                 <%= offre.minSalaire %>€ - <%= offre.maxSalaire %>€ / semaine
               </p>
               <div class="d-flex justify-content-end gap-2">
+                <a href="/recruteur/GererOffres/reponses/<%= offre.id %>" class="btn btn-outline-success">Réponses</a>
                 <a href="/supprimerOffre/<%= offre.id %>" class="btn btn-outline-danger">Supprimer</a>
-
                 <a href="modifierOffre/<%= offre.id %>" class="btn btn-outline-secondary">Modifier</a>
               </div>
             </div>

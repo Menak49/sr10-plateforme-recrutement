@@ -8,6 +8,7 @@ const metier = require('../model/typeMetier.js');
 const organisation = require('../model/organisation.js');
 const typeOrganisation = require('../model/typeOrganisation.js');
 const pieceDossier = require('../model/typePieceDossier.js');
+const candidature = require('../model/candidature.js');
 
 router.get('/Accueil', function(req, res, next) {
   const userId = req.session.user?.phone ;//|| 223344556
@@ -25,10 +26,12 @@ router.get('/Accueil', function(req, res, next) {
 
 ////////////////////////// GERER MES OFFRES ////////////////////////////////////////////////
 
-/*- manque router.post('/modifierOffre/:id') 
+/*- pas de bouton pour consuler les réponses (et donc pas de route pour les récupérer)
+- manque router.post('/modifierOffre/:id') 
 qui devrait appeler offreEmploi.update(offreId) dans le modèle
 - pb requête SQL de récupération des offres de l'utilisateur
- (ou plus simplement de l'orga à laquelle appartient l'utilisateur*/
+ (ou plus simplement de l'orga à laquelle appartient l'utilisateur
+ - manque supprimer */
 
 router.get('/GererOffres', async (req, res) => {
     try {
@@ -138,6 +141,23 @@ router.get('/modifierOffre/:id', async(req, res) => {
 });
 
 
+router.get('/GererOffres/reponses/:offreId', async (req, res) => {
+  //loin de fonctionner, à revoir, de même que la vue reponses.ejs
+  try {
+    const offreId = req.params.offreId;
+    // À adapter selon ton modèle, exemple :
+    const reponses = await candidature.getCandidaturesByOffreId(offreId);
+    res.render('Recruteur/Reponses', {
+      role: 'recruteur',
+      reponses: reponses,
+      offreId: offreId
+    });
+  } catch (err) {
+    console.error('Erreur lors de la récupération des réponses à l\'offre :', err);
+    res.status(500).send('Erreur lors de la récupération des réponses à l\'offre');
+  }
+});
+
 
 
 /////////////////////////////GERER MES FICHES DE POSTE//////////////////////////////////////////
@@ -145,7 +165,10 @@ router.get('/modifierOffre/:id', async(req, res) => {
 /* - manque router.post('/modifierFicheDePoste/:id') 
 qui devrait appeler fichePoste.update(ficheId) dans le modèle
 - pb requête SQL pour récup fiches de postes de l'orga à laquelle appartient recruteur? 
-- supprimer marche pas encore*/
+
+ce qui fonctionne : 
+- créer une nouvelle fiche de poste
+- supprimer une fiche de poste*/
 
 router.get('/gererFicheDePoste', async (req, res) => {
   try {

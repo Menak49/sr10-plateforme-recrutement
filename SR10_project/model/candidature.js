@@ -21,6 +21,33 @@ module.exports = {
     },
 
 
+    getCandidaturesByOffreId: async function(offreId) {
+      //pour le recruteur
+      const query = `
+        SELECT 
+          c.Id AS candidature_id,
+          DATE_FORMAT(c.Date, '%d/%m/%Y') AS date_candidature,
+          u.LastName AS nom,
+          u.FirstName AS prenom,
+          u.Email AS email,
+          GROUP_CONCAT(pd.Name, '::', pd.Chemin SEPARATOR '||') AS pieces
+        FROM Candidature c
+        JOIN Utilisateur u ON c.Candidat = u.Phone
+        LEFT JOIN CandidaturePieceDossier cpd ON c.Id = cpd.Candidature
+        LEFT JOIN PieceDossier pd ON cpd.PieceDossier = pd.Id
+        WHERE c.OffreEmploi = ?
+        GROUP BY c.Id, u.LastName, u.FirstName, u.Email, c.Date
+        ORDER BY c.Date DESC
+      `;
+      try {
+        return await db.query(query, [offreId]);
+      } catch (err) {
+        console.error('Erreur lors de la récupération des candidatures pour une offre :', err);
+        throw err;
+      }
+    },
+
+
     getCandidaturesByUserId: async function(userId, searchTerm = '', limit = 10, offset = 0) {
         const query = `
           SELECT 
