@@ -8,6 +8,8 @@ CREATE TABLE Utilisateur (
     Email VARCHAR(255) UNIQUE NOT NULL
 );
 
+CREATE TABLE TypePieceDossier (Name VARCHAR(255) PRIMARY KEY);
+
 CREATE TABLE TypeOrganisation (
     Name VARCHAR(255) PRIMARY KEY
 );

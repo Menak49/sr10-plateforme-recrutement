@@ -2,6 +2,7 @@
 INSERT INTO TypeOrganisation (Name) VALUES ('Entreprise'), ('Association'), ('Freelance');
 INSERT INTO StatutPoste (Name) VALUES ('CDI'), ('CDD'), ('Stage'), ('Alternance');
 INSERT INTO TypeMetier (Name) VALUES ('Informatique'), ('Marketing'), ('Finance');
+INSERT INTO TypePieceDossier (Name) VALUES ('CV'), ('Lettre de motivation'), ('piède d identité'), ('photo'), ('diplôme'), ('autre');
 
 INSERT INTO Utilisateur (Phone, LastName, FirstName, Status, Password, Email) VALUES
 (123456789, 'Doe', 'John', 'Active', 'SecurePass123!', 'Doe@gmail.com'),
