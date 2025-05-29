@@ -10,27 +10,36 @@
   <div class="container mt-4">
     <div class="card bg-light text-dark">
       <div class="card-body">
-        <h4 class="card-title mb-4">CANDIDATER À L'OFFRE : <%= offre.TitreOffre %></h4>
+        <h4 class="card-title mb-4">Pour candidatater à l'offre <%= offre.TitreOffre %>, veuillez joindre des pièces de dossier: </h4>
         <form action="/candidat/candidater/<%= offre.Id %>" method="POST">
           <div class="mb-3">
-            <label class="form-label">Offre</label>
+            <label class="form-label"><b>Offre</b></label>
             <input type="text" class="form-control" value="<%= offre.TitreOffre %>" disabled>
           </div>
           <div class="mb-3">
-            <label class="form-label">Date de candidature</label>
+            <label class="form-label"><b>Date de candidature</b></label>
             <input type="text" class="form-control" value="<%= defaultValues.date %>" disabled>
             <input type="hidden" name="date" value="<%= defaultValues.date %>">
           </div>
           <div class="mb-3">
-            <label class="form-label">Pièces à joindre pour constituer votre dossier :</label>
-            <% pieces.forEach(piece => { %>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="pieces" value="<%= piece.Id %>" id="piece-<%= piece.Id %>">
-                <label class="form-check-label" for="piece-<%= piece.Id %>">
-                  <%= piece.Name %>
-                </label>
+            <div class="row">
+              <div class="col-md-6">
+                <% pieces.slice(0, 3).forEach(piece => { %>
+                  <div class="mb-2">
+                    <label class="form-label"><b><%= piece.Name %> :</b></label>
+                    <input class="form-control" type="file" name="piece_<%= piece.Id %>">
+                  </div>
+                <% }) %>
               </div>
-            <% }) %>
+              <div class="col-md-6">
+                <% pieces.slice(3, 6).forEach(piece => { %>
+                  <div class="mb-2">
+                    <label class="form-label"><b><%= piece.Name %> :</b></label>
+                    <input class="form-control" type="file" name="piece_<%= piece.Id %>">
+                  </div>
+                <% }) %>
+              </div>
+            </div>
           </div>
           <div class="text-end">
             <a href="/candidat/parcourir" class="btn btn-secondary me-2">Annuler</a>
