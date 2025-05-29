@@ -41,8 +41,8 @@
                 <%= offre.contrat %> - <%= offre.localisation %>
               </p>
               <div class="d-flex justify-content-end gap-2">
-                <button class="btn btn-dark">Candidater</button>
-                <button class="btn btn-dark">Afficher</button>
+                <a href="/candidat/candidater/<%= offre.id %>" class="btn btn-dark">Candidater</a>
+                <a href="/candidat/afficher/<%= offre.id %>" class="btn btn-dark">Afficher</a>
               </div>
             </div>
           </div>

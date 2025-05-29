@@ -7,6 +7,7 @@ const statut = require('../model/statutPoste.js');
 const metier = require('../model/typeMetier.js');
 const organisation = require('../model/organisation.js');
 const typeOrganisation = require('../model/typeOrganisation.js');
+const pieceDossier = require('../model/typePieceDossier.js');
 
 router.get('/Accueil', function(req, res, next) {
   const userId = req.session.user?.phone ;//|| 223344556
@@ -53,10 +54,12 @@ router.get('/GererOffres', async (req, res) => {
 router.get('/ajouterOffre', async(req, res) => {
   try{
     const fiches = await fiche.readAllBis();
+    const pieces = await pieceDossier.readAll();
     res.render('Recruteur/PublierOffre', {
       mode: 'create',
       fiches: fiches,
       role: 'recruteur',
+      pieces: pieces,
       defaultValues: {
         state: 'NotPublished',
         expiryDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)

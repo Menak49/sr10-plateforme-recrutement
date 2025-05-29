@@ -159,6 +159,7 @@ create: async function (phone, lastName, firstName, status, password, email) {
   },
   ```
 
+On affiche ensuite un popup pour avertir l'utilisateur que son compte a bien été créé.
 
 #### Vérification du bon fonctionnement
 

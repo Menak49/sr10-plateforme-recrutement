@@ -5,6 +5,22 @@ db.query = util.promisify(db.query);
 
 module.exports = {
 
+
+    create: async function(date, offreEmploi, candidat) {
+      const query = `
+        INSERT INTO Candidature (Date, OffreEmploi, Candidat)
+        VALUES (?, ?, ?)
+      `;
+      try {
+        const result = await db.query(query, [date, offreEmploi, candidat]);
+        return result.insertId;
+      } catch (err) {
+        console.error('Erreur lors de la création de la candidature :', err);
+        throw err;
+      }
+    },
+
+
     getCandidaturesByUserId: async function(userId, searchTerm = '', limit = 10, offset = 0) {
         const query = `
           SELECT 

@@ -6,6 +6,9 @@ const candidature = require('../model/candidature.js');
 const organisation = require('../model/organisation.js');
 const typeOrganisation = require('../model/typeOrganisation.js');
 const recruteurBecomeQuery = require('../model/recruteurBecomeQuery.js');
+const fichePoste = require('../model/fichePoste.js');
+const pieceDossier = require('../model/typePieceDossier.js');
+
 
 
 
@@ -20,6 +23,8 @@ router.get('/Accueil', function(req, res, next) {
       roles:req.session.user?.roles || []  });
 });
 
+
+/*VOIR LES OFFRES*/
 
 router.get('/parcourir', async (req, res) => {
   try {
@@ -58,6 +63,41 @@ router.get('/parcourir', async (req, res) => {
 
 
 
+
+// Afficher le formulaire de candidature
+router.get('/candidater/:offreId', async (req, res) => {
+  try {
+    const userId = req.session.user?.phone;
+    if (!userId) return res.redirect('/LogIn');
+
+    const offreId = req.params.offreId;
+    const offreData = await offre.read(offreId);
+    const fichePosteData = await fichePoste.read(offreData.FichePoste);
+
+    const pieces = await pieceDossier.readAll(); // Toutes les pièces disponibles
+
+    res.render('Candidat/candidater', {
+      role: 'candidat',
+      offre: {
+        Id: offreData.Id,
+        TitreOffre: fichePosteData.Title,
+      },
+      pieces: pieces,
+      defaultValues: {
+        date: new Date().toISOString().split('T')[0]
+      }
+    });
+  } catch (err) {
+    console.error('Erreur lors de l\'affichage du formulaire de candidature :', err);
+    res.status(500).send('Erreur lors de l\'affichage du formulaire de candidature');
+  }
+});
+
+
+
+
+/*MES CANDIDATURES*/
+
 router.get('/candidatures', async (req, res) => {
   console.log("session");
   try {
@@ -88,8 +128,48 @@ router.get('/candidatures', async (req, res) => {
   }
 });
 
+router.post('/delete-candidature/:id', async (req, res) => {
+  const candidatureId = req.params.id;
+  try {
+    await candidature.deleteById(candidatureId);
+    res.redirect('/candidat/candidatures');
+  } catch (err) {
+    console.error('Erreur lors de la suppression de la candidature :', err);
+    res.status(500).send('Erreur lors de la suppression de la candidature');
+  }
+});
+
+router.get('/modifierCandidature/:id', async (req, res) => {
+  const candidatureId = req.params.id;
+  try {
+    const candidature = await candidature.findById(candidatureId); 
+    res.render('Candidat/modifierCandidature', { candidature });
+  } catch (err) {
+    console.error('Erreur lors de la récupération de la candidature :', err);
+    res.status(500).send('Erreur lors de la récupération de la candidature');
+  }
+});
+
+router.post('/modifierCandidature/:id', async (req, res) => {
+  const candidatureId = req.params.id;
+  const { titre, localisation, contrat, ...autresChamps } = req.body;
+  try {
+    await candidature.updateById(candidatureId, {
+      titre,
+      localisation,
+      contrat,
+      ...autresChamps
+    });
+    res.redirect('/candidat/candidatures');
+  } catch (err) {
+    console.error('Erreur lors de la modification de la candidature :', err);
+    res.status(500).send('Erreur lors de la modification de la candidature');
+  }
+});
 
 
+
+/*PRIVILEGES*/
 
 router.get('/privileges', (req, res) => {
   // Récupérer l'ID de l'utilisateur depuis la session
@@ -185,46 +265,6 @@ router.get('/creerOrganisation', async (req, res) => {
   } catch (err) {
     console.error('CONTROLEUR : Erreur lors de la création de l\'organisation :', err);
     return res.status(500).send("CONTROLEUR : Erreur lors de la création de l'organisation");
-  }
-});
-
-
-router.post('/delete-candidature/:id', async (req, res) => {
-  const candidatureId = req.params.id;
-  try {
-    await candidature.deleteById(candidatureId);
-    res.redirect('/candidat/candidatures');
-  } catch (err) {
-    console.error('Erreur lors de la suppression de la candidature :', err);
-    res.status(500).send('Erreur lors de la suppression de la candidature');
-  }
-});
-
-router.get('/modifierCandidature/:id', async (req, res) => {
-  const candidatureId = req.params.id;
-  try {
-    const candidature = await candidature.findById(candidatureId); 
-    res.render('Candidat/modifierCandidature', { candidature });
-  } catch (err) {
-    console.error('Erreur lors de la récupération de la candidature :', err);
-    res.status(500).send('Erreur lors de la récupération de la candidature');
-  }
-});
-
-router.post('/modifierCandidature/:id', async (req, res) => {
-  const candidatureId = req.params.id;
-  const { titre, localisation, contrat, ...autresChamps } = req.body;
-  try {
-    await candidature.updateById(candidatureId, {
-      titre,
-      localisation,
-      contrat,
-      ...autresChamps
-    });
-    res.redirect('/candidat/candidatures');
-  } catch (err) {
-    console.error('Erreur lors de la modification de la candidature :', err);
-    res.status(500).send('Erreur lors de la modification de la candidature');
   }
 });
 
