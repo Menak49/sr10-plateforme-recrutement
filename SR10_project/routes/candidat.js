@@ -8,6 +8,7 @@ const typeOrganisation = require('../model/typeOrganisation.js');
 const recruteurBecomeQuery = require('../model/recruteurBecomeQuery.js');
 const fichePoste = require('../model/fichePoste.js');
 const pieceDossier = require('../model/typePieceDossier.js');
+const adminBecomeQuery = require('../model/adminBecomeQuery.js');
 
 
 
@@ -267,6 +268,39 @@ router.get('/creerOrganisation', async (req, res) => {
     return res.status(500).send("CONTROLEUR : Erreur lors de la création de l'organisation");
   }
 });
+
+router.get('/devenirAdmin', (req, res) => {
+  const userId = req.session.user?.phone;
+  if (!userId) {
+    return res.redirect('/LogIn');
+  }
+  res.render('Privileges/DevenirAdmin', {
+    role: 'candidat',
+    userId: userId
+  });
+});
+
+router.post('/devenirAdmin', async (req, res) => {
+  try {
+    const userId = req.session.user?.phone;
+    const message = req.body.message;
+    if (!userId || !message) {
+      return res.status(400).send('Informations manquantes');
+    }
+    
+    await adminBecomeQuery.create({
+      user: userId,
+      message: message
+    });
+
+    res.redirect('/candidat/Accueil');
+  } catch (err) {
+    console.error('Erreur lors de l\'envoi de la demande admin :', err);
+    res.status(500).send('Erreur lors de l\'envoi de la demande');
+  }
+});
+
+
 
 
 
