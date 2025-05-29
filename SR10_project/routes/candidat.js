@@ -170,7 +170,7 @@ router.post('/modifierCandidature/:id', async (req, res) => {
 
 
 
-/*PRIVILEGES*/
+/*PRIVILEGES c'est ici qu'on gère tout, aussi bien pour recruteur, admin que candidat */
 
 router.get('/privileges', (req, res) => {
   // Récupérer l'ID de l'utilisateur depuis la session
@@ -239,7 +239,7 @@ router.post('/EnvoyerDemandeRecruteur', async (req, res) => {
 
 
 router.get('/creerOrganisation', async (req, res) => {
-  const userId = req.session.user?.phone ;//|| 223344556
+  const userId = req.session.user?.phone ;
     if (!userId) {
       return res.redirect('/LogIn');
     }
@@ -293,7 +293,7 @@ router.post('/devenirAdmin', async (req, res) => {
       message: message
     });
 
-    res.redirect('/candidat/Accueil');
+    res.redirect('/candidat/privileges?success=1');
   } catch (err) {
     console.error('Erreur lors de l\'envoi de la demande admin :', err);
     res.status(500).send('Erreur lors de l\'envoi de la demande');

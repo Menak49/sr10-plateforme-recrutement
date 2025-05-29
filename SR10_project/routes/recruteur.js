@@ -249,7 +249,6 @@ router.get('/modifierFicheDePoste/:id', async (req, res) => {
       return res.redirect('/login');
     }
     
-    
     const pageTitle = 'Élévation de Privilèges';
     console.log('Rôle de l\'utilisateur:', req.session.user?.roles );
     res.render('Privileges/Privileges', {
@@ -261,19 +260,14 @@ router.get('/modifierFicheDePoste/:id', async (req, res) => {
     });
   });
 
-
-  router.get('/creerOrganisation', async (req, res) => {
-  const userId = req.session.user?.phone;
-  if (!userId) {
-    return res.redirect('/LogIn');
-  }
-  const types = await typeOrganisation.readAll();
-  res.render('Privileges/creerOrga', {
-    role: 'recruteur',
-    types: types
+  router.get('/creerOrganisation', (req, res) => {
+      res.redirect('/candidat/creerOrganisation');
   });
-});
 
+  router.get('/devenirAdmin', async (req, res) => {
+    res.redirect('/candidat/devenirAdmin');
+  });
+  
   
 
 module.exports = router;

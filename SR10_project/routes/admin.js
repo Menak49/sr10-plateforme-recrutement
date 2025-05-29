@@ -22,55 +22,6 @@ router.get('/Accueil', function(req, res, next) {
 });
 
 
-router.get('/devenirRecruteur', async (req, res) => {
-  try {
-    const userId = req.session.user?.phone ;//|| 223344556
-  if (!userId) {
-    return res.redirect('/LogIn');
-  }
-    let results;
-    results = await organisation.readAll();
-      return res.render('Privileges/DevenirRecruteur', 
-      {role: 'admin',
-         organisations: results});
-  }
-  catch (err) {
-    console.log(err);
-    res.status(500).send("Erreur lors de la récupération des organisations (Contrôleur)");
-  }
-});
-
-
-router.get('/privileges', (req, res) => {
-  // Récupérer l'ID de l'utilisateur depuis la session
-  const userId = req.session.user?.phone ;//|| 223344556
-  if (!userId) {
-    return res.redirect('/LogIn');
-  }
-  
-  const pageTitle = 'Élévation de Privilèges';
-  
-  res.render('Privileges/Privileges', {
-    role: 'admin',
-    title: pageTitle,
-    userId: userId,
-    roles:req.session.user?.roles || [],
-    success: req.query.success
-  });
-});
-
-
-router.get('/creerOrganisation', async (req, res) => {
-  const userId = req.session.user?.phone;
-  if (!userId) {
-    return res.redirect('/LogIn');
-  }
-  const types = await typeOrganisation.readAll();
-  res.render('Privileges/creerOrga', {
-    role: 'admin',
-    types: types
-  });
-});
 
 
 
@@ -261,5 +212,38 @@ router.post('/RefuserOrganisation/:siren', async (req, res) => {
     res.status(500).send('Erreur lors du refus');
   }
 });
+
+
+//PRIVILEGES
+
+
+router.get('/privileges', (req, res) => {
+  // Récupérer l'ID de l'utilisateur depuis la session
+  const userId = req.session.user?.phone ;//|| 223344556
+  if (!userId) {
+    return res.redirect('/LogIn');
+  }
+  
+  const pageTitle = 'Élévation de Privilèges';
+  
+  res.render('Privileges/Privileges', {
+    role: 'admin',
+    title: pageTitle,
+    userId: userId,
+    roles:req.session.user?.roles || [],
+    success: req.query.success
+  });
+});
+
+router.get('/devenirRecruteur', async (req, res) => {
+  res.redirect('/candidat/devenirRecruteur');
+});
+
+
+router.get('/creerOrganisation', (req, res) => {
+      res.redirect('/candidat/creerOrganisation');
+  });
+
+
 
 module.exports = router;
