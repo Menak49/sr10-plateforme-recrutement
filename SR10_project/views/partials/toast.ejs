@@ -1,0 +1,22 @@
+<% if (typeof showToast !== 'undefined' && showToast) { %>
+  <div aria-live="polite" aria-atomic="true" class="position-fixed top-0 end-0 p-3" style="z-index: 1080;">
+    <div id="successToast" class="toast align-items-center text-bg-success border-0 show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+      <div class="d-flex">
+        <div class="toast-body fw-bold text-center" style="font-family: inherit;">
+          <%= typeof toastContent !== 'undefined' ? toastContent : '' %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    window.onload = function() {
+      var toastEl = document.getElementById('successToast');
+      var toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+      toast.show();
+      setTimeout(function() {
+        toastEl.classList.remove('show');
+        toastEl.classList.add('fade');
+      }, 3000);
+    }
+  </script>
+<% } %>

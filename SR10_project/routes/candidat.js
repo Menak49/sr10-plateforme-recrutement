@@ -106,7 +106,8 @@ router.get('/privileges', (req, res) => {
     role: role,
     title: pageTitle,
     userId: userId,
-    roles: req.session.user?.roles
+    roles: req.session.user?.roles,
+    success: req.query.success
   });
 });
 
@@ -180,7 +181,7 @@ router.get('/creerOrganisation', async (req, res) => {
     console.log(req.body);
     const { siren, name, headquarters, type } = req.body;
     await organisation.create(siren, name, headquarters, type, userId);
-    return res.redirect('/candidat/privileges');
+    return res.redirect('/candidat/privileges?success=1');
   } catch (err) {
     console.error('CONTROLEUR : Erreur lors de la création de l\'organisation :', err);
     return res.status(500).send("CONTROLEUR : Erreur lors de la création de l'organisation");
