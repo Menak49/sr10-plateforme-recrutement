@@ -22,7 +22,13 @@ router.get('/Accueil', function(req, res, next) {
 });
 
 
-/*GERE MES OFFRES*/
+
+////////////////////////// GERER MES OFFRES ////////////////////////////////////////////////
+
+/*- manque router.post('/modifierOffre/:id') 
+qui devrait appeler offreEmploi.update(offreId) dans le modèle
+- pb requête SQL de récupération des offres de l'utilisateur
+ (ou plus simplement de l'orga à laquelle appartient l'utilisateur*/
 
 router.get('/GererOffres', async (req, res) => {
     try {
@@ -132,8 +138,13 @@ router.get('/modifierOffre/:id', async(req, res) => {
 });
 
 
-/*GERER MES FICHES DE POSTE*/
 
+
+/////////////////////////////GERER MES FICHES DE POSTE//////////////////////////////////////////
+
+/* - manque router.post('/modifierFicheDePoste/:id') 
+qui devrait appeler fichePoste.update(ficheId) dans le modèle
+- pb requête SQL pour récup fiches de postes de l'orga à laquelle appartient recruteur? */
 
 router.get('/gererFicheDePoste', async (req, res) => {
   try {
@@ -170,6 +181,7 @@ router.get('/gererFicheDePoste', async (req, res) => {
     res.status(500).send('Erreur lors de la récupération des fiches de poste');
   }
 });
+
 
 router.get('/ajouterFicheDePoste', async (req, res) => {
   try{
@@ -209,7 +221,6 @@ router.post('/ajouterFicheDePoste', async (req, res) => {
 });
 
 
-
 router.get('/modifierFicheDePoste/:id', async (req, res) => {
   try {
     const ficheId = req.params.id;
@@ -240,15 +251,19 @@ router.get('/modifierFicheDePoste/:id', async (req, res) => {
 });
 
 
-/*PRIVILEGES*/
+
+
+////////////////////////// PRIVILEGES ////////////////////////////////////////////////
+
+/*Les privilèges sont gérés au niveau de la route /candidat
+on affiche ici les actions qu'il peut effectuer selon son rôle
+en particulier, le recruteur ne doit pas pouvoir demander à devenir recruteur comme il l'est déjà*/
 
   router.get('/privileges', (req, res) => {
     const userId = req.session.user || 111222333;
-    
     if (!userId) {
       return res.redirect('/login');
     }
-    
     const pageTitle = 'Élévation de Privilèges';
     console.log('Rôle de l\'utilisateur:', req.session.user?.roles );
     res.render('Privileges/Privileges', {

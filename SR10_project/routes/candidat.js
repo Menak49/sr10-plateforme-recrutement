@@ -12,7 +12,6 @@ const adminBecomeQuery = require('../model/adminBecomeQuery.js');
 
 
 
-
 router.get('/Accueil', function(req, res, next) {
   const userId = req.session.user?.phone ;//|| 223344556
   if (!userId) {
@@ -25,7 +24,12 @@ router.get('/Accueil', function(req, res, next) {
 });
 
 
-/*VOIR LES OFFRES*/
+////////////////////////// VOIR LES OFFRES ////////////////////////////////////////
+
+/*ce qu'il manque dans "VOIR LES OFFRES": 
+  - la possibilité d'upload des pièces jointes (utiliser multer?)
+  - requête router.post('/candidater/:offreId') qui envoie le formulaire à la DB */
+
 
 router.get('/parcourir', async (req, res) => {
   try {
@@ -38,14 +42,10 @@ router.get('/parcourir', async (req, res) => {
     const limit = 9;
     const offset = (page - 1) * limit;
 
-
     let offres, total;
-
-
     offres = await offre.readOffresPourCandidat(userId, searchTerm, limit, offset);
     total = await offre.countOffresPourCandidat(userId, searchTerm);
     
-
     const totalPages = Math.ceil(total / limit);
 
     return res.render('Candidat/ParcourirOffre', {
@@ -61,8 +61,6 @@ router.get('/parcourir', async (req, res) => {
   res.status(500).send("Erreur lors de la récupération des offres (Contrôleur)");
   }
 });
-
-
 
 
 // Afficher le formulaire de candidature
@@ -97,7 +95,12 @@ router.get('/candidater/:offreId', async (req, res) => {
 
 
 
-/*MES CANDIDATURES*/
+
+////////////////////////// MES CANDIDATURES ////////////////////////////////////////
+
+/*ce qu'il manque dans "MES CANDIDATURES" 
+- aucune des deux routes get et post ne fonctionnent
+car la vue /Candidat/modifierCandidature n'existe pas encore */
 
 router.get('/candidatures', async (req, res) => {
   console.log("session");
@@ -140,10 +143,11 @@ router.post('/delete-candidature/:id', async (req, res) => {
   }
 });
 
+
 router.get('/modifierCandidature/:id', async (req, res) => {
   const candidatureId = req.params.id;
   try {
-    const candidature = await candidature.findById(candidatureId); 
+    const candidatureData = await candidature.findById(candidatureId); 
     res.render('Candidat/modifierCandidature', { candidature });
   } catch (err) {
     console.error('Erreur lors de la récupération de la candidature :', err);
@@ -170,7 +174,20 @@ router.post('/modifierCandidature/:id', async (req, res) => {
 
 
 
-/*PRIVILEGES c'est ici qu'on gère tout, aussi bien pour recruteur, admin que candidat */
+
+
+////////////////////////// PRIVILEGES ////////////////////////////////////////
+
+/*c'est ici qu'on gère tout, aussi bien pour recruteur, admin que candidat
+
+ce qu'il manque dans PRIVILEGES
+- la route post /EnvoyerDemandeRecruteur ne fonctionne pas
+
+ce qui fonctionne dans PRIVILEGES
+- la route get /devenirRecruteur (mais pas post)
+- les routes get/post de creeerOrganisation
+- les routes get/post de devenirAdmin */
+
 
 router.get('/privileges', (req, res) => {
   // Récupérer l'ID de l'utilisateur depuis la session
@@ -191,7 +208,6 @@ router.get('/privileges', (req, res) => {
     success: req.query.success
   });
 });
-
 
 
 router.get('/devenirRecruteur', async (req, res) => {
@@ -235,7 +251,6 @@ router.post('/EnvoyerDemandeRecruteur', async (req, res) => {
     res.status(500).send('Erreur lors de l\'envoi de la demande');
   }
 });
-
 
 
 router.get('/creerOrganisation', async (req, res) => {
@@ -299,7 +314,6 @@ router.post('/devenirAdmin', async (req, res) => {
     res.status(500).send('Erreur lors de l\'envoi de la demande');
   }
 });
-
 
 
 

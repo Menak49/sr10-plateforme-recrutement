@@ -23,7 +23,7 @@ router.get('/Accueil', function(req, res, next) {
 
 
 
-
+///////////////////////// GESTION DES UTILISATEURS //////////////////////////////////////
 
 router.get('/gestionUtilisateurs', async(req, res) => {
   try{
@@ -81,6 +81,9 @@ router.post('/delete-user/:id', async (req, res) => {
   }
 });
 
+
+
+////////////////////////// GESTION DES RECRUTEURS ////////////////////////////////////
 
 router.get('/GestionDemandeRecruteur', async (req, res) => {
   try{
@@ -150,6 +153,8 @@ router.post('/accepterDemandeRecruteur/:id', async (req, res) => {
 });
 
 
+////////////////////////// GESTION DES ORGANISATIONS /////////////////////////////////
+
 router.get('/organisations', async(req, res) => {
   try{
     const userId = req.session.user?.phone ;//|| 223344556
@@ -214,8 +219,9 @@ router.post('/RefuserOrganisation/:siren', async (req, res) => {
 });
 
 
-//PRIVILEGES
+////////////////////////// PRIVILEGES ////////////////////////////////////////
 
+/*Les privilèges sont gérés au niveau de la route /candidat*/
 
 router.get('/privileges', (req, res) => {
   // Récupérer l'ID de l'utilisateur depuis la session
