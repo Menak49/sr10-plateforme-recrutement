@@ -174,7 +174,7 @@ module.exports = {
       
       readOffresFiltrePagineByUserId: async function(userId, searchTerm, limit, offset) {
     const query = `
-      SELECT 
+      SELECT
         o.Id AS id,
         o.State AS etat,
         o.ExpiryDate AS dateExpiration,
@@ -195,7 +195,6 @@ module.exports = {
       LEFT JOIN Organisation org ON fp.Organisation = org.Siren
       LEFT JOIN StatutPoste sp ON fp.StatutPoste = sp.Name
       LEFT JOIN TypeMetier tm ON fp.Type = tm.Name
-      WHERE o.State = 'Published'
         AND fp.Recruteur = ?
         AND (fp.Title LIKE ? OR org.Name LIKE ?)
       LIMIT ? OFFSET ?

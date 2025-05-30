@@ -284,15 +284,29 @@ router.get('/creerOrganisation', async (req, res) => {
   }
 });
 
+
 router.get('/devenirAdmin', (req, res) => {
   const userId = req.session.user?.phone;
   if (!userId) {
     return res.redirect('/LogIn');
-  }
+    }
   res.render('Privileges/DevenirAdmin', {
     role: 'candidat',
     userId: userId
   });
+});
+
+
+router.get('/modifierCandidature/:id', async (req, res) => {
+  const candidatureId = req.params.id;
+  try {
+    const candidature_ = await candidature.findById(candidatureId);
+    res.render('Candidat/modifierCandidature', { candidature_ });
+  } catch (err) {
+    console.error('Erreur lors de la récupération de la candidature :', err);
+    res.status(500).send('Erreur lors de la récupération de la candidature');
+
+  }
 });
 
 router.post('/devenirAdmin', async (req, res) => {
