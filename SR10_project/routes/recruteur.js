@@ -9,6 +9,7 @@ const organisation = require('../model/organisation.js');
 const typeOrganisation = require('../model/typeOrganisation.js');
 const pieceDossier = require('../model/typePieceDossier.js');
 const candidature = require('../model/candidature.js');
+const OffreType = require('../model/OffreEmploi_TypePieceDossier.js');
 
 router.get('/Accueil', function(req, res, next) {
   const userId = req.session.user?.phone ;//|| 223344556
@@ -92,6 +93,8 @@ router.post('/ajouterOffre', async (req, res) => {
         const details = req.body.details;
         const slots = req.body.slots;
         const fichePosteId = req.body.fichePosteId;
+        const pieces = req.body.pieces; 
+
 
         // Créer un objet avec les données du formulaire
         const formData = {
@@ -103,7 +106,8 @@ router.post('/ajouterOffre', async (req, res) => {
         };
         console.log('FormData:', formData);
 
-      const result = await offre.create(formData);
+      const offreid = await offre.create(formData);
+      const insert = await OffreType.addTypesToOffre(offreid, pieces);
       res.redirect('/recruteur/GererOffres?success=1');
   } catch (err) {
       console.error(err);
@@ -118,7 +122,10 @@ router.get('/modifierOffre/:id', async(req, res) => {
     const offreId = req.params.id;
     const offreToRender = await offre.read(offreId);
     const fiches = await fiche.readAllBis();
-  
+    const pieces = await pieceDossier.readAll();
+    const piecesAssociees = (await OffreType.getTypesByOffreId(offreId)).map(p => p.type_piece_name);
+
+    console.log('pj:', piecesAssociees);
     res.render('Recruteur/PublierOffre', {
       mode: 'edit',
       offre: {
@@ -127,10 +134,13 @@ router.get('/modifierOffre/:id', async(req, res) => {
         State: offreToRender.State,
         ExpiryDate: offreToRender.ExpiryDateFormatted,
         Details: offreToRender.Details,
-        Slots: offreToRender.Slots
+        Slots: offreToRender.Slots,
       },
       fiches: fiches,
-      role: 'recruteur'
+      role: 'recruteur',
+      pieces: pieces,
+      piecesAssociees: piecesAssociees,
+
     });
   }
   catch (err) {

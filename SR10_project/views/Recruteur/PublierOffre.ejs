@@ -98,13 +98,14 @@
               <label class="form-label"><b>Pièces à joindre</b></label>
               <% if (typeof pieces !== 'undefined' && pieces.length > 0) { %>
                 <% pieces.forEach(piece => { %>
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="pieces" value="<%= piece.Id %>" id="piece-<%= piece.Id %>">
-                    <label class="form-check-label" for="piece-<%= piece.Id %>">
-                      <%= piece.Name %>
-                    </label>
-                  </div>
-                <% }) %>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="pieces" value="<%= piece.Id %>" id="piece-<%= piece.Id %>"
+                    <% if (mode === 'edit' && Array.isArray(piecesAssociees) && piecesAssociees.includes(piece.Id)) { %>checked<% } %>>
+                  <label class="form-check-label" for="piece-<%= piece.Id %>">
+                    <%= piece.Name %>
+                  </label>
+                </div>
+              <% }) %>
               <% } else { %>
                 <div class="text-muted">Aucune pièce disponible.</div>
               <% } %>
