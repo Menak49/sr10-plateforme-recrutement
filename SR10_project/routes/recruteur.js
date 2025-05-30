@@ -37,13 +37,13 @@ router.get('/GererOffres', async (req, res) => {
     try {
       const searchTerm = req.query.search || '';
       const page = parseInt(req.query.page) || 1;
-      const limit = 9; 
+      const limit = 9;
       const offset = (page - 1) * limit;
       const userId = req.session.user?.phone;
       const results = await offre.readOffresFiltrePagineByUserId(userId, searchTerm, limit, offset);
       const countResult = await offre.nbTotalOffresByUserId(userId, searchTerm);
       const totalOffers = countResult[0] ? countResult[0].total : 0;
-      const totalPages = Math.ceil(totalOffers / limit); 
+      const totalPages = Math.ceil(totalOffers / limit);
   
       res.render('Recruteur/GererOffres', {
         role:"recruteur",
