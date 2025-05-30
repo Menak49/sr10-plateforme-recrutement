@@ -41,9 +41,9 @@
                 <%= offre.contrat %> - <%= offre.localisation %>
               </p>
               <div class="d-flex justify-content-end gap-2">
-                <a href="/candidat/candidater/<%= offre.id %>" class="btn btn-dark">Candidater</a>
+                <a href="/candidat/candidater/<%= offre.id %>" class="btn btn-sm btn-outline-success">Candidater</a>
 <button 
-  class="btn btn-sm btn-outline-success" 
+  class="btn btn-sm btn-outline-secondary" 
   data-bs-toggle="modal" 
   data-bs-target="#afficherModal-<%= offre.id %>">
   Afficher
@@ -59,13 +59,18 @@
       </div>
       <div class="modal-body">
         <p><strong>Organisation :</strong> <%= offre.organisation %></p>
-        <p><strong>Contrat :</strong> <%= offre.contrat %></p>
         <p><strong>Localisation :</strong> <%= offre.localisation %></p>
+        <p><strong>Surpeviseur :</strong> <%= offre.superviseur %></p>
+        <p><strong>Horaire :</strong> <%= offre.horaire %></p>
+        <p><strong>Salaire min/max :</strong> <%= offre.minSalaire %>/<%= offre.maxSalaire %></p>
+        <p><strong>Statut :</strong> <%= offre.statut %></p>
+        <p><strong>Catégorie :</strong> <%= offre.typeMetier %></p>
         <p><strong>Description :</strong> <%= offre.description %></p>
+        <p><strong>Details :</strong> <%= offre.details %></p>
       </div>
       <div class="modal-footer">
-        <a href="/candidat/postuler/<%= offre.id %>" class="btn btn-success">Candidater</a>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <a href="/candidat/candidater/<%= offre.id %>" class="btn btn-outline-success">Candidater</a>
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
       </div>
     </div>
   </div>
