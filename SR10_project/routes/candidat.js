@@ -1,4 +1,9 @@
 // routes/candidat.js
+
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' }); 
+
+
 const express = require('express');
 const router = express.Router();
 const offre = require('../model/offreEmploi.js');
@@ -7,10 +12,11 @@ const organisation = require('../model/organisation.js');
 const typeOrganisation = require('../model/typeOrganisation.js');
 const recruteurBecomeQuery = require('../model/recruteurBecomeQuery.js');
 const fichePoste = require('../model/fichePoste.js');
-const pieceDossier = require('../model/typePieceDossier.js');
+const pieceDossiertype = require('../model/typePieceDossier.js');
 const adminBecomeQuery = require('../model/adminBecomeQuery.js');
 const OffreType = require('../model/OffreEmploi_TypePieceDossier.js');
-
+const PieceDossier = require('../model/pieceDossier.js');
+const CandidaturePieceDossier = require('../model/candidaturePieceDossier.js');
 
 
 router.get('/Accueil', function(req, res, next) {
@@ -77,7 +83,7 @@ router.get('/candidater/:offreId', async (req, res) => {
     // [ { TypePiece: 'Lettre de motivation' }, ... ]
     const piecesAssociees = piecesAssocieesRaw.map(p => p.TypePiece);
     // [ 'Lettre de motivation', 'Photo', ... ]
-    const allPieces = await pieceDossier.readAll(); // [{Id, Name}, ...]
+    const allPieces = await pieceDossiertype.readAll(); // [{Id, Name}, ...]
     const pieces = allPieces.filter(p => piecesAssociees.includes(p.Name));
     console.log('Pièces jointes disponibles:', piecesAssociees);
 
@@ -97,6 +103,51 @@ router.get('/candidater/:offreId', async (req, res) => {
     res.status(500).send('Erreur lors de l\'affichage du formulaire de candidature');
   }
 });
+
+
+router.post('/candidater/:offreId',upload.any(), async (req, res) => {
+  try {
+    const userId = req.session.user?.phone;
+    if (!userId) return res.redirect('/LogIn');
+
+    const offreId = req.params.offreId;
+    const dateCandidature = req.body.date;
+
+
+    //const pieces = req.body.
+    //console.log("Pieces jointes :", pieces);
+    
+      if (Array.isArray(req.files)) {
+      for (const file of req.files) {
+        const pieceId = await PieceDossier.create(
+          file.originalname,
+          file.path,
+          file.mimetype
+        );
+        await CandidaturePieceDossier.create(candidatureId, pieceId);
+      }
+    }
+    throw new Error("Cette route n'est pas encore implémentée pour l'upload des fichiers");
+
+    // Enregistrer la candidature
+    let candidatureId = await candidature.create({
+      userId,
+      offreId,
+      date: dateCandidature
+    });
+
+    // Gérer l'upload des fichiers
+    /*req.files.forEach(file => {
+      console.log(file.fieldname, file.originalname, file.path);
+    });*/
+
+    res.redirect('/candidat/candidatures?success=1');
+  } catch (err) {
+    console.error('Erreur lors de la soumission de la candidature :', err);
+    res.status(500).send('Erreur lors de la soumission de la candidature');
+  }
+});
+
 
 
 

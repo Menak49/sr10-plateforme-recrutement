@@ -11,7 +11,7 @@
     <div class="card bg-light text-dark">
       <div class="card-body">
         <h4 class="card-title mb-4">Pour candidatater à l'offre <%= offre.TitreOffre %>, veuillez joindre des pièces de dossier: </h4>
-        <form action="/candidat/candidater/<%= offre.Id %>" method="POST">
+        <form action="/candidat/candidater/<%= offre.Id %>" method="POST" enctype="multipart/form-data">
           <div class="mb-3">
             <label class="form-label"><b>Offre</b></label>
             <input type="text" class="form-control" value="<%= offre.TitreOffre %>" disabled>
