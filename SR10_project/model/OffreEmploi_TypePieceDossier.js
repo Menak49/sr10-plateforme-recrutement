@@ -1,6 +1,8 @@
 const db = require('./db.js');
 const util = require('util');
 
+
+
 db.query = util.promisify(db.query);
 
 module.exports = {
@@ -32,6 +34,18 @@ addTypesToOffre: async function(offreId, typePieceNames) {
         await db.query(query, [values]);
     } catch (err) {
         console.error('Erreur lors de l\'association des types de pièces à l\'offre :', err);
+        throw err;
+    }
+},
+deleteByOffreId: async function(offreId) {
+    const query = `
+        DELETE FROM OffreEmploi_TypePieceDossier
+        WHERE OffreId = ?
+    `;
+    try {
+        await db.query(query, [offreId]);
+    } catch (err) {
+        console.error('Erreur lors de la suppression des types de pièces pour l\'offre :', err);
         throw err;
     }
 },

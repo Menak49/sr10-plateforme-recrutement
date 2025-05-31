@@ -65,8 +65,11 @@ router.get('/ajouterOffre', async(req, res) => {
   try{
     const fiches = await fiche.readAllBis();
     const pieces = await pieceDossier.readAll();
+    const piecesAssociees = await OffreType.getTypesByOffreId(offreId);
+    console.log('pj:', piecesAssociees);
     res.render('Recruteur/PublierOffre', {
       mode: 'create',
+      piecesAssociees: piecesAssociees,
       fiches: fiches,
       role: 'recruteur',
       pieces: pieces,
@@ -82,7 +85,6 @@ router.get('/ajouterOffre', async(req, res) => {
     console.error('Erreur lors de la récupération des données:', err);
     return res.status(500).send('Erreur serveur');
   }
-  
 });
 
 router.post('/ajouterOffre', async (req, res) => {
@@ -94,7 +96,15 @@ router.post('/ajouterOffre', async (req, res) => {
         const slots = req.body.slots;
         const fichePosteId = req.body.fichePosteId;
         const pieces = req.body.pieces; 
+        let offreId = req.body.fichePosteId; // sera défini seulement en modification
 
+        let piecesArray = [];
+        if (Array.isArray(pieces)) {
+          piecesArray = pieces;
+        } else if (pieces) {
+          piecesArray = [pieces];
+        }
+        console.log('Selected pieces:', req.body);
 
         // Créer un objet avec les données du formulaire
         const formData = {
@@ -106,12 +116,22 @@ router.post('/ajouterOffre', async (req, res) => {
         };
         console.log('FormData:', formData);
 
-      const offreid = await offre.create(formData);
-      const insert = await OffreType.addTypesToOffre(offreid, pieces);
+
+      if (offreId) {
+        console.log("Modification de l'offre:", offreId);
+      await offre.update(offreId, formData);
+      await OffreType.deleteByOffreId(offreId);
+    } else {
+      offreId = await offre.create(formData);
+    }
+    if (piecesArray.length > 0) {
+
+        await OffreType.addTypesToOffre(offreId, piecesArray);
+      }
       res.redirect('/recruteur/GererOffres?success=1');
   } catch (err) {
       console.error(err);
-      console.log('Erreur lors de la création de l\'offre d\'emploi:', formData);
+      console.log('Erreur lors de la création de l\'offre d\'emploi:');
       res.status(500).send('Erreur lors de la création de l\'offre');
   }
 });
@@ -123,7 +143,8 @@ router.get('/modifierOffre/:id', async(req, res) => {
     const offreToRender = await offre.read(offreId);
     const fiches = await fiche.readAllBis();
     const pieces = await pieceDossier.readAll();
-    const piecesAssociees = (await OffreType.getTypesByOffreId(offreId)).map(p => p.type_piece_name);
+    const piecesAssocieesRaw = await OffreType.getTypesByOffreId(offreId);
+    const piecesAssociees = piecesAssocieesRaw.map(p => p.TypePiece);
 
     console.log('pj:', piecesAssociees);
     res.render('Recruteur/PublierOffre', {

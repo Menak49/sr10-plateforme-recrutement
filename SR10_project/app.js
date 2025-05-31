@@ -53,7 +53,7 @@ app.set('view engine', 'ejs');
 //pas de route spécifiée, ces layers seront exécutés pour chaque requête, quelque soit la route
 app.use(logger('dev')); //enregistre les requêtes HTTP dans la console
 app.use(express.json());//analyse le corps de la requête HTTP au format JSON
-app.use(express.urlencoded({ extended: false })); //pour requêtes post
+app.use(express.urlencoded({ extended: true })); //pour requêtes post
 app.use(cookieParser()); //analyse les cookies dans la requête HTTP
 app.use(express.static(path.join(__dirname, 'public'))); 
 

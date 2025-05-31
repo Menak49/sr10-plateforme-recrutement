@@ -11,6 +11,22 @@ module.exports = {
         const query = 'INSERT INTO OffreEmploi (State, ExpiryDate, Details, Slots, FichePoste) VALUES (?, ?, ?, ?, ?)';
         const results = await db.query(query, [State, ExpiryDate, Details, Slots, FichePoste]);
         console.log('Offre d\'emploi créée avec succès:', results);
+        return results.insertId; 
+    } catch (error) {
+        throw error;
+    }
+},
+update: async (id, data) => {
+    try {
+        const { State, ExpiryDate, Details, Slots, FichePoste } = data;
+        const query = `
+            UPDATE OffreEmploi
+            SET State = ?, ExpiryDate = ?, Details = ?, Slots = ?, FichePoste = ?
+            WHERE Id = ?
+        `;
+        const results = await db.query(query, [State, ExpiryDate, Details, Slots, FichePoste, id]);
+        console.log('Offre d\'emploi modifiée avec succès:', results);
+        return results.affectedRows; // retourne le nombre de lignes modifiées
     } catch (error) {
         throw error;
     }

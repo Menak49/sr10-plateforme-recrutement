@@ -99,9 +99,8 @@
               <% if (typeof pieces !== 'undefined' && pieces.length > 0) { %>
                 <% pieces.forEach(piece => { %>
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="pieces" value="<%= piece.Id %>" id="piece-<%= piece.Id %>"
-                    <% if (mode === 'edit' && Array.isArray(piecesAssociees) && piecesAssociees.includes(piece.Id)) { %>checked<% } %>>
-                  <label class="form-check-label" for="piece-<%= piece.Id %>">
+                  <input class="form-check-input" type="checkbox" name="pieces" value="<%= piece.Name %>" id="piece-<%= piece.Id %>"
+                  <% if (mode === 'edit' && Array.isArray(piecesAssociees) && piecesAssociees.includes(piece.Name)) { %>checked<% } %>                  <label class="form-check-label" for="piece-<%= piece.Id %>">
                     <%= piece.Name %>
                   </label>
                 </div>
@@ -118,6 +117,9 @@
               </button>
             </div>
           </form>
+          <% if (mode === 'edit') { %>
+  <input type="hidden" name="offreId" value="<%= offre.id %>">
+<% } %>
         </div>
       </div>
     </div>

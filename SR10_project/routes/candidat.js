@@ -9,6 +9,7 @@ const recruteurBecomeQuery = require('../model/recruteurBecomeQuery.js');
 const fichePoste = require('../model/fichePoste.js');
 const pieceDossier = require('../model/typePieceDossier.js');
 const adminBecomeQuery = require('../model/adminBecomeQuery.js');
+const OffreType = require('../model/OffreEmploi_TypePieceDossier.js');
 
 
 
@@ -72,8 +73,13 @@ router.get('/candidater/:offreId', async (req, res) => {
     const offreId = req.params.offreId;
     const offreData = await offre.read(offreId);
     const fichePosteData = await fichePoste.read(offreData.FichePoste);
-
-    const pieces = await pieceDossier.readAll(); // Toutes les pièces disponibles
+    const piecesAssocieesRaw = await OffreType.getTypesByOffreId(offreId);
+    // [ { TypePiece: 'Lettre de motivation' }, ... ]
+    const piecesAssociees = piecesAssocieesRaw.map(p => p.TypePiece);
+    // [ 'Lettre de motivation', 'Photo', ... ]
+    const allPieces = await pieceDossier.readAll(); // [{Id, Name}, ...]
+    const pieces = allPieces.filter(p => piecesAssociees.includes(p.Name));
+    console.log('Pièces jointes disponibles:', piecesAssociees);
 
     res.render('Candidat/candidater', {
       role: 'candidat',
