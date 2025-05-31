@@ -65,11 +65,9 @@ router.get('/ajouterOffre', async(req, res) => {
   try{
     const fiches = await fiche.readAllBis();
     const pieces = await pieceDossier.readAll();
-    const piecesAssociees = await OffreType.getTypesByOffreId(offreId);
-    console.log('pj:', piecesAssociees);
+
     res.render('Recruteur/PublierOffre', {
       mode: 'create',
-      piecesAssociees: piecesAssociees,
       fiches: fiches,
       role: 'recruteur',
       pieces: pieces,
