@@ -113,33 +113,33 @@ router.post('/candidater/:offreId',upload.any(), async (req, res) => {
     const offreId = req.params.offreId;
     const dateCandidature = req.body.date;
 
+    // Enregistrer la candidature
+    let candidatureId = await candidature.create(
+      dateCandidature,
+      offreId,
+      userId,
+    );
 
     //const pieces = req.body.
     //console.log("Pieces jointes :", pieces);
-    
+      const allPieces = await pieceDossiertype.readAll(); 
       if (Array.isArray(req.files)) {
       for (const file of req.files) {
+        console.log("Fichier uploadé :", file);
+        const typeName = file.fieldname.split('_')[1];
+        const pieceObj = allPieces.find(p => p.Name === typeName);
         const pieceId = await PieceDossier.create(
           file.originalname,
           file.path,
-          file.mimetype
+          pieceObj.Name
         );
         await CandidaturePieceDossier.create(candidatureId, pieceId);
       }
     }
-    throw new Error("Cette route n'est pas encore implémentée pour l'upload des fichiers");
+    //throw new Error("Cette route n'est pas encore implémentée pour l'upload des fichiers");
 
-    // Enregistrer la candidature
-    let candidatureId = await candidature.create({
-      userId,
-      offreId,
-      date: dateCandidature
-    });
+    
 
-    // Gérer l'upload des fichiers
-    /*req.files.forEach(file => {
-      console.log(file.fieldname, file.originalname, file.path);
-    });*/
 
     res.redirect('/candidat/candidatures?success=1');
   } catch (err) {

@@ -27,7 +27,7 @@
                 <% pieces.slice(0, 3).forEach(piece => { %>
                   <div class="mb-2">
                     <label class="form-label"><b><%= piece.Name %> :</b></label>
-                    <input class="form-control" type="file" name="piece_<%= piece.Id %>">
+                    <input class="form-control" type="file" name="piece_<%= piece.Name %>">
                   </div>
                 <% }) %>
               </div>
@@ -35,7 +35,7 @@
                 <% pieces.slice(3, 6).forEach(piece => { %>
                   <div class="mb-2">
                     <label class="form-label"><b><%= piece.Name %> :</b></label>
-                    <input class="form-control" type="file" name="piece_<%= piece.Id %>">
+                    <input class="form-control" type="file" name="piece_<%= piece.Name %>">
                   </div>
                 <% }) %>
               </div>
