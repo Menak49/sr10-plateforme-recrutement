@@ -189,6 +189,16 @@ router.get('/GererOffres/reponses/:offreId', async (req, res) => {
   }
 });
 
+router.post('/supprimerOffre/:id', async (req, res) => {
+  const offreId = req.params.id;
+  try {
+    await offre.delete(offreId); 
+    res.redirect('/recruteur/GererOffres?success=1');
+  } catch (err) {
+    console.error('Erreur lors de la suppression de l\'offre :', err);
+    res.status(500).send('Erreur lors de la suppression de l\'offre');
+  }
+});
 
 
 /////////////////////////////GERER MES FICHES DE POSTE//////////////////////////////////////////

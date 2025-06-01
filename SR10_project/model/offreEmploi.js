@@ -252,9 +252,18 @@ nbTotalOffresByUserId: async function(userId, searchTerm) {
         throw err;
     }
 },
-
-    
-    
-    
+delete: async function(id) {
+    const query = `
+        DELETE FROM OffreEmploi
+        WHERE Id = ?
+    `;
+    try {
+        const result = await db.query(query, [id]);
+        return result.affectedRows;
+    } catch (err) {
+        console.error('Erreur lors de la suppression de l\'offre d\'emploi (modèle) :', err);
+        throw err;
+    }
+}
     
 }

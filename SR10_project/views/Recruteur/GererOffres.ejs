@@ -50,8 +50,10 @@
               </p>
               <div class="d-flex justify-content-end gap-2">
                 <a href="/recruteur/GererOffres/reponses/<%= offre.id %>" class="btn btn-outline-success">Réponses</a>
-                <a href="/supprimerOffre/<%= offre.id %>" class="btn btn-outline-danger">Supprimer</a>
-                <a href="modifierOffre/<%= offre.id %>" class="btn btn-outline-secondary">Modifier</a>
+              <form action="/recruteur/supprimerOffre/<%= offre.id %>" method="POST">
+                <button type="submit" class="btn btn-outline-danger">Supprimer</button>
+              </form>                
+              <a href="modifierOffre/<%= offre.id %>" class="btn btn-outline-secondary">Modifier</a>
               </div>
             </div>
           </div>
