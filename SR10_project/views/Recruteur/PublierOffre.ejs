@@ -116,10 +116,11 @@
                 <%= mode === 'edit' ? 'Mettre à jour' : 'Publier' %>
               </button>
             </div>
-          </form>
-          <% if (mode === 'edit') { %>
+            <% if (mode === 'edit') { %>
   <input type="hidden" name="offreId" value="<%= offre.id %>">
 <% } %>
+          </form>
+          
         </div>
       </div>
     </div>

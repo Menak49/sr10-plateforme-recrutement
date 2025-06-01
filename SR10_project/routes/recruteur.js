@@ -94,8 +94,8 @@ router.post('/ajouterOffre', async (req, res) => {
         const slots = req.body.slots;
         const fichePosteId = req.body.fichePosteId;
         const pieces = req.body.pieces; 
-        let offreId = req.body.fichePosteId; // sera défini seulement en modification
-
+        let offreId = req.body.offreId; // sera défini seulement en modification
+        console.log('Offre ID:', offreId);
         let piecesArray = [];
         if (Array.isArray(pieces)) {
           piecesArray = pieces;
@@ -112,7 +112,9 @@ router.post('/ajouterOffre', async (req, res) => {
             Slots: slots,
             FichePoste: fichePosteId
         };
+        
         console.log('FormData:', formData);
+       
 
 
       if (offreId) {
