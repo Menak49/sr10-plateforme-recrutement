@@ -251,8 +251,7 @@ update: async (id, data) => {
         LEFT JOIN Organisation org ON fp.Organisation = org.Siren
         LEFT JOIN StatutPoste sp ON fp.StatutPoste = sp.Name
         LEFT JOIN TypeMetier tm ON fp.Type = tm.Name
-        WHERE o.State = 'Published'
-          AND fp.Recruteur = ?
+        WHERE fp.Recruteur = ?
           AND (
             fp.Title LIKE ?
             OR org.Name LIKE ?

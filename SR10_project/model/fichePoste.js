@@ -82,24 +82,29 @@ module.exports = {
     
     },
 
-    readAllBis: async function(){
+    readAllBis: async function(recruteurId) {
+    const orgQuery = `SELECT Organization FROM Recruteur WHERE User = ?`;
+    try {
+        const orgRows = await db.query(orgQuery, [recruteurId]);
+        if (!orgRows[0] || !orgRows[0].Organization) return [];
+        const organisation = orgRows[0].Organization;
+        console.log('Organisation récupérée :', orgRows);
         const query = `
-        SELECT 
-            fp.Id,
-            fp.Title, 
-            org.Name AS organisation
-        FROM FichePoste fp
-        JOIN Organisation org ON fp.Organisation = org.Siren
+            SELECT 
+                fp.Id,
+                fp.Title, 
+                org.Name AS organisation
+            FROM FichePoste fp
+            JOIN Organisation org ON fp.Organisation = org.Siren
+            WHERE fp.Organisation = ?
         `;
-        try{
-            const results = await db.query(query);
-            return results;
-        }
-        catch(err){
-            console.error('Erreur lors de la récupération des fiches de poste (Modèle) :', err);
-            throw err;
-        }
-    },
+        const results = await db.query(query, organisation);
+        return results;
+    } catch (err) {
+        console.error('Erreur lors de la récupération des fiches de poste (Modèle) :', err);
+        throw err;
+    }
+},
     readPage: async function(limit, offset) {
         const query = `
           SELECT 

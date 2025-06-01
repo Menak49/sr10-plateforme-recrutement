@@ -15,7 +15,7 @@
     <div class="container mt-4">
       <h2 class="fw-bold">GÉRER LES OFFRES D'EMPLOI</h2>
 
-      <form method="GET" action="gererOffres">
+      <form method="GET" action="/recruteur/GererOffres">
         <div class="input-group mt-3 mb-3 shadow-sm">
           <input
             type="text"
@@ -64,13 +64,13 @@
       <nav aria-label="Pagination" class="mt-4">
         <ul class="pagination justify-content-center">
           <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
-            <a class="page-link text-dark" href="gererFicheDePoste?page=<%= currentPage - 1 %>">‹</a>
+            <a class="page-link text-dark" href="/recruteur/GererOffres?page=<%= currentPage - 1 %>&search=<%= searchTerm %>">‹</a>
           </li>
-      
+
           <% for (let i = 1; i <= totalPages; i++) { %>
             <% if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) { %>
               <li class="page-item <%= currentPage === i ? 'active' : '' %>">
-                <a class="page-link <%= currentPage === i ? 'bg-dark border-dark' : 'text-dark' %>" href="gererFicheDePoste?page=<%= i %>"><%= i %></a>
+                <a class="page-link <%= currentPage === i ? 'bg-dark border-dark' : 'text-dark' %>" href="/recruteur/GererOffres?page=<%= i %>&search=<%= searchTerm %>"><%= i %></a>
               </li>
             <% } else if ((i === 2 && currentPage > 3) || (i === totalPages - 1 && currentPage < totalPages - 2)) { %>
               <li class="page-item">
@@ -78,9 +78,9 @@
               </li>
             <% } %>
           <% } %>
-      
+
           <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
-            <a class="page-link text-dark" href="gererFicheDePoste?page=<%= currentPage + 1 %>">›</a>
+            <a class="page-link text-dark" href="/recruteur/GererOffres?page=<%= currentPage + 1 %>&search=<%= searchTerm %>">›</a>
           </li>
         </ul>
       </nav>

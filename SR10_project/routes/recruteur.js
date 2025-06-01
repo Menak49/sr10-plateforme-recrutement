@@ -45,7 +45,8 @@ router.get('/GererOffres', async (req, res) => {
       const countResult = await offre.nbTotalOffresByUserId(userId, searchTerm);
       const totalOffers = countResult[0] ? countResult[0].total : 0;
       const totalPages = Math.ceil(totalOffers / limit);
-  
+      console.log('Total pages:', totalPages," Current page:", page, "Total offers:", totalOffers);
+   
       res.render('Recruteur/GererOffres', {
         role:"recruteur",
         offres: results,
@@ -63,7 +64,8 @@ router.get('/GererOffres', async (req, res) => {
 
 router.get('/ajouterOffre', async(req, res) => {
   try{
-    const fiches = await fiche.readAllBis();
+    const userId = req.session.user?.phone;
+    const fiches = await fiche.readAllBis(userId);
     const pieces = await pieceDossier.readAll();
 
     res.render('Recruteur/PublierOffre', {
@@ -139,9 +141,12 @@ router.post('/ajouterOffre', async (req, res) => {
 
 router.get('/modifierOffre/:id', async(req, res) => {
   try {
+    const userId = req.session.user?.phone;
+
     const offreId = req.params.id;
     const offreToRender = await offre.read(offreId);
-    const fiches = await fiche.readAllBis();
+    const fiches = await fiche.readAllBis(userId);
+    console.log('Offre à modifier:');
     const pieces = await pieceDossier.readAll();
     const piecesAssocieesRaw = await OffreType.getTypesByOffreId(offreId);
     const piecesAssociees = piecesAssocieesRaw.map(p => p.TypePiece);
