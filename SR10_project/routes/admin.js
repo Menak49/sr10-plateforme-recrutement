@@ -5,9 +5,8 @@ var db = require('../model/db');
 const organisation = require('../model/organisation.js');
 const utilisateur = require('../model/utilisateur.js');
 const recruteur = require('../model/recruteurBecomeQuery.js');
-const recruteurBecomeQuery = require('../model/recruteurBecomeQuery.js');
 const typeOrganisation = require('../model/typeOrganisation.js');
-
+const admin = require('../model/adminBecomeQuery.js');
 
 router.get('/Accueil', function(req, res, next) {
     const userId = req.session.user?.phone ;//|| 223344556
@@ -83,9 +82,11 @@ router.post('/delete-user/:id', async (req, res) => {
 
 
 
-////////////////////////// GESTION DES RECRUTEURS ////////////////////////////////////
+////////////////////////// GESTION DES DEMANDES ////////////////////////////////////
 
-router.get('/GestionDemandeRecruteur', async (req, res) => {
+
+/*
+router.get('/GestionDemande', async (req, res) => {
   try{
 const userId = req.session.user?.phone ;//|| 223344556
   if (!userId) {
@@ -110,8 +111,7 @@ const userId = req.session.user?.phone ;//|| 223344556
         statut: demande.StatutDemande
       };
     });
-      
-    const totalPages = Math.ceil(countResults / limit);
+        const totalPages = Math.ceil(countResults / limit);
     
     res.render('Admin/GestionDemandeRecruteur', {
       role: 'admin',
@@ -125,13 +125,72 @@ const userId = req.session.user?.phone ;//|| 223344556
     console.log(err);
     res.status(500).send("Erreur lors de la récupération des demandes de recruteur (Contrôleur)");
   }
-  
+});*/
+
+
+router.get('/GestionDemandes', async (req, res) => {
+  try {
+    const userId = req.session.user?.phone;
+    if (!userId) {
+      return res.redirect('/LogIn');
+    }
+    const page = parseInt(req.query.page) || 1;
+    const limit = 9;
+    const offset = (page - 1) * limit;
+    const searchTerm = req.query.search || '';
+
+    // 1. Demandes pour devenir recruteur
+    const recruteurResults = await recruteur.readAllFiltrePagine(searchTerm, limit, offset);
+    const recruteurDemandes = recruteurResults.map(demande => ({
+      id: demande.Id,
+      nom: `${demande.LastName} ${demande.FirstName}`,
+      email: demande.Email,
+      message: demande.Message,
+      date: demande.FormattedDate,
+      statut: demande.StatutDemande,
+      type: 'recruteur'
+    }));
+
+    // 2. Demandes pour devenir admin
+    const adminResults = await admin.readAllFiltrePagine(searchTerm, limit, offset);
+    const adminDemandes = adminResults.map(demande => ({
+      id: demande.Id,
+      nom: demande.nom || '',
+      email: demande.email || '',
+      message: demande.Message,
+      date: demande.date || '',
+      statut: demande.statut || '',
+      type: 'admin'
+    }));
+
+    // Fusionner toutes les demandes
+    const demandes = [...recruteurDemandes, ...adminDemandes];
+
+
+    // Pagination et total à ajuster selon la fusion
+    const totalOffers = demandes.length;
+    const totalPages = Math.ceil(totalOffers / limit);
+    const demandesPage = demandes.slice(offset, offset + limit);
+
+    res.render('Admin/GestionDemandeRecruteur', {
+      role: "admin",
+      demandes: demandesPage,
+      searchTerm,
+      currentPage: page,
+      totalPages
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erreur lors de la récupération des demandes');
+  }
 });
+      
+
 
 router.post('/refuserDemandeRecruteur/:id', async (req, res) => {
   const userId = req.params.id;
   try {
-    await recruteurBecomeQuery.deleteById(userId);
+    await recruteur.deleteById(userId);
     res.redirect('/admin/GestionDemandeRecruteur');
   } catch (err) {
     console.error('Erreur lors de la suppression de la demande :', err);
@@ -143,7 +202,7 @@ router.post('/refuserDemandeRecruteur/:id', async (req, res) => {
 router.post('/accepterDemandeRecruteur/:id', async (req, res) => {
   const demandeId = req.params.id;
   try {
-    await recruteurBecomeQuery.accepterDemande(demandeId); // Utilisation du modèle
+    await recruteur.accepterDemande(demandeId); // Utilisation du modèle
 
     res.redirect('/admin/GestionDemandeRecruteur');
   } catch (err) {
