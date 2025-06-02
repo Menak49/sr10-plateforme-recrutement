@@ -52,7 +52,7 @@ router.get('/gestionUtilisateurs', async(req, res) => {
       
     const totalPages = Math.ceil(countResults / limit);
     
-    res.render('Admin/gestionUtilisateurs', {
+    res.render('Admin/GestionUtilisateurs', {
       role: 'admin',
       utilisateurs: utilisateurs,
       currentPage: page,
@@ -172,7 +172,7 @@ router.get('/GestionDemandes', async (req, res) => {
     const totalPages = Math.ceil(totalOffers / limit);
     const demandesPage = demandes.slice(offset, offset + limit);
 
-    res.render('Admin/GestionDemandeRecruteur', {
+    res.render('Admin/GestionDemandes', {
       role: "admin",
       demandes: demandesPage,
       searchTerm,

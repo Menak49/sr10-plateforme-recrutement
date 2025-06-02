@@ -54,7 +54,9 @@
               </div>
 
               <p class="text-muted"><%= demande.email %></p>
-              <p class="small mb-2">Message : <%= demande.message %></p>
+              <% if (demande.message && demande.message !== '') { %>
+                <p class="small mb-2">Message : <%= demande.message %></p>
+              <% } %>
 
               <div class="d-flex justify-content-end mt-auto gap-2">
                 <button

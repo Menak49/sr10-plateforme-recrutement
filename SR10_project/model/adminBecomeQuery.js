@@ -27,21 +27,26 @@ module.exports = {
       }
     },
     readAllFiltrePagine: async function(searchTerm, limit, offset) {
-        const query = `
-          SELECT *
-          FROM AdminBecomeQuery
-          WHERE Message LIKE ?
-          ORDER BY Id DESC
-          LIMIT ? OFFSET ?
-        `;
-        try {
-          const rows = await db.query(query, [`%${searchTerm}%`, limit, offset]);
-          return rows;
-        } catch (err) {
-          console.error('Erreur lors de la récupération paginée des demandes admin :', err);
-          throw err;
-        }
-      },
+      const query = `
+        SELECT 
+        Utilisateur.FirstName AS nom,
+        Utilisateur.Email AS email,
+        AdminBecomeQuery.Message AS message,
+        AdminBecomeQuery.Id AS id
+      FROM AdminBecomeQuery
+      JOIN Utilisateur ON AdminBecomeQuery.User = Utilisateur.Phone
+      WHERE AdminBecomeQuery.Message LIKE ?
+      ORDER BY Utilisateur.Email ASC
+      LIMIT ? OFFSET ?
+      `;
+      try {
+        const rows = await db.query(query, [`%${searchTerm}%`, limit, offset]);
+        return rows;
+      } catch (err) {
+        console.error('Erreur lors de la récupération paginée des demandes admin avec jointure :', err);
+        throw err;
+      }
+    },
     
       count: async function(searchTerm) {
         const query = `
