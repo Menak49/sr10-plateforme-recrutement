@@ -8,7 +8,7 @@ var recruteurRouter = require('./recruteur');
 const { isAuthenticated, authorizeRole } = require('../middlewares/authentification');
 const users = require('../model/utilisateur.js');
 
-router.use('/Accueil', WelcomePagerouter);
+router.use('/Accueil', isAuthenticated, WelcomePagerouter);
 router.use('/candidat', isAuthenticated, candidatRouter);
 router.use('/recruteur', isAuthenticated, authorizeRole('recruteur'), recruteurRouter);
 router.use('/admin', isAuthenticated, authorizeRole('admin'), adminRouter);
