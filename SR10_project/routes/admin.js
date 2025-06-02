@@ -154,7 +154,7 @@ router.get('/GestionDemandes', async (req, res) => {
     // 2. Demandes pour devenir admin
     const adminResults = await admin.readAllFiltrePagine(searchTerm, limit, offset);
     const adminDemandes = adminResults.map(demande => ({
-      id: demande.Id,
+      id: demande.id,
       nom: demande.nom || '',
       email: demande.email || '',
       message: demande.Message,
@@ -171,8 +171,8 @@ router.get('/GestionDemandes', async (req, res) => {
     const totalOffers = demandes.length;
     const totalPages = Math.ceil(totalOffers / limit);
     const demandesPage = demandes.slice(offset, offset + limit);
-
-    res.render('Admin/GestionDemandes', {
+    console.log(demandesPage);
+    res.render('Admin/GestionDemandeRecruteur', {
       role: "admin",
       demandes: demandesPage,
       searchTerm,
