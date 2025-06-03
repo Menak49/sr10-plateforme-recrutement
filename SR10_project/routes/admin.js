@@ -99,19 +99,15 @@ router.get('/GestionDemandes', async (req, res) => {
     const offset = (page - 1) * limit;
     const searchTerm = req.query.search || '';
 
-    console.log('Limit:', limit);
-    console.log('Offset:', offset);
+
 
     // Appeler la fonction avec UNION pour récupérer les demandes paginées
     const demandes = await admin.readAllFiltrePagineUnion(searchTerm, limit, offset);
-    console.log('Demandes:', demandes);
 
     // Calculer le nombre total de pages
     const totalResults = await admin.countUnion(searchTerm);
     const totalPages = Math.ceil(totalResults[0].total / limit);
 
-    console.log('Current Page:', page);
-    console.log('Total :', totalResults);
 
     res.render('Admin/GestionDemandeRecruteur', {
       role: "admin",

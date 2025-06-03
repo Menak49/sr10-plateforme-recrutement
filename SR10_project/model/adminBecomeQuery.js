@@ -72,7 +72,7 @@ module.exports = {
             'admin' AS type
           FROM AdminBecomeQuery
           JOIN Utilisateur ON AdminBecomeQuery.User = Utilisateur.Phone
-          WHERE AdminBecomeQuery.Message LIKE ?
+          WHERE AdminBecomeQuery.Message LIKE ? OR Utilisateur.Email LIKE ? OR Utilisateur.FirstName LIKE ? OR Utilisateur.LastName LIKE ?
       
           UNION ALL
       
@@ -84,13 +84,17 @@ module.exports = {
             'recruteur' AS type
           FROM RecruteurBecomeQuery
           JOIN Utilisateur ON RecruteurBecomeQuery.Candidat = Utilisateur.Phone
-          WHERE RecruteurBecomeQuery.Message LIKE ?
+          WHERE RecruteurBecomeQuery.Message LIKE ? OR Utilisateur.Email LIKE ? OR Utilisateur.FirstName LIKE ? OR Utilisateur.LastName LIKE ?
       
           ORDER BY email ASC
           LIMIT ? OFFSET ?
         `;
         try {
-          const rows = await db.query(query, [`%${searchTerm}%`, `%${searchTerm}%`, limit, offset]);
+          const rows = await db.query(query, [
+            `%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`,
+            `%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`,
+            limit, offset
+          ]);
           return rows;
         } catch (err) {
           console.error('Erreur lors de la récupération paginée des demandes avec UNION :', err);
@@ -103,19 +107,22 @@ module.exports = {
             SELECT AdminBecomeQuery.Id
             FROM AdminBecomeQuery
             JOIN Utilisateur ON AdminBecomeQuery.User = Utilisateur.Phone
-            WHERE AdminBecomeQuery.Message LIKE ?
+            WHERE AdminBecomeQuery.Message LIKE ? OR Utilisateur.Email LIKE ? OR Utilisateur.FirstName LIKE ? OR Utilisateur.LastName LIKE ?
       
             UNION ALL
       
             SELECT RecruteurBecomeQuery.Id
             FROM RecruteurBecomeQuery
             JOIN Utilisateur ON RecruteurBecomeQuery.Candidat = Utilisateur.Phone
-            WHERE RecruteurBecomeQuery.Message LIKE ?
+            WHERE RecruteurBecomeQuery.Message LIKE ? OR Utilisateur.Email LIKE ? OR Utilisateur.FirstName LIKE ? OR Utilisateur.LastName LIKE ?
           ) AS unionTable
         `;
         try {
-          const rows = await db.query(query, [`%${searchTerm}%`, `%${searchTerm}%`]);
-          return rows;
+          const rows = await db.query(query, [
+            `%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`,
+            `%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`
+          ]);
+          return rows; 
         } catch (err) {
           console.error('Erreur lors du comptage des demandes avec UNION :', err);
           throw err;
