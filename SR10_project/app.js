@@ -32,7 +32,7 @@ const loginLimiter = rateLimit({
 var app = express();
 
 
-app.post('/LogIn', loginLimiter);
+
 
 //configuration de la session
 app.use(session({
