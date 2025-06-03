@@ -128,4 +128,33 @@ module.exports = {
           throw err;
         }
       },
+      accepterDemande: async function(demandeId) {
+        try {
+            // Récupérer les informations de l'utilisateur à partir de la demande
+            const rows = await db.query(
+                'SELECT User FROM AdminBecomeQuery WHERE Id = ?', [demandeId]
+            );
+            if (!rows[0]) throw new Error('Demande non trouvée');
+            const userId = rows[0].User;
+
+            // Ajouter dans la table Admin
+            await db.query('INSERT INTO Administrateur (User) VALUES (?)', [userId]);
+
+            // Supprimer la demande de la table AdminBecomeQuery
+            await db.query('DELETE FROM AdminBecomeQuery WHERE Id = ?', [demandeId]);
+        } catch (err) {
+            console.error('Erreur lors de l\'acceptation de la demande admin (Modèle) :', err);
+            throw err;
+        }
+    },
+    // Fonction pour refuser une demande d'admin
+    deleteById: async function(id) {
+      const query = `DELETE FROM AdminBecomeQuery WHERE Id = ?`;
+      try {
+          await db.query(query, [id]);
+      } catch (err) {
+          console.error('Erreur lors de la suppression de la demande admin (Modèle) :', err);
+          throw err;
+      }
+  },
 }

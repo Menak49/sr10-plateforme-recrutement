@@ -149,6 +149,29 @@ router.post('/accepterDemandeRecruteur/:id', async (req, res) => {
 });
 
 
+router.post('/refuserDemandeAdmin/:id', async (req, res) => {
+  const demandeId = req.params.id;
+  try {
+    await admin.deleteById(demandeId); // Supprime la demande d'admin
+    res.redirect('/admin/GestionDemandes');
+  } catch (err) {
+    console.error('Erreur lors de la suppression de la demande admin :', err);
+    res.status(500).send('Erreur lors de la suppression de la demande admin');
+  }
+});
+
+router.post('/accepterDemandeAdmin/:id', async (req, res) => {
+  const demandeId = req.params.id;
+  try {
+    await admin.accepterDemande(demandeId); // Accepte la demande d'admin
+    res.redirect('/admin/GestionDemandes');
+  } catch (err) {
+    console.error('Erreur lors de l\'acceptation de la demande admin :', err);
+    res.status(500).send('Erreur lors de l\'acceptation de la demande admin');
+  }
+});
+
+
 ////////////////////////// GESTION DES ORGANISATIONS /////////////////////////////////
 
 router.get('/organisations', async(req, res) => {
