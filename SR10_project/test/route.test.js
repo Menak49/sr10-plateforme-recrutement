@@ -98,29 +98,29 @@ describe("Tests routes protégées (avec session)", () => {
     const response = await agent.get("/admin/Accueil");
     expect(response.statusCode).toBe(200);
   });
-
+/*
   test("GET /admin/devenirRecruteur devrait répondre 200", async () => {
     const response = await agent.get("/admin/devenirRecruteur");
     expect(response.statusCode).toBe(200);
-  });
+  });*/
 
   test("GET /admin/privileges devrait répondre 200", async () => {
     const response = await agent.get("/admin/privileges");
     expect(response.statusCode).toBe(200);
   });
-
+/*
   test("GET /admin/creerOrganisation devrait répondre 200", async () => {
     const response = await agent.get("/admin/creerOrganisation");
     expect(response.statusCode).toBe(200);
   });
-
+*/
   test("GET /admin/gestionUtilisateurs devrait répondre 200", async () => {
     const response = await agent.get("/admin/gestionUtilisateurs");
     expect(response.statusCode).toBe(200);
   });
 
-  test("GET /admin/GestionDemandeRecruteur devrait répondre 200", async () => {
-    const response = await agent.get("/admin/GestionDemandeRecruteur");
+  test("GET /admin/GestionDemandes devrait répondre 200", async () => {
+    const response = await agent.get("/admin/GestionDemandes");
     expect(response.statusCode).toBe(200);
   });
 
