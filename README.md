@@ -1,9 +1,10 @@
-# Projet SR10 - TD03
+# Projet SR10 - Readme
 
 ## Technologies utilisées
 
-On utilise : 
+On utilise le stack technique suivant: 
 - ```HTML, CSS, JavaScript```
+- le framework ```Bootstrap``` (CDN) pour ses styles CSS pré-définis
 - le framework ```Express``` qui implémente l'architecture MVC (Modèle Vue Contrôleur)
 - le serveur web ```Node.js```
 - le framework ```Jest``` pour implémenter les tests unitaires complété du module ```supertest```pour les tests d'intégration
@@ -16,14 +17,52 @@ Cloner le dépôt puis ouvrir un terminal et taper:
 cd .\SR10\SR10_project\
 npm start
 ```
-Se connecter au VPN de l'utc pour avoir accès à la base de données puis ouvrir un navigateur et taper : 
-```http://localhost:3000/Accueil```
 
-Par défaut, l'utilisateur est considéré comme un candidat. Vous pouvez changer d'espaces grâce aux boutons en bas à droite des pages d'accueil. Sur les trois espaces utilisateurs, des fonctionnalités différentes sont programmées ; pour accéder aux différentes routes, vous pouvez naviguer grâce à la navbar ou cliquer sur les différents boutons.
+Puis ouvrir un navigateur et taper : 
+http://localhost:3000/LogIn
 
-## Conception (TD1)
+Pour ne pas avoir d'erreur lors de la connexion, il faut se connecter au VPN de l'UTC pour avoir accès à la base de données.
 
-Lien vers le figma : [Conception des routes, de l'interface et des fonctionnalités](https://www.figma.com/design/l7j4jq5fwSGC3Mfd4yWi7d/SR10-Maquette?node-id=0-1&t=OZ16zT2FTczzaGUG-1)
+Le compte utilisateur de **Luc Bernard** permet d'avoir accès à toutes les fonctionnalités du site, il a tous les privilèges:
+- Adresse email : luc.bernard@mail.com
+- Mot de passe : mdp123
+
+**Doe John** n'a pas les privilèges admin, il a un compte candidat/recruteur:
+- Adresse email : Doe@gmail.com
+- Mot de passe : SecurePass123!
+
+**Nina Robert** a les privilèges admin mais pas les privilèges recruteurs:
+- Adresse email : nina.robert@mail.com
+- Mot de passe : mdp123
+
+Pour créer un **nouveau compte** utilisateur, taper dans votre navigateur : http://localhost:3000/SignUp. Par défaut, l'utilisateur n'a pas de privilèges, seulement un compte candidat. 
+
+Vous pouvez changer d'espace utilisateur grâce aux boutons en bas à droite des pages d'accueil ou grâce aux routes suivantes:
+- http://localhost:3000/candidat/Accueil
+- http://localhost:3000/recruteur/accueil
+- http://localhost:3000/admin/accueil
+
+Des mesures de sécurité ont été mises en place pour que les routes admin et recruteur ne soient accessibles que si les privilèges ont été accordés. Un message d'erreur "Accès interdit" s'affichera sinon. Pour demander les accès, vous pouvez vous rendre dans l'onglet "privilèges" accessible  depuis tous les espaces. La demande sera alors envoyée aux administrateurs dans l'attente de leur validation.
+
+
+
+## Organisation du dépôt Git : dossier conception, etc.
+
+Le dépôt git est organisé selon l'arborescence suivante:
+- le dossier *conception* contient 
+
+
+La **carte du site web** et le **prototype de l’IHM** sont accessibles sur le figma suivant : [Conception des routes, de l'interface et des fonctionnalités](https://www.figma.com/design/l7j4jq5fwSGC3Mfd4yWi7d/SR10-Maquette?node-id=0-1&t=OZ16zT2FTczzaGUG-1)
+
+
+
+
+Les améliorations apportées aux livrables précédents (indiquer les commits), le cas échéant.
+Les principes ou bonnes pratiques que vous avez suivis (ex. : règles de nommage, utilisation de contrôleurs au lieu de routes surchargées en code, etc.)
+
+
+
+
 
 ## Contrôleur (TD3 - partie 3)
 
