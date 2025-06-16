@@ -123,20 +123,28 @@ router.post('/candidater/:offreId',upload.any(), async (req, res) => {
     //const pieces = req.body.
     //console.log("Pieces jointes :", pieces);
       const allPieces = await pieceDossiertype.readAll(); 
+      const normalize = s => s && s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
       if (Array.isArray(req.files)) {
-      for (const file of req.files) {
-        console.log("Fichier uploadé :", file);
-        const typeName = file.fieldname.split('_')[1];
-        const pieceObj = allPieces.find(p => p.Name === typeName);
-        const pieceId = await PieceDossier.create(
-          file.originalname,
-          file.path,
-          pieceObj.Name
-        );
-        await CandidaturePieceDossier.create(candidatureId, pieceId);
-      }
+  for (const file of req.files) {
+    console.log("Fichier uploadé :", file);
+    const typeName = file.fieldname.split('_')[1];
+    const pieceObj = allPieces.find(
+      p => normalize(p.Name) === normalize(typeName)
+    );
+    if (!pieceObj) {
+      console.error('Type de pièce non trouvé pour', typeName, 'dans', allPieces.map(p => p.Name));
+      continue; // ou return res.status(400).send('Type de pièce inconnu');
     }
-    //throw new Error("Cette route n'est pas encore implémentée pour l'upload des fichiers");
+    const pieceId = await PieceDossier.create(
+      file.originalname,
+      file.path,
+      pieceObj.Name
+    );
+    await CandidaturePieceDossier.create(candidatureId, pieceId);
+  }}
+  //throw new Error("Cette route n'est pas encore implémentée pour l'upload des fichiers");
+
 
     
 
