@@ -76,7 +76,13 @@
                 id="password"
                 name="password"
                 required
+                minlength="12"
+                pattern='^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!"#$%&\()*+,\-./:;<=>?@[\\\]^_`{|}~]).{12,}$'
+                title="Au moins 12 caractères, avec majuscules, minuscules, chiffres et caractères spéciaux."
               />
+              <small class="text-muted">
+                <em>Au moins 12 caractères, avec majuscules, minuscules, chiffres et caractères spéciaux.</em>
+              </small>
             </div>
 
             <div class="d-grid">

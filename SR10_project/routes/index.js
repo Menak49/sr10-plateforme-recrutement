@@ -30,6 +30,17 @@ router.post('/SignUp', async (req, res) => {
   console.log("req.body", req.body);
   const { phone, lastname, firstname, email, password } = req.body;
   const status = 'Active';
+
+  //recommandation CNIL (expression régulière)
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]).{12,}$/;
+  if (!passwordRegex.test(password)) {
+    return res.render('SignUp', {
+      error: "Le mot de passe doit comporter au moins 12 caractères, avec majuscules, minuscules, chiffres et caractères spéciaux.",
+      title: 'Accueil',
+      text: 'Bienvenue sur notre site de gestion des offres d\'emploi !'
+    });
+  }
+
   try {
     const result = await users.create(phone, lastname, firstname, status, password, email);
     if (!result) {
