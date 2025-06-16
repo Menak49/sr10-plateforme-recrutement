@@ -47,16 +47,17 @@ areValid: async function (Email, password) {
     const results = await db.query(query, [Email]);
     if (results.length === 1) {
       const storedPassword = results[0].Password;
-      // 1. Essaye la comparaison directe (mot de passe en clair)
+      
+      // Essaye la comparaison directe (mot de passe en clair)
       if (storedPassword === password) {
         return true;
       }
-      // 2. Sinon, essaye avec bcrypt (mot de passe haché)
+      // Sinon, essaye avec bcrypt (mot de passe haché)
       const isValid = await bcrypt.compare(password, storedPassword);
       if (isValid) {
         return true;
       }
-      // 3. Sinon, retourne false
+      // Sinon, retourne false
       return false;
     } else {
       return false;
