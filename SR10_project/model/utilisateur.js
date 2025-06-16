@@ -1,6 +1,7 @@
 const db = require('./db.js');
 const util = require('util');
 const { readAllFiltréPaginé } = require('./recruteurBecomeQuery.js');
+const bcrypt = require('bcrypt'); // pour décrypter les mots de passe hachés
 // Promisify db.query
 db.query = util.promisify(db.query);
 
@@ -40,20 +41,31 @@ module.exports = {
 
   attention : ne marche pas sans le await
   */
-  areValid: async function (email, password) {
-    const query = 'SELECT Password FROM Utilisateur WHERE Email = ?';
-    try {
-      const results = await db.query(query, [email]);
-      if (results.length === 1 && results[0].Password === password) {
+areValid: async function (Email, password) {
+  const query = 'SELECT Password FROM Utilisateur WHERE Email = ?';
+  try {
+    const results = await db.query(query, [Email]);
+    if (results.length === 1) {
+      const storedPassword = results[0].Password;
+      // 1. Essaye la comparaison directe (mot de passe en clair)
+      if (storedPassword === password) {
         return true;
-      } else {
-        return false;
       }
-    } catch (err) {
-      console.error('Erreur MySQL : ', err);
-      throw err;
+      // 2. Sinon, essaye avec bcrypt (mot de passe haché)
+      const isValid = await bcrypt.compare(password, storedPassword);
+      if (isValid) {
+        return true;
+      }
+      // 3. Sinon, retourne false
+      return false;
+    } else {
+      return false;
     }
-  },
+  } catch (err) {
+    console.error('Erreur MySQL : ', err);
+    throw err;
+  }
+},
   
 
   /* CREATE : Fonction pour insérer un nouvel utilisateur (candidat)

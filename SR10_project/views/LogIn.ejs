@@ -46,6 +46,12 @@
                 name="password"
                 required
               />
+              <div class="form-check mt-1">
+                <input class="form-check-input" type="checkbox" id="showPasswordLogIn" onclick="togglePassword('password', 'showPasswordLogIn')">
+                <label class="form-check-label" for="showPasswordLogIn">
+                  Afficher le mot de passe
+                </label>
+              </div>
             </div>
 
             <div class="d-grid gap-1">
@@ -68,6 +74,16 @@
       showToast: (success == 1 || success == '1'),
       toastContent: "Compte créé avec succès, veuillez vous authentifier."
     }) %>
+
+    <script>
+      function togglePassword(inputId, checkboxId) {
+        const input = document.getElementById(inputId);
+        const checkbox = document.getElementById(checkboxId);
+        if (input && checkbox) {
+          input.type = checkbox.checked ? 'text' : 'password';
+        }
+      }
+    </script>
 
   </body>
 </html>

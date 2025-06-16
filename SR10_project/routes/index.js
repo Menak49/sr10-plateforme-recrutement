@@ -7,6 +7,7 @@ var adminRouter = require('./admin');
 var recruteurRouter = require('./recruteur');
 const { isAuthenticated, authorizeRole } = require('../middlewares/authentification');
 const users = require('../model/utilisateur.js');
+const bcrypt = require('bcrypt'); //pour hacher les mdp
 
 router.use('/Accueil', isAuthenticated, WelcomePagerouter);
 router.use('/candidat', isAuthenticated, candidatRouter);
@@ -42,7 +43,8 @@ router.post('/SignUp', async (req, res) => {
   }
 
   try {
-    const result = await users.create(phone, lastname, firstname, status, password, email);
+    const hashedPassword = await bcrypt.hash(password, 10); // 10 = nombre de "salt rounds"
+    const result = await users.create(phone, lastname, firstname, status, hashedPassword, email);
     if (!result) {
       // Utilisateur déjà existant
       return res.render('SignUp', { error: "Ce numéro de téléphone est déjà utilisé.", title: 'Accueil', text: 'Bienvenue sur notre site de gestion des offres d\'emploi !' });
@@ -68,18 +70,18 @@ router.post('/LogIn', async (req, res) => {
   const { Email, password } = req.body;
   var email = Email
   try {
+    const userData = await users.read(email);
+    if (userData.length === 0) {
+      return res.redirect('/LogIn?error=Email%20ou%20mot%20de%20passe%20incorrect.');
+    }
+    const user = userData[0]; // données utilisateur
+    //
     const isValid = await users.areValid(Email, password);
     console.log("email", Email, "password", password, "isValid", isValid);
     if (!isValid) {
-  return res.redirect('/LogIn?error=Email%20ou%20mot%20de%20passe%20incorrect.');
-}
+      return res.redirect('/LogIn?error=Email%20ou%20mot%20de%20passe%20incorrect.');
+  }
 
-    const userData = await users.read(email);
-    if (userData.length === 0) {
-      return res.status(404).send("Utilisateur introuvable.");
-    }
-
-    const user = userData[0]; // données utilisateur
 
     // Déterminer le rôle à partir du Status
     let roles = await users.getRoles(user.Phone);
