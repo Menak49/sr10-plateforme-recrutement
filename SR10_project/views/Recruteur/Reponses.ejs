@@ -46,7 +46,7 @@
                         const [name, chemin] = doc.split('::');
                         if (name && chemin) { %>
                           <li class="list-group-item bg-light">
-                            <a href="<%= chemin %>" target="_blank"><%= name %></a>
+                            <a href="<%='/'+ chemin %>" target="_blank"><%= name %></a>
                           </li>
                         <% }
                       }); %>

@@ -1,8 +1,20 @@
 // routes/candidat.js
 
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' }); 
+const path = require('path');
 
+const fs = require('fs');
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname);
+    const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1E9) + ext;
+    cb(null, uniqueName);
+  }
+});
+const upload = multer({ storage: storage });
 
 const express = require('express');
 const router = express.Router();
@@ -132,15 +144,17 @@ router.post('/candidater/:offreId',upload.any(), async (req, res) => {
     const pieceObj = allPieces.find(
       p => normalize(p.Name) === normalize(typeName)
     );
+    
     if (!pieceObj) {
       console.error('Type de pièce non trouvé pour', typeName, 'dans', allPieces.map(p => p.Name));
-      continue; // ou return res.status(400).send('Type de pièce inconnu');
+      continue; 
     }
     const pieceId = await PieceDossier.create(
       file.originalname,
       file.path,
       pieceObj.Name
     );
+    console.log("file :", file);
     await CandidaturePieceDossier.create(candidatureId, pieceId);
   }}
   //throw new Error("Cette route n'est pas encore implémentée pour l'upload des fichiers");
@@ -182,7 +196,7 @@ router.get('/candidatures', async (req, res) => {
     const candidatures = await candidature.getCandidaturesByUserId(userId, searchTerm, limit, offset);
     const total = await candidature.countCandidaturesByUserId(userId, searchTerm);
     const totalPages = Math.ceil(total / limit);
-
+    console.log("candidatures", candidatures);
     res.render('Candidat/Candidatures', {
       role : 'candidat',
       candidatures,
