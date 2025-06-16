@@ -10,7 +10,6 @@ On utilise le stack technique suivant:
 - le moteur de visualisation ```EJS```
 - le framework ```Jest``` pour implémenter les tests unitaires complété du module ```supertest```pour les tests d'intégration
 
-</br>
 
 ## Pour faire fonctionner le serveur
 
@@ -46,11 +45,10 @@ Vous pouvez changer d'espace utilisateur grâce aux boutons en bas à droite des
 
 Des mesures de sécurité ont été mises en place pour que les routes admin et recruteur ne soient accessibles que si les privilèges ont été accordés. Un message d'erreur "Accès interdit" s'affichera sinon. Pour demander les accès, vous pouvez vous rendre dans l'onglet "privilèges" accessible  depuis tous les espaces. La demande sera alors envoyée aux administrateurs dans l'attente de leur validation.
 
-</br>
-
 ## Organisation du dépôt Git
 
 Le dépôt git est organisé selon l'arborescence suivante:
+- le package `json` gère les dépendances
 - le dossier `/conception` contient le **diagramme des cas d'utilisation** (UseCaseDiagram), le **diagramme de classes** (UML) et le **modèle logique de données** (MLD). La **carte du site web** est accessible sur le figma suivant : [Conception des routes, de l'interface et des fonctionnalités](https://www.figma.com/design/l7j4jq5fwSGC3Mfd4yWi7d/SR10-Maquette?node-id=0-1&t=OZ16zT2FTczzaGUG-1)
 - le dossier `/Db` contient les **requêtes SQL** qui ont été exécutées pour créer les tables SQL et insérer les jeux de données dans notre base de données
 - le dossier `/SR10_project` contient notre application et est structuré selon l'architecture **MVC (Modèle Vue Contrôleur)**. En voici le diagramme de séquence :
@@ -60,7 +58,7 @@ Le dépôt git est organisé selon l'arborescence suivante:
 Pour implémenter l'architecture MVC, on utilise un framework de node.js : le **framework express**. Le projet express généré contient déjà la partie Vue `/views` et la partie Contrôleur `/routes` de l'architecture MVC. On a crée un dossier pour la partie Modèle `/model`. La création de routes permet de connecter les trois parties de l'architecture.
 
 ### Contrôleur
-Le **contrôleur** est composé de plusieurs sous-routes ; cela rend le code plus lisible et strucuré. On décompose et organise les routes par **type d'utilisateurs** :
+Le **contrôleur** contient les scripts JS qui traitent les requêtes http. Décomposer le contrôleur en plusieurs scripts rend le code plus lisible et strucuré. On organise les routes par **type d'utilisateurs** :
 - `index.js` prend en charge les requêtes de *création de compte et de connexion*, il redirige ensuite vers la route qui gère l'espace candidat.
 - `candidat.js` contient toutes les **sous-routes** relatives à l'espace candidat : *Voir les offres, Mes candidatures, Privilèges*
 - `admin.js` contient toutes les **sous-routes** relatives à l'admin : *Gestion des utilisateurs, Gestion des demandes, Gestion des organisations, Privilèges*
@@ -75,54 +73,30 @@ Le dossier `/model` représente la partie modèle de l'architecture MVC. Il cont
 - `db.js` qui implémente la connexion à la base de donnée MySQL
 - pour chaque table utile de notre base de données, un fichier qui contient les opérations de **persistance CRUD** (create, read, update, delete) et d'autres plus spécifiques
 
-</br>
+### Vue
+
+Le dossier `/views` contient les vues .ejs ; les **rendus dynamiques** permmettent de mettre en forme (render) les données récupérées. L'arborescence du dossier se structure par type d'utilisateurs, par templates communs et par utilitaires.
+
+## Quelques fonctionnalités expliquées
 
 
-## Comment filtrer, rechercher et paginer les données ?
-
-Le projet étant de taille réduite, on choisit de développer des scripts qui permettent de filtrer, rechercher et paginer **côté client** ; le serveur envoie toutes les données au client qui ne les affiche pas toutes. Dans le cadre d'un projet avec une grande quantité de données, on aurait pu filtrer les données **côté serveur**, avant l'envoie au client ; cette stratégie est plus optimale en therme de consommation énergétique.
-
-
-
-
-## Tests (TD qualité du code)
+### Tests
 
 On utilise le framework de tests automatisés pour JavaScript `Jest`.
-Pour contrôler la **couverture de code**, c'est-à-dire le poucentage de métriques couvertes par les tests dans le projet, ouvrez un terminal et tapez : 
+Pour contrôler la **couverture de code**, c'est-à-dire le poucentage de métriques couvertes par les tests dans le projet, ouvrir un terminal et tapez : 
 ```bash
 cd .\SR10\SR10_project\
 npm run test
 ```
 
-### Tests unitaires : tester les fonctions CRUD
+Les **tests unitaires** permettent de tester chaque fonctions indépendamment des autres. Ainsi, on donne une entrée à cette fonction et on vérifie que la sortie est celle attendue grâce à l'assertion `expect()`. Dans `/test/utilisateur.test.js`, on se limite aux tests unitaires permettant de vérifier le bon fonctionnement de nos requêtes SQL sur la table `utilisateur`, en particulier la persistance des données assurée par les fonctions CRUD.
 
-Les tests unitaires permettent de tester chaque fonctions indépendamment des autres. Ainsi, on donne une entrée à cette fonction et on vérifie que la sortie est celle attendue grâce à l'assertion `expect()`.
+Les **tests d'intégration** permettent de tester les routes http et la bonne connexion entre les différentes parties de l'application MVC. Dans `/test/routes1.test.js` on vérifie notamment que le code *succès 200* est retourné: la requête est donc fonctionnelle. Dans `/test/routes2.test.js` on teste le bon fonctionnement du mécanisme de session, en particulier le *code erreur 403 (accès refusé)* devrait être renvoyé si un utilisateur essaye d'accéder à des routes pour lesquelles il n'a pas les privilèges.
 
-Le champ des possibles des fonctions à tester est énorme, on décide de se limiter aux tests unitaires permettant de vérifier la persistance des données. On vérifie ainsi le bon fonctionnement des fonctions CRUD :
-- CREATE : test de création d'utilisateur (model.create)
-- READ : test de lecture d'un champ d'un utilisateur (model.read)
-- READALL
-- UPDATE : test de mise à jour d'utilisateur (model.update)
-- DELETE : test de suppression d'utilisateur (model.delete), on vérifie qu'une et une seule ligne a été affectée avec `expect(result.affectedRows).toBe(1);`
-
-
-D'autres tests
-- vérification du mot de passe choisi par l'utilisateur, il doit être conforme aux recommandations de la CNIL
-- vérifier que toutes les candidatures contiennent une pièce jointe
-
-
-### Tests d'intégration : tester des routes
-
-Pour faire des tests complets de l'application, il faudrait le décliner sur tous les domaines du dossier route; on se concentre ici sur le domaine candidat. Les tests implémentés sont : 
-- marche pas qd nn authent
-- recup page qui existe pas => page qui existe pas
-
-
-## TD4 : formulaires et sessions
 
 ### Formulaires
 
-Pour ajouter et modifier des données dans notre base de données, on utilise des formulaires. On présente ici l'exemple du formulaire de **création de compte**.
+Pour **ajouter et modifier des données** dans notre base de données, on utilise des formulaires. On présente ici l'exemple du formulaire de **création de compte**.
 
 D'abord, pour rendre le formulaire accessible à l'utilisateur, on crée une vue EJS avec des champs à remplir qu'on affiche avec une requête GET :
 
@@ -182,6 +156,9 @@ GET /LogIn 304 8.249 ms - -
 
 
 
-
+## Améliorations possibles
+- filtrer et rechercher les données côté client
+- imposer à l'utilisateur de choisir un mot de passe conforme aux recommandations de la CNIL
+- imposer à l'utilisateur d'upload au moins une pièce jointe par candidature
 
 
