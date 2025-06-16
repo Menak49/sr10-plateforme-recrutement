@@ -1,13 +1,16 @@
-# Projet SR10 - TD03
+# Projet SR10 - Readme
 
 ## Technologies utilisées
 
-On utilise : 
-- ```HTML, CSS, JavaScript```
-- le framework ```Express``` qui implémente l'architecture MVC (Modèle Vue Contrôleur)
+On utilise le stack technique suivant: 
 - le serveur web ```Node.js```
+- les langages de programmation ```HTML, CSS, JavaScript```
+- le framework ```Bootstrap``` (CDN) pour ses styles CSS pré-définis
+- le framework ```Express``` qui implémente l'architecture MVC (Modèle Vue Contrôleur)
+- le moteur de visualisation ```EJS```
 - le framework ```Jest``` pour implémenter les tests unitaires complété du module ```supertest```pour les tests d'intégration
 
+</br>
 
 ## Pour faire fonctionner le serveur
 
@@ -16,47 +19,63 @@ Cloner le dépôt puis ouvrir un terminal et taper:
 cd .\SR10\SR10_project\
 npm start
 ```
-Se connecter au VPN de l'utc pour avoir accès à la base de données puis ouvrir un navigateur et taper : 
-```http://localhost:3000/Accueil```
 
-Par défaut, l'utilisateur est considéré comme un candidat. Vous pouvez changer d'espaces grâce aux boutons en bas à droite des pages d'accueil. Sur les trois espaces utilisateurs, des fonctionnalités différentes sont programmées ; pour accéder aux différentes routes, vous pouvez naviguer grâce à la navbar ou cliquer sur les différents boutons.
+Puis ouvrir un navigateur web et taper dans la barre de recherche : 
+http://localhost:3000/LogIn.
 
-## Conception (TD1)
+Pour ne pas avoir d'erreur lors de la connexion, il faut se connecter au **VPN** de l'UTC pour avoir accès à la base de données.
 
-Lien vers le figma : [Conception des routes, de l'interface et des fonctionnalités](https://www.figma.com/design/l7j4jq5fwSGC3Mfd4yWi7d/SR10-Maquette?node-id=0-1&t=OZ16zT2FTczzaGUG-1)
+Le compte utilisateur de **Luc Bernard** permet d'avoir accès à toutes les fonctionnalités du site, il a tous les privilèges:
+- Adresse email : luc.bernard@mail.com
+- Mot de passe : mdp123
 
-## Contrôleur (TD3 - partie 3)
+**Doe John** n'a pas les privilèges admin, il a un compte candidat/recruteur:
+- Adresse email : Doe@gmail.com
+- Mot de passe : SecurePass123!
 
-Le dossier `routes` représente la partie contrôleur de l'architecture MVC. Il contient les fichiers qui implémentent une arborescences de routes/sous-routes :
+**Nina Robert** a les privilèges admin mais pas les privilèges recruteurs:
+- Adresse email : nina.robert@mail.com
+- Mot de passe : mdp123
 
-`index.js` permet de décomposer et d'organiser les routes par **type d'utilisateurs** et on ajoute une route **commune**:
-- espace candidat: ```http://localhost:3000/candidat/Accueil```
-- espace recruteur : ```http://localhost:3000/recruteur/accueil```
-- espace admin : ```http://localhost:3000/admin/accueil```
-- routes communes : ```http://localhost:3000/commun/```
+Pour créer un **nouveau compte** utilisateur, taper dans votre navigateur : http://localhost:3000/SignUp. Par défaut, l'utilisateur n'a pas de privilèges, seulement un compte candidat. 
 
-Cette stratégie permet de sécuriser simplement l'accès aux routes ; en revanche il peut y avoir des redondances de code. On aurait aussi pu décomposer les routes par **entiés**.
+Vous pouvez changer d'espace utilisateur grâce aux boutons en bas à droite des pages d'accueil ou grâce aux routes suivantes:
+- http://localhost:3000/candidat/Accueil
+- http://localhost:3000/recruteur/accueil
+- http://localhost:3000/admin/accueil
 
-`admin.js` contient toutes les **sous-routes** relatives à l'admin
-- Gestion des utilisateurs : ```/admin/gestionUtilisateurs```
-- Gestion des organisations : ```/admin/organisations```
-- Gestion des recruteurs : ```/admin/GestionDemandeRecruteur```
-- Privilèges : ```/admin/Privileges```
-	- Devenir recruteur : ```/admin/devenirRecruteur```
-	- Créer une organisation : ```/adim/creerOrganisation```
+Des mesures de sécurité ont été mises en place pour que les routes admin et recruteur ne soient accessibles que si les privilèges ont été accordés. Un message d'erreur "Accès interdit" s'affichera sinon. Pour demander les accès, vous pouvez vous rendre dans l'onglet "privilèges" accessible  depuis tous les espaces. La demande sera alors envoyée aux administrateurs dans l'attente de leur validation.
 
-`candidat.js` contient toutes les **sous-routes** relatives à l'espace candidat
-- Voir les offres : ```/candidat/parcourir```
-- Mes candidatures : ```/candidat/candidatures```
-- Privilèges : ```/candidat/privileges```
-	- Devenir recruteur : ```/candidat/devenirRecruteur```
-	- Créer une organisation : ```/candidat/creerOrganisation```
+</br>
 
-`recruteur.js` contient toutes les **sous-routes** relatives à l'espace recruteur
-- Gérer mes offres : ```/recruteur/GererOffres```
-- Gérer mes fiches de poste : ```/recruteur/gererFicheDePoste```
+## Organisation du dépôt Git
+
+Le dépôt git est organisé selon l'arborescence suivante:
+- le dossier `/conception` contient le **diagramme des cas d'utilisation** (UseCaseDiagram), le **diagramme de classes** (UML) et le **modèle logique de données** (MLD). La **carte du site web** est accessible sur le figma suivant : [Conception des routes, de l'interface et des fonctionnalités](https://www.figma.com/design/l7j4jq5fwSGC3Mfd4yWi7d/SR10-Maquette?node-id=0-1&t=OZ16zT2FTczzaGUG-1)
+- le dossier `/Db` contient les **requêtes SQL** qui ont été exécutées pour créer les tables SQL et insérer les jeux de données dans notre base de données
+- le dossier `/SR10_project` contient notre application et est structuré selon l'architecture **MVC (Modèle Vue Contrôleur)**. En voici le diagramme de séquence :
+
+![alt text](MVC_diag_sequence.png)
+
+Pour implémenter l'architecture MVC, on utilise un framework de node.js : le **framework express**. Le projet express généré contient déjà la partie Vue `/views` et la partie Contrôleur `/routes` de l'architecture MVC. On a crée un dossier pour la partie Modèle `/model`. La création de routes permet de connecter les trois parties de l'architecture.
+
+### Contrôleur
+Le **contrôleur** est composé de plusieurs sous-routes ; cela rend le code plus lisible et strucuré. On décompose et organise les routes par **type d'utilisateurs** :
+- `index.js` prend en charge les requêtes de *création de compte et de connexion*, il redirige ensuite vers la route qui gère l'espace candidat.
+- `candidat.js` contient toutes les **sous-routes** relatives à l'espace candidat : *Voir les offres, Mes candidatures, Privilèges*
+- `admin.js` contient toutes les **sous-routes** relatives à l'admin : *Gestion des utilisateurs, Gestion des demandes, Gestion des organisations, Privilèges*
+- `recruteur.js` contient toutes les **sous-routes** relatives à l'espace recruteur : *Gérer mes offres, Gérer mes fiches de poste, Privilèges*
+
+Cette stratégie permet de sécuriser simplement l'accès aux routes avec les sessions.
 
 
+### Modèle
+
+Le dossier `/model` représente la partie modèle de l'architecture MVC. Il contient : 
+- `db.js` qui implémente la connexion à la base de donnée MySQL
+- pour chaque table utile de notre base de données, un fichier qui contient les opérations de **persistance CRUD** (create, read, update, delete) et d'autres plus spécifiques
+
+</br>
 
 
 ## Comment filtrer, rechercher et paginer les données ?
@@ -64,24 +83,6 @@ Cette stratégie permet de sécuriser simplement l'accès aux routes ; en revanc
 Le projet étant de taille réduite, on choisit de développer des scripts qui permettent de filtrer, rechercher et paginer **côté client** ; le serveur envoie toutes les données au client qui ne les affiche pas toutes. Dans le cadre d'un projet avec une grande quantité de données, on aurait pu filtrer les données **côté serveur**, avant l'envoie au client ; cette stratégie est plus optimale en therme de consommation énergétique.
 
 
-## Model (TD 3 - partie 2)
-
-Le dossier `Modèle` représente la partie modèle de l'architecture MVC. Il contient : 
-- `db.js` qui implémente la connexion à la base de donnée MySQL
-- un fichier qui contient les opérations de persistance CRUD (create, read, update, delete) et d'autres plus spécifiques pour chaque table principale de notre base de données : Utilisateur, 
-
-Si on prend par exemple la table utilisateur :
-
-```SQL
-CREATE TABLE Utilisateur (
-    Phone INT PRIMARY KEY,
-    LastName VARCHAR(255) NOT NULL,
-    FirstName VARCHAR(255) NOT NULL,
-    Status ENUM('Active', 'Inactive') NOT NULL,
-    Password VARCHAR(255) NOT NULL,
-    Email VARCHAR(255) UNIQUE NOT NULL
-);
-```
 
 
 ## Tests (TD qualité du code)
@@ -180,9 +181,6 @@ GET /LogIn 304 8.249 ms - -
 ```
 
 
-### Sessions 
-
-gestion des sessions pour sécuriser notre application
 
 
 
