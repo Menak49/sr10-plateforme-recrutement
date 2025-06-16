@@ -21,7 +21,7 @@ module.exports = {
       try {
           const result = await db.query(query, [User]);
           return result; 
-      } catch (err) {
+      } catch (err) { 
           console.error('Erreur lors de la lecture de l\'utilisateur :', err);
           throw err;
       }

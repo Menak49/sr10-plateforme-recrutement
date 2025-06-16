@@ -22,13 +22,7 @@ describe('Tests sur la table Utilisateur', () => {
     });
   });
 
-  test('create user success', async () => {
-    /* On teste les deux embranchements de la fonction create
-    - si le numéros (qui est notre clé unique) existe déjà, on retourne false
-    - sinon on crée l'utilisateur*/
-  
-    //attention à bien vérifer que l'utilisateur n'existe pas déjà dans la BD, sinon erreur!!
-    const newUser = {
+const newUser = {
       phone: 1005089,
       lastName: 'asupp',
       firstName: 'asupp',
@@ -36,6 +30,14 @@ describe('Tests sur la table Utilisateur', () => {
       password: 'psu23',
       email: 'supp@supp.fr'
     };
+
+  test('create user success', async () => {
+    /* On teste les deux embranchements de la fonction create
+    - si le numéros (qui est notre clé unique) existe déjà, on retourne false
+    - sinon on crée l'utilisateur*/
+  
+    //attention à bien vérifer que l'utilisateur n'existe pas déjà dans la BD, sinon erreur!!
+    
 
     const existingUser = {
       phone: 1005, //même numéros qu'utilisateur existant (Nina)
@@ -171,7 +173,7 @@ describe('Tests sur la table Utilisateur', () => {
   });
 
   test('delete user success', async () => {
-    const result = await model.deleteUser(createdUserEmail);
+    const result = await model.deleteUser(newUser.phone);
     expect(result.affectedRows).toBe(1); //objet renvoyé a un champ affectedRows qui indique le nombre de lignes affectées par la requête
   }); 
 

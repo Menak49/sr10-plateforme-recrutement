@@ -80,6 +80,7 @@ des informations sur l'opération SQL du type :
       else {
         const query = 'INSERT INTO Utilisateur (Phone, LastName, FirstName, Status, Password, Email) VALUES (?, ?, ?, ?, ?, ?)';
         const result = await db.query(query, [phone, lastName, firstName, status, password, email]);
+        console.log('Résultat insert utilisateur :', result);
         return result
       }
     } catch (err) {

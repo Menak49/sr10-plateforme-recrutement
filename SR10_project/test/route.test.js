@@ -6,12 +6,12 @@ let agent;
 beforeAll(async () => {
   agent = request.agent(app);
   await agent
-    .post("/LogIn") // route de connexion, à adapter si c'est /login
+    .post("/LogIn")
     .send({
       Email: "luc.bernard@mail.com",
       password: "mdp123"
     })
-    .expect(302); // adapter si c'est 200 selon ton app
+    .expect(302);
 });
 
 describe("Tests routes protégées (avec session)", () => {
