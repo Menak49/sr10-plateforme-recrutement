@@ -1,20 +1,30 @@
 # Sécurité web
 
-Après avoir identifié trois **vulnérabilités** de sécurité de notre application web et la manière dont des **attaques** peuvent les exploiter, on propose des **solutions** pour protéger notre application contre ces menaces et on vérifie leur **efficacité**.
+Après avoir identifié trois **vulnérabilités** de sécurité de notre application web et la manière dont des **attaques** peuvent les exploiter, on propose des **solutions** pour protéger notre application contre ces menaces et on vérifie leur **efficacité** avec des tests.
+
+Menace : vulnérabilité pouvant être exploitée par une attaque
 
 On s'appuie notamment sur les articles sur les applications web de la communauté **OWASP (Open Worldwide Application Security Project)**.
 
 ## Sessions fixation
 
-### Menace : vulnérabilité pouvant être exploitée par une attaque
+### Menace : sessions fixation
 
-### solution implémentée pour se prémunir de cette attaque 
-Middleware pour protéger les rôles
+vulnérabilité : 
+
+[attaque](https://owasp.org/www-community/attacks/Session_fixation) : 
+
+### Prévention : middleware 
+
+Pour se prémunir de cette attaque, on implémente un middleware qui protège les rôles
  dossier middleware deux fonctions: 
  - appelée qd on se connecter pour vérifier que bons authentifiants
  - appelée dans les routes au moment où on redirige de index.js vers candidat.js etc : intermédiaire qui vérifie qu'on a bien les accès 
 
-### efficacité de la solution : vérification avec des tests automatisés
+https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html
+
+### Vérification de la résistance à l'attaque
+
 Cette solution est efficacice: l'attaquant ne pourra plus exploiter la vulnérabilité
 
 *Vérification de la gestion des sessions et des droits d’accès. Mettre en place des tests pour s’assurer qu’un utilisateur authentifié mais non autorisé ne peut pas accéder à des routes réservées à l’administration. 
@@ -24,7 +34,7 @@ Exemple : un candidat connecté ne doit pas pouvoir accéder à /admin/panel.*
 
 ## Attaque par force brute
 
-### Attaque: force brute
+### Menace : force brute
 
 Selon [OWASP](https://owasp.org/www-community/attacks/Brute_force_attack), la brut force attaque peut se manifester de différentes manières ; l'attaque par force brute sur l'authentification en est une, elle peut aussi être utilisée pour découvrir des pages ou des contenus cachés.
 
@@ -55,7 +65,7 @@ pendant un certain temps.*
 
 ## Attaque par injections SQL
 
-### Attaque : injection SQL
+### Menace : injection SQL
 Exploite une vulnérabilité pour [injecter du code SQL malveillant via des formulaires dans le but d'exécuter des requêtes incidieuses
 injecte](https://owasp.org/www-community/attacks/SQL_Injection) donne des exemples.
 
