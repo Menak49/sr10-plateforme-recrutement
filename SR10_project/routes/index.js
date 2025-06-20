@@ -14,13 +14,18 @@ router.use('/candidat', isAuthenticated, candidatRouter);
 router.use('/recruteur', isAuthenticated, authorizeRole('recruteur'), recruteurRouter);
 router.use('/admin', isAuthenticated, authorizeRole('admin'), adminRouter);
 
+//brute force attack prevention
+const rateLimit = require('express-rate-limit');
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 3, // 3 tentatives max
+  message: "Trop de tentatives de connexion, veuillez réessayer plus tard."
+});
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
   //appelle la fonction readall() dans /model/utilisateur.js pour récupérer les utilisateurs
   //puis les affiche dans la vue usersList.ejs
-
-
 });
 
 router.get('/SignUp', function(req, res, next) {
@@ -66,7 +71,7 @@ router.get('/LogIn', function(req, res, next) {
 
 
 
-router.post('/LogIn', async (req, res) => {
+router.post('/LogIn', loginLimiter, async (req, res) => {
   const { Email, password } = req.body;
   var email = Email
   try {
