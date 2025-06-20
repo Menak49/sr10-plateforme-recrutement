@@ -86,7 +86,7 @@ La [brut force attaque](https://owasp.org/www-community/attacks/Brute_force_atta
 
 On implémente une [politique de blocage de compte](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html#account-lockout).
 
-Le nombre de requêtes authorisé par adresse IP est limité sur une période donnée. Pour implémenter cette politique de sécurité, on utilise la librairie express-rate-limit, configurée dans `index.js` (le contrôleur commun pour l'athentification). On ajoute le paramètre `loginLimiter` à la requpete router.post :
+Le nombre de requêtes authorisé par adresse IP est limité sur une période donnée. Pour implémenter cette politique de sécurité, on utilise la librairie express-rate-limit, configurée dans `index.js` (le contrôleur commun pour l'athentification). On ajoute le paramètre `loginLimiter` à la requete router.post qui va intercepter la requete et la faire passer par le loginLimiter. Si l'adresse ip est au dessus du nombre de requete fixé dans notre configuration, on ne traitera pas la requete et on redirigera vers la page de connexion avec un message d'erreur :
 
 ```javascript
 //brute force attack prevention
