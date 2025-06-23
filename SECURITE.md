@@ -1,6 +1,9 @@
 # Sécurité web
 
-Après avoir identifié trois **vulnérabilités** de sécurité de notre application web et la manière dont des **attaques** pourraient les exploiter (menace), on propose des **solutions** pour protéger notre application contre ces menaces et on vérifie leur **efficacité** avec des tests.
+Après avoir identifié trois **vulnérabilités** de sécurité de notre application web et la manière dont des **attaques** pourraient les exploiter (menace), on propose des **solutions** pour protéger notre application contre ces menaces:
+- attaque par force brute avec une **politique de blocage** d'adresse IP
+- injections SQL avec des **requêtes préparamétrées** et un **hachage** des mots de passes dans la base de données
+- détournement du contrôle d'accès avec les **sessions**
 
 On s'appuie notamment sur les articles à propos des applications web de la communauté **OWASP (Open Worldwide Application Security Project)**.
 
@@ -18,13 +21,13 @@ Si l'attaque par injection SQL réussit, l'attaquant peut alors utiliser à des 
 
 Cette attaque exploite une vulnérabilité dans la manière dont les requêtes SQL sont adréssées à la base de données. 
 
-### Prévention : prepared statements
+### Prévention : prepared statements et hachage des mots de passe
 
 Pour se prémunir des injecctions SQL, on utilise une des méthodes proposées par [OWASP](https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html) : déclarer de requêtes SQL paramétrées. "**Prepared statements** ensure that an attacker cannot change the intent of a query, even if SQL commands are inserted by an attacker."
 
-Ainsi, pour interragir avec la base de données, le **contrôleur** fait appelle à des requêtes paramétrées dans le **modèle**. Les requêtes du modèle **comparent** alors les types et si l'équivalence n'est pas trouvée, la requête échuoue. Du code malicieux ne sera donc pas éxécuté.
+Ainsi, pour interragir avec la base de données, le **contrôleur** fait appelle à des requêtes paramétrées dans le **modèle**. Les requêtes du modèle **comparent** alors les types et si l'équivalence n'est pas trouvée, la requête échoue. Du code malicieux ne sera donc pas éxécuté.
 
-Prenons l'exemple du formulaire de LogIn: le contôleur appelle le modèle et lui fournit l'email et le mot de passe qui sont en réalité du code malveillant.
+Prenons l'exemple du formulaire de LogIn: le contôleur appelle le modèle et lui fournit l'email et le mot de passe qui sont en réalité du code malveillant comme la chaîne totologique `' OR 1=1--`
 ```javascript
 //CONTRÔLEUR
 router.post('/LogIn', async (req, res) => {
@@ -35,6 +38,7 @@ router.post('/LogIn', async (req, res) => {
 ```
 
 Le modèle envoie à la base de donnée la requête préparamétrée `query` qui essaye de matcher la variable `?` envoyée par le contrôleur avec un Email de la table UTILISATEUR : 
+
 ```javascript
 areValid: async function (Email, password) {
   const query = 'SELECT Password FROM Utilisateur WHERE Email = ?';
@@ -64,55 +68,15 @@ areValid: async function (Email, password) {
 }
 ```
 
-### Verification de la résistance à l’attaque
+On **hache** les mots de passe dans la base de données. Ainsi, si l'attaquant arrivait à récupérer les mots de passes par une injection SQL, les mots de passes seraient hachés inexploitables.
 
-Supposons que la requête ne soit pas correctement préparamétrée, l'attaquant pourrait contourner l'authentification avec une injection SQL dans le champ Email avec la chaîne totologique `' OR 1=1--`. La requête pourrait alors renvoyer tous les mot de passe : 
-```SQL
-SELECT Password FROM Utilisateur WHERE Email = '' OR '1'='1'
-```
-
-On automatise un test qui injecte cette chaine malveillante dans le champs de saisie Email afin de verifier que notre requête est securisée.
-
-
-## Sessions fixation
-
-### Menaces CIA
-
-Les [sessions fixation](https://owasp.org/www-community/attacks/Session_fixation) : 
-
-### Prévention : middleware 
-
-Pour se prémunir de cette attaque, on implémente un middleware qui protège les rôles
- dossier middleware deux fonctions: 
- - appelée qd on se connecter pour vérifier que bons authentifiants
- - appelée dans les routes au moment où on redirige de index.js vers candidat.js etc : intermédiaire qui vérifie qu'on a bien les accès 
-
-https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html
-
-### Vérification de la résistance à l'attaque
-
-Cette solution est efficacice: l'attaquant ne pourra plus exploiter la vulnérabilité
-
-*Vérification de la gestion des sessions et des droits d’accès. Mettre en place des tests pour s’assurer qu’un utilisateur authentifié mais non autorisé ne peut pas accéder à des routes réservées à l’administration. 
-Exemple : un candidat connecté ne doit pas pouvoir accéder à /admin/panel.* 
-```java
-//configuration de la session
-app.use(session({
-  secret: 'une string complexe qui sera utilise pour signé',   
-  resave: false,// ne pas forcer l'enregistrement
-  cookie: { secure: false, httpOnly: true, maxAge: 1000*60*15 //durée de vie max de 15 min
-   }, // true si HTTPS, false sinon
-  name: 'sessionId', // nom du cookie de session
-  saveUninitialized: true
-}));
-```
 
 
 ## Attaque par force brute
 
 ### Menaces CIA
 
-La (brut force attaque)(https://owasp.org/www-community/attacks/Brute_force_attack) peut se manifester de différentes manières ; on se focalise ici sur l'attaque par force brute sur l'authentification. L'attaquant réalise une multitudes de requêtes au serveur avec des valeurs prédéterminées (comme l'attaque par dictionnaire) pour trouver le mot de passe d'un utilisateur et ainsi pouvoir se connecter sur son compte. Dans le cas de notre site, la connexion sur un **compte admministrateur** pourrait être particulièrement dommageable.
+La [brut force attaque](https://owasp.org/www-community/attacks/Brute_force_attack) peut se manifester de différentes manières ; on se focalise ici sur l'attaque par force brute sur l'authentification. L'attaquant réalise une multitudes de requêtes au serveur avec des valeurs prédéterminées (comme l'attaque par dictionnaire) pour trouver le mot de passe d'un utilisateur et ainsi pouvoir se connecter sur son compte. Dans le cas de notre site, la connexion sur un **compte admministrateur** pourrait être particulièrement dommageable.
 
 - AUTHENTIFICATION : usurper des identités d'un ou plusieurs utilisateurs
 - CONFIDENTIALITE : lire ou divulguer des données des tous les utilisateurs
@@ -122,7 +86,7 @@ La (brut force attaque)(https://owasp.org/www-community/attacks/Brute_force_atta
 
 On implémente une [politique de blocage de compte](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html#account-lockout).
 
-Le nombre de requêtes authorisé par adresse IP est limité sur une période donnée. Pour implémenter cette politique de sécurité, on utilise la librairie express-rate-limit, configurée dans `index.js` (le contrôleur commun pour l'athentification). On ajoute le paramètre `loginLimiter` à la requpete router.post :
+Le nombre de requêtes authorisé par adresse IP est limité sur une période donnée. Pour implémenter cette politique de sécurité, on utilise la librairie express-rate-limit, configurée dans `index.js` (le contrôleur commun pour l'athentification). On ajoute le paramètre `loginLimiter` à la requete router.post qui va intercepter la requete et la faire passer par le loginLimiter. Si l'adresse ip est au dessus du nombre de requete fixé dans notre configuration, on ne traitera pas la requete et on redirigera vers la page de connexion avec un message d'erreur :
 
 ```javascript
 //brute force attack prevention
@@ -135,3 +99,67 @@ const loginLimiter = rateLimit({
 
 router.post('/LogIn', loginLimiter, async (req, res) => {})
 ```
+
+
+
+## Détournement du contrôle d'accès
+
+### Menaces CIA
+
+
+[Broken access control](https://owasp.org/Top10/A01_2021-Broken_Access_Control/) est une attaque qui consiste à détourner le contrôle d'accès pour accéder à une élevation de privilèges et réaliser des requêtes qui dépasse les persissions occtroyées à l'utilisateur. 
+
+
+Dans notre cas, un compte utilisateur avec les permissions de candidat pourrait contourner le contrôle d'accès pour accéder aux privilèges du compte administrateur. L'attaquant n'usurpe pas d'identité, mais il peut utiliser à des fins malveillantes les **privilèges** du compte administrateur :
+- CONFIDENTIALITE : lire ou divulguer des données des tous les utilisateurs
+- ACCESSIBILITE (availability) : refuser les demandes des utilisateurs, supprimer des organisations ou des comptes utilisateurs
+
+### Prévention : middleware 
+
+Pour [se prémunir de cette attaque](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html), on implémente un middleware `/middlewares/authentification.js` qui protège les rôles. Le middleware est appelé lors des redirections pour vérifier les accès dans `index.js`
+
+ ```javascript
+const { isAuthenticated, authorizeRole } = require('../middlewares/authentification');
+
+router.use('/Accueil', isAuthenticated, WelcomePagerouter);
+router.use('/candidat', isAuthenticated, candidatRouter);
+router.use('/recruteur', isAuthenticated, authorizeRole('recruteur'), recruteurRouter);
+router.use('/admin', isAuthenticated, authorizeRole('admin'), adminRouter);
+```
+
+
+### Vérification de la résistance à l'attaque
+
+On vérifie de la gestion des sessions et des droits d’accès avec des tests automatisés de `route2.test.js`. Un utilisateur authentifié avec les seuls privilèges de candidat ne peut pas accéder à des routes réservées à l’administration ou aux recruteurs. On interdit également les accès sans session.
+
+```javascript
+const request = require("supertest");
+const app = require("../app");
+
+let agent;
+beforeAll(async () => {
+  agent = request.agent(app);
+  await agent
+    .post("/LogIn")
+    .send({
+      Email: "paul@mail.com", // un compte candidat
+      password: "pwd"
+    })
+    .expect(302);
+});
+
+  test("Un candidat connecté ne peut pas accéder à /admin/Accueil", async () => {
+    const response = await agent.get("/admin/Accueil");
+    expect(response.statusCode).toBe(403);
+  });
+
+  test("Un candidat connecté ne peut pas accéder à /recruteur/Accueil", async () => {
+    const response = await agent.get("/recruteur/Accueil");
+    expect(response.statusCode).toBe(403);
+  });
+
+  test("GET /candidat/Accueil sans session doit être interdit", async () => {
+  const response = await request(app).get("/candidat/Accueil");
+  expect([401, 302, 403]).toContain(response.statusCode);
+});
+  ```
