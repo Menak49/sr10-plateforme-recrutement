@@ -70,7 +70,7 @@ Cette stratégie permet de sécuriser simplement l'accès aux routes avec les se
 ### Modèle
 
 Le dossier `/model` représente la partie modèle de l'architecture MVC. Il contient : 
-- `db.js` qui implémente la connexion à la base de donnée MySQL
+- `db.js` qui implémente la connexion à la base de donnée MySQL, configurée via les variables d'environnement `DB_HOST`, `DB_USER`, `DB_PASSWORD`, `DB_NAME` (voir `.env.example` à copier en `.env` avec vos identifiants)
 - pour chaque table utile de notre base de données, un fichier qui contient les opérations de **persistance CRUD** (create, read, update, delete) et d'autres plus spécifiques
 
 ### Vue

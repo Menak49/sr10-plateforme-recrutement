@@ -1,21 +1,12 @@
 
-
+require("dotenv").config();
 
 var mysql = require("mysql");
 
 var pool = mysql.createPool({
-host: "tuxa.sme.utc", //ou localhost
-user: "sr10p029",
-password: "",
-database: "sr10p029"
+host: process.env.DB_HOST,
+user: process.env.DB_USER,
+password: process.env.DB_PASSWORD,
+database: process.env.DB_NAME
 });
 module.exports = pool;
-/*
-var pool = mysql.createPool({
-    host: "localhost", 
-    user: "root",
-    port: 3306,
-    password: "azerty",
-    database: "sr10p029"
-    });
-    module.exports = pool;*/

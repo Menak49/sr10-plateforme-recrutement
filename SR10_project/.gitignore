@@ -5,6 +5,8 @@
 
 **/coverage/
 
+.env
+
 **/db.js
 **/.gitignore
 
