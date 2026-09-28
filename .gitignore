@@ -1,2 +1,4 @@
 SR10_project/package-lock.json
 SR10_project/package.json
+SR10_project/uploads/*
+!SR10_project/uploads/.gitkeep
