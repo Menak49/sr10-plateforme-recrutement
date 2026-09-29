@@ -13,9 +13,10 @@ On utilise le stack technique suivant:
 
 ## Pour faire fonctionner le serveur
 
-Cloner le dépôt puis ouvrir un terminal et taper: 
+Cloner le dépôt, copier `SR10_project/.env.example` en `SR10_project/.env` et le remplir (identifiants MySQL et `SESSION_SECRET`, une chaîne aléatoire qui signe les cookies de session), puis ouvrir un terminal et taper: 
 ```bash
-cd .\SR10\SR10_project\
+cd sr10-plateforme-recrutement/SR10_project
+npm install
 npm start
 ```
 

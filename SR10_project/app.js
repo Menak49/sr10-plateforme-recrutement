@@ -1,6 +1,7 @@
 
 
-//importation des modules 
+//importation des modules
+require('dotenv').config();
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -20,7 +21,7 @@ var app = express();
 
 //configuration de la session
 app.use(session({
-  secret: 'une string complexe qui sera utilise pour signé',   
+  secret: process.env.SESSION_SECRET,
   resave: false,// ne pas forcer l'enregistrement
   cookie: { secure: false, httpOnly: true, maxAge: 1000*60*15 //durée de vie max de 15 min
    }, // true si HTTPS, false sinon
